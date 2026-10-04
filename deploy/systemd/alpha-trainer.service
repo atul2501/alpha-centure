@@ -1,0 +1,11 @@
+[Unit]
+Description=Alpha Centure weekly retrain (challenger vs champion)
+After=postgresql.service
+
+[Service]
+Type=oneshot
+User=alpha
+WorkingDirectory=/opt/alpha
+EnvironmentFile=/etc/alpha/.env
+ExecStart=/home/alpha/.local/bin/uv run --no-dev python -m alpha.trainer
+TimeoutStartSec=3h

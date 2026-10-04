@@ -1,0 +1,15 @@
+[Unit]
+Description=Alpha Centure live predictor (LONG/SHORT/PASS signals + scoring)
+After=network-online.target postgresql.service alpha-collector.service
+Requires=postgresql.service
+
+[Service]
+User=alpha
+WorkingDirectory=/opt/alpha
+EnvironmentFile=/etc/alpha/.env
+ExecStart=/home/alpha/.local/bin/uv run --no-dev python -m alpha.predict
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

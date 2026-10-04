@@ -1,0 +1,7 @@
+[Unit]
+Description=Alpha Centure nightly DB backup to S3
+
+[Service]
+Type=oneshot
+User=alpha
+ExecStart=/opt/alpha/deploy/backup.sh
