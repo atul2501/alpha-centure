@@ -1,10 +1,11 @@
-from datetime import timezone
+from datetime import datetime, timezone
 from decimal import Decimal
 
 import pytest
 
 from alpha.binance.parse import (
-    FlowAggregator, interval_ms, liquidation_row, ms_to_dt, orderbook_row, rest_kline_to_row, ws_kline_to_row,
+    FlowAggregator, LatencyStats, book_tick_row, interval_ms, liquidation_row, ms_to_dt, orderbook_row,
+    rest_kline_to_row, ws_kline_to_row,
 )
 from alpha.db import upsert_sql
 
@@ -66,3 +67,29 @@ def test_upsert_sql_candles_refreshes_ingested_at():
     assert "ON CONFLICT (symbol, interval, open_time)" in sql
     assert "ingested_at = now()" in sql
     assert "symbol = EXCLUDED.symbol" not in sql
+
+
+def test_book_tick_row_depth_and_reach():
+    ts = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    bids = [["100.0", "2"], ["99.9", "1"]]
+    asks = [["100.1", "3"], ["100.3", "1"]]
+    row = book_tick_row("BTCUSDT.P", ts, bids, asks)
+    sym, t, bb, ba, bq, aq, bquote, aquote, breach, areach = row
+    assert (sym, t, bb, ba, bq, aq) == ("BTCUSDT.P", ts, 100.0, 100.1, 2.0, 3.0)
+    assert bquote == pytest.approx(200.0 + 99.9) and aquote == pytest.approx(300.3 + 100.3)
+    mid = 100.05
+    assert breach == pytest.approx((mid - 99.9) / mid * 1e4) and areach == pytest.approx((100.3 - mid) / mid * 1e4)
+    assert book_tick_row("X", ts, [], asks) is None
+
+
+def test_latency_stats_emits_finished_minutes_only():
+    lat = LatencyStats()
+    base = 1_767_225_600_000  # 2026-01-01 00:00 UTC
+    for i, d in enumerate([10, 20, 30, 40]):
+        assert lat.add("aggtrade", base + i * 1000, base + i * 1000 + d) == []
+    rows = lat.add("aggtrade", base + 60_000, base + 60_005)  # first sample of the next minute
+    assert len(rows) == 1
+    minute, stream, n, p50, p95, mx = rows[0]
+    assert (minute, stream, n, mx) == (datetime(2026, 1, 1, tzinfo=timezone.utc), "aggtrade", 4, 40.0)
+    assert p50 == 30.0 and p95 == 40.0
+    assert [r[2] for r in lat.flush()] == [1]

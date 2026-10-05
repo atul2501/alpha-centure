@@ -20,6 +20,17 @@ TABLES: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
     "liquidations": (("symbol", "ts", "side", "price", "avg_price", "qty", "filled_qty", "status"), ("symbol", "ts", "side", "price", "qty")),
     "flow_1m": (("symbol", "minute", "buy_vol", "sell_vol", "delta", "buy_quote", "sell_quote", "trades", "max_trade_quote", "complete"), ("symbol", "minute")),
     "orderbook_snap": (("symbol", "ts", "best_bid", "best_ask", "spread_bps", "bid_qty_20", "ask_qty_20", "imbalance", "bids", "asks"), ("symbol", "ts")),
+    "book_tick": (("symbol", "ts", "best_bid", "best_ask", "bid_qty", "ask_qty", "bid_quote_20", "ask_quote_20",
+                   "bid_reach_bps", "ask_reach_bps"), ("symbol", "ts")),
+    "open_interest_live": (("symbol", "ts", "open_interest"), ("symbol", "ts")),
+    "ws_latency": (("minute", "stream", "n", "p50_ms", "p95_ms", "max_ms"), ("minute", "stream")),
+    "futures_metrics": (("symbol", "ts", "sum_open_interest", "sum_open_interest_value", "toptrader_ls_count",
+                         "toptrader_ls_position", "ls_ratio", "taker_ls_vol_ratio"), ("symbol", "ts")),
+    "book_depth_5m": (("symbol", "ts", "snap_time", "bid_1", "bid_2", "bid_3", "bid_4", "bid_5",
+                       "ask_1", "ask_2", "ask_3", "ask_4", "ask_5"), ("symbol", "ts")),
+    "premium_kline": (("symbol", "interval", "open_time", "close_time", "open", "high", "low", "close"),
+                      ("symbol", "interval", "open_time")),
+    "vision_files": (("path", "dataset", "symbol", "period", "rows"), ("path",)),
     "signals": (("symbol", "tf", "bar_time", "strategy", "side", "model_version", "action", "reason", "regime",
                  "regime_probs", "p_win", "ev_r", "close_px", "stop", "target", "max_bars", "features", "exit_policy"),
                 ("symbol", "tf", "bar_time", "strategy", "side", "model_version")),
@@ -65,6 +76,26 @@ class DB:
             return 0
         async with self.pool.acquire() as conn:
             await conn.executemany(upsert_sql(table), rows)
+        return len(rows)
+
+    async def bulk_upsert(self, table: str, rows: list[tuple]) -> int:
+        """COPY into a temp table, then one INSERT .. ON CONFLICT. For large history loads (same semantics as
+        upsert). Pass numeric columns as str to keep exchange values exact."""
+        if not rows:
+            return 0
+        cols, pk = TABLES[table]
+        # Some dumps repeat a key within one file; ON CONFLICT cannot touch a row twice in one statement: keep last.
+        at = [cols.index(c) for c in pk]
+        rows = list({tuple(r[i] for i in at): r for r in rows}.values())
+        updates = ", ".join(f"{c} = EXCLUDED.{c}" for c in cols if c not in pk)
+        if table == "candles":
+            updates += ", ingested_at = now()"
+        collist = ", ".join(cols)
+        async with self.pool.acquire() as conn, conn.transaction():
+            await conn.execute(f"CREATE TEMP TABLE _bulk (LIKE {table} INCLUDING DEFAULTS) ON COMMIT DROP")
+            await conn.copy_records_to_table("_bulk", records=rows, columns=list(cols))
+            await conn.execute(f"INSERT INTO {table} ({collist}) SELECT {collist} FROM _bulk "
+                               f"ON CONFLICT ({', '.join(pk)}) DO UPDATE SET {updates}")
         return len(rows)
 
     async def log_fetch(

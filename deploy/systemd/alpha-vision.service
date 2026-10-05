@@ -1,0 +1,15 @@
+[Unit]
+Description=Alpha Centure history backfill from data.binance.vision (one-shot, resumable)
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=alpha
+WorkingDirectory=/opt/alpha
+EnvironmentFile=/etc/alpha/.env
+# small datasets first, then the large ones (1m candles, aggTrades -> 1m flow)
+ExecStart=/home/alpha/.local/bin/uv run --no-dev python -m alpha.binance.vision --datasets klines,premium,metrics,bookDepth --intervals 5m,15m,1h,4h,1d
+ExecStart=/home/alpha/.local/bin/uv run --no-dev python -m alpha.binance.vision --datasets klines,aggTrades --intervals 1m --workers 3
+Nice=10
+TimeoutStartSec=infinity

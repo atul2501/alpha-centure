@@ -98,7 +98,7 @@ def evaluate_bar(conn, bundle: Bundle, status: str, symbol: str, tf: str, bar_ti
 
     rows = with_features(s, f, symbol, tf, CORE_COLS)
     reg_start = bar_time - interval_td(REGIME_TF) * REGIME_HISTORY_BARS
-    reg = regime_features(load_candles(conn, base_symbol(symbol), REGIME_TF, reg_start, bar_time + step))
+    reg = regime_features(load_candles(conn, symbol, REGIME_TF, reg_start, bar_time + step))
     rows = attach_regime(rows, {base_symbol(symbol): bundle.regime.filter(reg)})
     scored = bundle.meta.score(rows)
 
@@ -109,7 +109,7 @@ def evaluate_bar(conn, bundle: Bundle, status: str, symbol: str, tf: str, bar_ti
         gate = "stale_data"
     elif live:
         sp = conn.execute("""SELECT spread_bps FROM orderbook_snap WHERE symbol = %s AND ts > now() - interval '5 minutes'
-                             ORDER BY ts DESC LIMIT 1""", (base_symbol(symbol),)).fetchone()
+                             ORDER BY ts DESC LIMIT 1""", (symbol,)).fetchone()
         if sp and sp[0] > MAX_SPREAD_BPS:
             gate = "wide_spread"
     busy, sides, today_r = open_book(conn, bundle.version, bar_time)

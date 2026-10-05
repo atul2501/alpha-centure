@@ -9,7 +9,7 @@ from loguru import logger
 
 from alpha.backfill import repair_gaps
 from alpha.binance.rest import BinanceREST
-from alpha.collectors.futures import run_futures_poller, run_liquidations
+from alpha.collectors.futures import run_futures_poller, run_liquidations, run_oi_live_poller
 from alpha.collectors.klines import run_klines
 from alpha.collectors.orderflow import run_orderflow
 from alpha.config import get_settings
@@ -39,18 +39,19 @@ async def main() -> None:
     db = await DB.connect(settings.database_url)
     await db.init_schema()
     rest = BinanceREST(settings.spot_rest, settings.futures_rest)
-    logger.info("collecting {} spot {} perp {}", settings.symbols, settings.intervals, settings.perp_intervals)
+    logger.info("collecting {} perp {} spot {}", settings.symbols, settings.perp_intervals,
+                settings.intervals or "off")
 
-    tasks = [
-        asyncio.create_task(run_klines(db, rest, settings, "spot"), name="klines_spot"),
-        asyncio.create_task(maintenance(db, rest, settings), name="maintenance"),
-    ]
+    tasks = [asyncio.create_task(maintenance(db, rest, settings), name="maintenance")]
+    if settings.spot_enabled:
+        tasks.append(asyncio.create_task(run_klines(db, rest, settings, "spot"), name="klines_spot"))
     if settings.orderflow_enabled:
         tasks.append(asyncio.create_task(run_orderflow(db, settings), name="orderflow"))
     if settings.futures_enabled:
         tasks.append(asyncio.create_task(run_klines(db, rest, settings, "perp"), name="klines_perp"))
         tasks.append(asyncio.create_task(run_futures_poller(db, rest, settings), name="futures"))
         tasks.append(asyncio.create_task(run_liquidations(db, settings), name="liquidations"))
+        tasks.append(asyncio.create_task(run_oi_live_poller(db, rest, settings), name="oi_live"))
 
     stop = asyncio.Event()
     loop = asyncio.get_running_loop()

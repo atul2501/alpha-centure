@@ -1,0 +1,17 @@
+[Unit]
+Description=Alpha Centure mainnet PAPER trading engine (simulated fills, no real orders)
+After=network-online.target postgresql.service alpha-collector.service
+Wants=network-online.target
+Requires=alpha-collector.service
+
+[Service]
+User=alpha
+WorkingDirectory=/opt/alpha
+EnvironmentFile=/etc/alpha/.env
+Environment=TRADING_MODE=paper
+ExecStart=/home/alpha/.local/bin/uv run --no-dev python -m alpha.live.engine
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -11,7 +11,9 @@ DB_PASS=${DB_PASS:-$(openssl rand -hex 16)}
 
 echo "==> PostgreSQL 16 + TimescaleDB"
 sudo apt-get update
-sudo apt-get install -y gnupg curl lsb-release ca-certificates awscli
+sudo apt-get install -y gnupg curl lsb-release ca-certificates awscli chrony
+# websocket latency (ws_latency) = receive time - exchange time: the clock must be NTP-synced
+sudo systemctl enable --now chrony
 sudo install -d /usr/share/postgresql-common/pgdg
 sudo curl -fsSL -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
 echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
@@ -48,13 +50,16 @@ sudo mkdir -p /etc/alpha
 if [ ! -f /etc/alpha/.env ]; then
   sudo tee /etc/alpha/.env >/dev/null <<ENV
 DATABASE_URL=postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}
-SYMBOLS=BTCUSDT,ETHUSDT,SOLUSDT,SUIUSDT
-INTERVALS=1m,5m,15m,1h,4h,1d,1w
-BACKFILL_1M_DAYS=365
-BACKFILL_START=2017-08-01
+# USD-M perpetuals only (spot off)
+SYMBOLS=BTCUSDT,ETHUSDT,SOLUSDT,SUIUSDT,TRXUSDT,AAVEUSDT,BNBUSDT,XRPUSDT,HYPEUSDT,LINKUSDT,ADAUSDT,UNIUSDT,LTCUSDT,AVAXUSDT
+SPOT_ENABLED=false
+PERP_INTERVALS=1m,5m,15m,1h,4h,1d
+BACKFILL_1M_DAYS=30
+BACKFILL_START=2020-01-01
 FUTURES_ENABLED=true
 ORDERFLOW_ENABLED=true
-PERP_INTERVALS=5m,15m,1h,4h
+BOOK_TICK_SECONDS=1
+OI_POLL_SECONDS=60
 MODELS_DIR=/opt/alpha/models
 PRODUCTION_CONFIG=roll730_risk
 # S3_BACKUP_URI=s3://your-bucket/alpha-backups
@@ -67,12 +72,17 @@ echo "==> systemd"
 sudo cp deploy/systemd/*.service deploy/systemd/*.timer /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now alpha-collector.service alpha-dashboard.service alpha-backup.timer
-sudo systemctl enable --now alpha-predictor.service alpha-trainer.timer alpha-drift.timer
+# Full history from data.binance.vision (1m candles + aggTrades -> 1m flow, ~15-20 GB before compression).
+# One-shot and resumable: re-run with `sudo systemctl start alpha-vision` if it is interrupted.
+sudo systemctl start --no-block alpha-vision.service
+# Mainnet PAPER trading of P6 (simulated fills; there is no real order path in the code)
+sudo systemctl enable --now alpha-paper.service
+# The old 4-token setup predictor/trainer (roll730_risk) is retired: it is not validated on the 14-perp universe.
+# Do not enable alpha-predictor / alpha-trainer / alpha-drift until a new system passes DEV -> VALID.
 sudo -u alpha mkdir -p "$APP_DIR/models"
 
 echo
 echo "Done. Check: systemctl status alpha-collector; journalctl -u alpha-collector -f"
 echo "Dashboard: ssh -L 8501:localhost:8501 ubuntu@<ec2-ip> then open http://localhost:8501"
-echo "First model: after the backfill finishes (journalctl -u alpha-collector), run once:"
-echo "  sudo -u alpha bash -c 'cd $APP_DIR && set -a && . /etc/alpha/.env && ~/.local/bin/uv run python -m alpha.trainer'"
-echo "The predictor waits for that champion, then signals start appearing on the Signals page."
+echo "History backfill: journalctl -u alpha-vision -f; coverage report:"
+echo "  sudo -u alpha bash -c 'cd $APP_DIR && set -a && . /etc/alpha/.env && ~/.local/bin/uv run python -m alpha.binance.vision --report'"

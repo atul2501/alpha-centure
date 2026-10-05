@@ -30,9 +30,10 @@ TFS = ("15m", "1h")
 MAKER_COSTS = Costs(fee_entry=0.0002, fee_target=0.0002)
 MAKER_ENTRY = Entry("limit", offset_atr=0.1, fill_bars=2)
 
+# v2: perp-only context/benchmark/regime (v1 caches used spot context and must not be mixed in)
 DATASETS = {
-    "market": dict(tag="mkt_15m1h_v1", costs=Costs(), entry=Entry()),
-    "maker": dict(tag="maker_15m1h_v1", costs=MAKER_COSTS, entry=MAKER_ENTRY),
+    "market": dict(tag="mkt_15m1h_v2", costs=Costs(), entry=Entry()),
+    "maker": dict(tag="maker_15m1h_v2", costs=MAKER_COSTS, entry=MAKER_ENTRY),
 }
 
 # ---- configs: each phase builds on the previous phase's winner (edit as results come in) ----

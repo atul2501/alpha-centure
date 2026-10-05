@@ -12,13 +12,13 @@ import psycopg
 
 from alpha.audit import _df as _raw_df
 from alpha.binance.parse import interval_td
-from alpha.config import PERP_SUFFIX
+from alpha.config import PERP_SUFFIX, perp_symbol
 from alpha.features.indicators import add_all, atr, ema, rsi
 
 WARMUP_BARS = 300
 CONTEXT_BARS = 400
 CONTEXT_TFS = ("4h", "1d")
-BENCHMARK = "BTCUSDT"
+BENCHMARK = "BTCUSDT.P"  # everything is perp: context, benchmark and the traded series
 
 CORE_COLS = [
     "ret_1", "ret_3", "ret_12", "ret_48", "atr_pct", "rsi", "ema20_dist", "ema50_slope", "bb_width", "bb_z",
@@ -71,8 +71,8 @@ def _asof(left: pd.DataFrame, right: pd.DataFrame, on_right: str, cols: list[str
 
 
 def _context(conn, symbol: str, tf: str, start, end) -> pd.DataFrame:
-    """Trend/vol context from a higher timeframe, keyed by that bar's close time."""
-    ctx = load_candles(conn, base_symbol(symbol), tf, start, end)
+    """Trend/vol context from a higher timeframe (same perp series), keyed by that bar's close time."""
+    ctx = load_candles(conn, perp_symbol(symbol), tf, start, end)
     if ctx.empty:
         return pd.DataFrame(columns=["close_time"])
     p = "h4_" if tf == "4h" else "d1_"
@@ -132,7 +132,8 @@ def build_frame(conn: psycopg.Connection, symbol: str, tf: str, start: datetime 
 
 
 def _add_rich(conn, df: pd.DataFrame, sym: str, tf: str, start, end) -> pd.DataFrame:
-    """Futures positioning + order flow + book. Short history; only for the 'rich' feature set."""
+    """Futures positioning + perp order flow + perp book. Short history; only for the 'rich' feature set.
+    Futures stats are keyed by the plain symbol, perp flow/book by the perp name (BTCUSDT.P)."""
     five = timedelta(minutes=5)
     oi = _df(conn, "SELECT ts, sum_open_interest_value AS oi FROM open_interest WHERE symbol = %s ORDER BY ts", (sym,))
     if not oi.empty:
@@ -154,7 +155,7 @@ def _add_rich(conn, df: pd.DataFrame, sym: str, tf: str, start, end) -> pd.DataF
 
     n = max(1, int(interval_td(tf) / timedelta(minutes=1)))
     fl = _df(conn, """SELECT minute, delta, buy_vol + sell_vol AS vol FROM flow_1m
-                      WHERE symbol = %s AND complete ORDER BY minute""", (sym,))
+                      WHERE symbol = %s AND complete ORDER BY minute""", (perp_symbol(sym),))
     if not fl.empty:
         fl["avail"] = fl["minute"] + timedelta(minutes=1)
         fl["flow_delta_norm"] = fl["delta"].rolling(n).sum() / fl["vol"].rolling(n).sum()
@@ -162,7 +163,8 @@ def _add_rich(conn, df: pd.DataFrame, sym: str, tf: str, start, end) -> pd.DataF
         fl["cvd_slope"] = (cvd - cvd.shift(n)) / fl["vol"].rolling(n).sum()
     df = _asof(df, fl, "avail", ["flow_delta_norm", "cvd_slope"])
 
-    ob = _df(conn, "SELECT ts, imbalance AS book_imb, spread_bps FROM orderbook_snap WHERE symbol = %s ORDER BY ts", (sym,))
+    ob = _df(conn, "SELECT ts, imbalance AS book_imb, spread_bps FROM orderbook_snap WHERE symbol = %s ORDER BY ts",
+             (perp_symbol(sym),))
     if not ob.empty:
         ob["avail"] = ob["ts"] + timedelta(minutes=1)
     df = _asof(df, ob, "avail", ["book_imb", "spread_bps"])

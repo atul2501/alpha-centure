@@ -85,6 +85,15 @@ class BinanceREST:
     async def premium_index(self, symbol: str) -> dict:
         return await self._get(f"{self.futures_base}/fapi/v1/premiumIndex", {"symbol": symbol})
 
+    async def premium_klines(self, symbol: str, interval: str, start_ms: int, limit: int = 500) -> list[list]:
+        """Premium index klines (same row format as klines)."""
+        return await self._get(f"{self.futures_base}/fapi/v1/premiumIndexKlines",
+                               {"symbol": symbol, "interval": interval, "startTime": start_ms, "limit": limit})
+
+    async def open_interest(self, symbol: str) -> dict:
+        """Current open interest: {"symbol", "openInterest", "time"}."""
+        return await self._get(f"{self.futures_base}/fapi/v1/openInterest", {"symbol": symbol})
+
     async def futures_stats_range(self, path: str, symbol: str, start_ms: int, limit: int = 500):
         """Yields batches from /futures/data/{path} (5m period) from start_ms to now.
 

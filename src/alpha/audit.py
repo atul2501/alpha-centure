@@ -40,28 +40,43 @@ def last_fetches(conn, n: int = 10, kind: str | None = None) -> pd.DataFrame:
     """, {"k": kind, "n": n})
 
 
-def candle_health(conn, intervals: list[str]) -> pd.DataFrame:
-    """Latest closed candle per symbol x interval and whether it is overdue."""
+def _feeds_values(symbols: list[str], intervals: list[str]) -> str:
+    return ", ".join(f"('{s}', '{i}', interval '{INTERVAL_MS[i] // 1000} seconds')" for s in symbols for i in intervals)
+
+
+def candle_health(conn, intervals: list[str], symbols: list[str]) -> pd.DataFrame:
+    """Latest closed candle per symbol x interval and whether it is overdue.
+
+    Index lookups per feed (first / last row on the primary key), never a scan of the whole table: with years of
+    history a full count took ~15 s. `bars` is the span in bars since the first candle (gaps are reported apart)."""
     return _df(conn, f"""
-        WITH iv(interval, step) AS (VALUES {_intervals_values(intervals)})
-        SELECT c.symbol, c.interval, max(c.close_time) AS last_close, count(*) AS candles,
-               min(c.open_time) AS first_open,
-               (now() - max(c.close_time)) > (iv.step + interval '2 minutes') AS stale
-        FROM candles c JOIN iv USING (interval)
-        GROUP BY c.symbol, c.interval, iv.step
-        ORDER BY c.symbol, iv.step
+        WITH f(symbol, interval, step) AS (VALUES {_feeds_values(symbols, intervals)})
+        SELECT f.symbol, f.interval, l.close_time AS last_close,
+               (extract(epoch FROM l.open_time - fo.open_time) / extract(epoch FROM f.step))::bigint + 1 AS bars,
+               fo.open_time AS first_open,
+               (now() - l.close_time) > (f.step + interval '2 minutes') AS stale
+        FROM f
+        CROSS JOIN LATERAL (SELECT open_time, close_time FROM candles c
+                            WHERE c.symbol = f.symbol AND c.interval = f.interval
+                            ORDER BY open_time DESC LIMIT 1) l
+        CROSS JOIN LATERAL (SELECT open_time FROM candles c
+                            WHERE c.symbol = f.symbol AND c.interval = f.interval
+                            ORDER BY open_time LIMIT 1) fo
+        ORDER BY f.symbol, f.step
     """)
 
 
-def candle_gaps(conn, intervals: list[str], days: int = 7) -> pd.DataFrame:
-    """Missing candles inside the recent window (lookback is at least 20 bars per interval)."""
+def candle_gaps(conn, intervals: list[str], symbols: list[str], days: int = 7) -> pd.DataFrame:
+    """Missing candles inside the recent window (lookback is at least 20 bars per interval), per feed on the index."""
     return _df(conn, f"""
-        WITH iv(interval, step) AS (VALUES {_intervals_values(intervals)}),
+        WITH f(symbol, interval, step) AS (VALUES {_feeds_values(symbols, intervals)}),
         seq AS (
-            SELECT c.symbol, c.interval, iv.step, c.open_time,
-                   lead(c.open_time) OVER (PARTITION BY c.symbol, c.interval ORDER BY c.open_time) AS next_open
-            FROM candles c JOIN iv USING (interval)
-            WHERE c.open_time > now() - greatest(make_interval(days => %(d)s), iv.step * 20)
+            SELECT f.symbol, f.interval, f.step, w.open_time,
+                   lead(w.open_time) OVER (PARTITION BY f.symbol, f.interval ORDER BY w.open_time) AS next_open
+            FROM f CROSS JOIN LATERAL (
+                SELECT open_time FROM candles c
+                WHERE c.symbol = f.symbol AND c.interval = f.interval
+                  AND c.open_time > now() - greatest(make_interval(days => %(d)s), f.step * 20)) w
         )
         SELECT symbol, interval, open_time AS gap_after, next_open AS gap_before,
                (extract(epoch FROM next_open - open_time) / extract(epoch FROM step))::int - 1 AS missing
@@ -129,12 +144,13 @@ def ws_events(conn, hours: int = 24) -> pd.DataFrame:
 
 def main() -> None:
     s = get_settings()
+    feeds = list(dict.fromkeys(f.db_symbol for f in s.candle_feeds()))
     pd.set_option("display.width", 200)
     pd.set_option("display.max_columns", 20)
     with psycopg.connect(s.database_url) as conn:
         for title, df in [
-            ("Candle health", candle_health(conn, s.all_intervals)),
-            ("Gaps (7d)", candle_gaps(conn, s.all_intervals)),
+            ("Candle health", candle_health(conn, s.all_intervals, feeds)),
+            ("Gaps (7d)", candle_gaps(conn, s.all_intervals, feeds)),
             ("OHLC violations (24h)", ohlc_violations(conn)),
             ("1m->5m resample mismatches (24h)", resample_mismatch(conn)),
             ("Other feeds", feed_health(conn)),

@@ -1,14 +1,20 @@
 # Alpha Centure
 
-Step 1 of a regime-aware crypto trading system. It collects live Binance market data for **BTCUSDT, ETHUSDT, SOLUSDT, SUIUSDT** into PostgreSQL/TimescaleDB, with an audit dashboard on top.
+A cost-aware crypto perpetual-futures research and paper-trading system. It collects live Binance **USD-M perpetual** data for
+**BTC, ETH, SOL, SUI, TRX, AAVE, BNB, XRP, HYPE, LINK, ADA, UNI, LTC, AVAX** (all `…USDT`, spot is off) into
+PostgreSQL/TimescaleDB, with an audit dashboard on top.
 
 ## What gets collected
 
 | Table | Content | Cadence |
 |---|---|---|
-| `candles` | OHLCV, quote volume, trades, taker-buy volume for 1m/5m/15m/1h/4h/1d/1w. **Closed candles only.** | Live websocket + REST backfill |
-| `flow_1m` | Aggressive buy/sell volume, delta (cumsum gives CVD), largest trade. `complete=false` marks partial minutes | Every minute |
-| `orderbook_snap` | Top-20 book: spread, bid/ask depth, imbalance, raw levels | Every minute |
+| `candles` | Perp OHLCV (stored as `BTCUSDT.P`), quote volume, trades, taker-buy volume for 1m/5m/15m/1h/4h/1d. **Closed candles only.** | Live websocket + REST / data.binance.vision backfill |
+| `flow_1m` | Perp aggressive buy/sell volume, delta (cumsum gives CVD), largest trade. `complete=false` marks partial minutes | Every minute (history: aggTrades dump) |
+| `orderbook_snap` | Perp top-20 book: spread, bid/ask depth, imbalance, raw levels | Every minute |
+| `book_tick` | Perp top of book + visible depth (quote value, reach in bps) | Every second |
+| `open_interest_live` | Current open interest | Every minute |
+| `ws_latency` | Websocket delivery latency p50/p95/max per stream kind | Every minute |
+| `futures_metrics`, `book_depth_5m`, `premium_kline` | History from data.binance.vision: 5m OI + long/short + taker ratios, ±1–5% book depth, premium index klines | One-off backfill |
 | `open_interest`, `long_short_ratio`, `taker_ratio` | Futures 5m stats. **Binance only keeps ~30 days, so collection must start early** | Every 5 min |
 | `funding_rate`, `premium_snap` | Settled funding history, plus mark/index/predicted funding | Every 5 min |
 | `liquidations` | Futures forced orders | Live websocket |
@@ -31,9 +37,22 @@ uv run pytest                          # TEST_DATABASE_URL=postgresql://localhos
 
 `uv run python -m alpha.backfill` does a one-off history load and exits.
 
+History from Binance's public dumps (resumable, skips files already loaded; `--report` prints coverage):
+
+```bash
+uv run python -m alpha.binance.vision                                     # 5m-1d klines, premium, metrics, book depth
+uv run python -m alpha.binance.vision --datasets klines,aggTrades --intervals 1m   # large: run on EC2 (TimescaleDB)
+uv run python -m alpha.binance.vision --report
+```
+
+Binance serves futures depth streams only on `wss://fstream.binance.com/public` and trades / mark price / klines only
+on `/market`; the collector opens one connection to each.
+
 ## Deploy on EC2
 
-1. Launch Ubuntu 24.04 in **ap-northeast-1 (Tokyo)** or **ap-south-1 (Mumbai)**. Binance blocks US regions with HTTP 451. `t4g.medium` with a 50 GB gp3 disk is a good start (1 year of 1m data for 4 symbols ≈ 2.1M rows; with compression this is small).
+1. Launch Ubuntu 24.04 in **ap-northeast-1 (Tokyo)** or **ap-south-1 (Mumbai)**. Binance blocks US regions with HTTP 451. `t4g.medium` with a **200 GB** gp3 disk (14 perps of 1m candles + 1m flow since 2020 ≈ 95M rows, ~15–20 GB before
+TimescaleDB compression, plus 1s top-of-book going forward). An existing `/etc/alpha/.env` is not overwritten: update
+`SYMBOLS`, `SPOT_ENABLED=false` and `PERP_INTERVALS=1m,5m,15m,1h,4h,1d` by hand.
 2. Security group: only SSH (22) from your IP. Postgres and the dashboard stay on localhost.
 3. Copy the repo to the instance and run `bash deploy/setup_ec2.sh`. It installs Postgres 16 + TimescaleDB, creates the DB and user, writes `/etc/alpha/.env`, and enables the systemd services.
 4. Open the dashboard through a tunnel: `ssh -L 8501:localhost:8501 ubuntu@<ip>` → http://localhost:8501

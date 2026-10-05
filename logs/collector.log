@@ -1,0 +1,34 @@
+2026-10-06 03:42:32 | INFO    | schema ready
+2026-10-06 03:42:32 | INFO    | collecting ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'SUIUSDT', 'TRXUSDT', 'AAVEUSDT', 'BNBUSDT', 'XRPUSDT', 'HYPEUSDT', 'LINKUSDT', 'ADAUSDT', 'UNIUSDT', 'LTCUSDT', 'AVAXUSDT'] perp ['1m', '5m', '15m', '1h', '4h', '1d'] spot off
+2026-10-06 03:42:33 | INFO    | [klines_perp] connected
+2026-10-06 03:42:33 | INFO    | [book_perp] connected
+2026-10-06 03:42:33 | INFO    | [flow_perp] connected
+2026-10-06 03:42:33 | INFO    | [liquidations] connected
+2026-10-06 03:42:50 | INFO    | backfill BTCUSDT.P 5m: 1 candles
+2026-10-06 03:42:50 | INFO    | backfill ETHUSDT.P 5m: 1 candles
+2026-10-06 03:42:50 | INFO    | backfill SOLUSDT.P 5m: 1 candles
+2026-10-06 03:42:51 | INFO    | backfill SUIUSDT.P 5m: 1 candles
+2026-10-06 03:42:51 | INFO    | backfill TRXUSDT.P 5m: 1 candles
+2026-10-06 03:42:51 | INFO    | backfill AAVEUSDT.P 5m: 1 candles
+2026-10-06 03:42:52 | INFO    | backfill BNBUSDT.P 5m: 1 candles
+2026-10-06 03:42:52 | INFO    | backfill XRPUSDT.P 5m: 1 candles
+2026-10-06 03:42:52 | INFO    | backfill HYPEUSDT.P 5m: 1 candles
+2026-10-06 03:42:53 | INFO    | backfill LINKUSDT.P 5m: 1 candles
+2026-10-06 03:42:53 | INFO    | backfill ADAUSDT.P 5m: 1 candles
+2026-10-06 03:42:53 | INFO    | backfill UNIUSDT.P 5m: 1 candles
+2026-10-06 03:42:53 | INFO    | backfill LTCUSDT.P 5m: 1 candles
+2026-10-06 03:42:54 | INFO    | backfill AVAXUSDT.P 5m: 1 candles
+2026-10-06 03:42:54 | INFO    | backfill BTCUSDT.P 1m: 4 candles
+2026-10-06 03:42:54 | INFO    | backfill ETHUSDT.P 1m: 4 candles
+2026-10-06 03:42:54 | INFO    | backfill SOLUSDT.P 1m: 4 candles
+2026-10-06 03:42:54 | INFO    | backfill SUIUSDT.P 1m: 4 candles
+2026-10-06 03:42:54 | INFO    | backfill TRXUSDT.P 1m: 4 candles
+2026-10-06 03:42:55 | INFO    | backfill AAVEUSDT.P 1m: 4 candles
+2026-10-06 03:42:55 | INFO    | backfill BNBUSDT.P 1m: 4 candles
+2026-10-06 03:42:55 | INFO    | backfill XRPUSDT.P 1m: 4 candles
+2026-10-06 03:42:55 | INFO    | backfill HYPEUSDT.P 1m: 4 candles
+2026-10-06 03:42:55 | INFO    | backfill LINKUSDT.P 1m: 4 candles
+2026-10-06 03:42:55 | INFO    | backfill ADAUSDT.P 1m: 4 candles
+2026-10-06 03:42:55 | INFO    | backfill UNIUSDT.P 1m: 4 candles
+2026-10-06 03:42:56 | INFO    | backfill LTCUSDT.P 1m: 4 candles
+2026-10-06 03:42:56 | INFO    | backfill AVAXUSDT.P 1m: 4 candles

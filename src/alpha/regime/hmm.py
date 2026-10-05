@@ -15,6 +15,7 @@ from hmmlearn.hmm import GaussianHMM
 from scipy.special import logsumexp
 from scipy.stats import multivariate_normal
 
+from alpha.config import perp_symbol
 from alpha.features.build import base_symbol, load_candles
 from alpha.features.indicators import bollinger, ema
 
@@ -133,7 +134,7 @@ def _name_states(means: np.ndarray, k: int) -> list[str]:
 def load_regime_frames(conn: psycopg.Connection, symbols: list[str], start=None, end=None) -> dict[str, pd.DataFrame]:
     out = {}
     for s in symbols:
-        c = load_candles(conn, base_symbol(s), REGIME_TF, start, end)
+        c = load_candles(conn, perp_symbol(s), REGIME_TF, start, end)
         if len(c) > 100:
             out[base_symbol(s)] = regime_features(c)
     return out

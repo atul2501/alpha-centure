@@ -153,3 +153,41 @@ class FlowAggregator:
         if minute == b.minute_ms:  # late trades from an already-emitted minute are dropped
             b.add(price, qty, buyer_is_maker)
         return closed
+
+
+def book_tick_row(symbol: str, ts: datetime, bids: list, asks: list) -> tuple | None:
+    """Top of book + visible depth from a depth20 payload (perp: data['b'] / data['a'])."""
+    if not bids or not asks:
+        return None
+    best_bid, best_ask = float(bids[0][0]), float(asks[0][0])
+    mid = (best_bid + best_ask) / 2
+    if mid <= 0:
+        return None
+    bid_quote = sum(float(p) * float(q) for p, q in bids)
+    ask_quote = sum(float(p) * float(q) for p, q in asks)
+    bid_reach = (mid - float(bids[-1][0])) / mid * 10_000
+    ask_reach = (float(asks[-1][0]) - mid) / mid * 10_000
+    return (symbol, ts, best_bid, best_ask, float(bids[0][1]), float(asks[0][1]), bid_quote, ask_quote,
+            bid_reach, ask_reach)
+
+
+class LatencyStats:
+    """Per-minute delivery latency (receive - event time, ms) per stream kind."""
+
+    def __init__(self) -> None:
+        self.samples: dict[tuple[int, str], list[float]] = {}
+
+    def add(self, stream: str, event_ms: int, recv_ms: int) -> list[tuple]:
+        """Record one sample; returns rows for minutes that are now complete."""
+        minute = recv_ms - recv_ms % 60_000
+        self.samples.setdefault((minute, stream), []).append(recv_ms - event_ms)
+        done = [k for k in self.samples if k[0] < minute]
+        return [self._row(k) for k in done]
+
+    def flush(self) -> list[tuple]:
+        return [self._row(k) for k in list(self.samples)]
+
+    def _row(self, key: tuple[int, str]) -> tuple:
+        xs = sorted(self.samples.pop(key))
+        q = lambda f: xs[min(len(xs) - 1, int(f * len(xs)))]
+        return (ms_to_dt(key[0]), key[1], len(xs), float(q(0.5)), float(q(0.95)), float(xs[-1]))

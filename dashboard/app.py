@@ -30,8 +30,8 @@ def conn() -> psycopg.Connection:
 
 
 st.title("Alpha Centure: Data Audit")
-st.caption(f"Spot: {', '.join(settings.symbols)} × {', '.join(settings.intervals)} · "
-           f"Perp (.P): {', '.join(settings.perp_intervals) or 'off'} · auto-refresh 5s")
+st.caption(f"Perp (.P): {', '.join(settings.symbols)} × {', '.join(settings.perp_intervals) or 'off'} · "
+           f"Spot: {', '.join(settings.intervals) or 'off'} · auto-refresh 5s")
 
 with st.sidebar:
     st.header("Filters")
@@ -43,8 +43,8 @@ with st.sidebar:
 @st.fragment(run_every="5s")
 def live_section() -> None:
     c = conn()
-    health = audit.candle_health(c, settings.all_intervals)
-    gaps = audit.candle_gaps(c, settings.all_intervals)
+    health = audit.candle_health(c, settings.all_intervals, ALL_SYMBOLS)
+    gaps = audit.candle_gaps(c, settings.all_intervals, ALL_SYMBOLS)
     bad = audit.ohlc_violations(c)
     mism = audit.resample_mismatch(c)
 
@@ -55,7 +55,7 @@ def live_section() -> None:
     k2.metric("Missing candles (7d)", int(gaps["missing"].sum()) if len(gaps) else 0)
     k3.metric("OHLC violations (24h)", len(bad))
     k4.metric("1m→5m mismatches (24h)", len(mism))
-    k5.metric("Total candles", f"{int(health['candles'].sum()):,}" if len(health) else 0)
+    k5.metric("Total candles (span)", f"{int(health['bars'].sum()):,}" if len(health) else 0)
 
     st.subheader(f"Last {n_rows} candles fetched")
     st.dataframe(
@@ -72,7 +72,7 @@ def live_section() -> None:
         st.subheader("Candle health")
         if len(health):
             health = health.assign(status=health["stale"].map({True: "🔴 stale", False: "🟢 live"}))
-            st.dataframe(health[["status", "symbol", "interval", "last_close", "candles", "first_open"]],
+            st.dataframe(health[["status", "symbol", "interval", "last_close", "bars", "first_open"]],
                          hide_index=True, width="stretch")
     with right:
         st.subheader("Other feeds")
@@ -87,7 +87,7 @@ st.divider()
 with st.expander("Audit details: gaps, OHLC violations, resample mismatches", expanded=False):
     c = conn()
     st.markdown("**Gaps in last 7 days.** Exchange outages can't be repaired; anything else is retried every 30 min.")
-    st.dataframe(audit.candle_gaps(c, settings.all_intervals), hide_index=True, width="stretch")
+    st.dataframe(audit.candle_gaps(c, settings.all_intervals, ALL_SYMBOLS), hide_index=True, width="stretch")
     st.markdown("**OHLC sanity violations (24h)**")
     st.dataframe(audit.ohlc_violations(c), hide_index=True, width="stretch")
     st.markdown("**5m candles rebuilt from 1m that differ from Binance 5m (24h)**")
