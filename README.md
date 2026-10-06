@@ -37,6 +37,15 @@ uv run pytest                          # TEST_DATABASE_URL=postgresql://localhos
 
 `uv run python -m alpha.backfill` does a one-off history load and exits.
 
+Run the collector + mainnet paper engine locally with one safe command (logs are appended to `logs/`, never wiped):
+
+```bash
+scripts/alphactl.sh start    # start whatever is not running
+scripts/alphactl.sh status   # RUNNING / STOPPED
+scripts/alphactl.sh logs     # follow both logs (Ctrl+C only stops watching)
+scripts/alphactl.sh stop     # asks before stopping
+```
+
 History from Binance's public dumps (resumable, skips files already loaded; `--report` prints coverage):
 
 ```bash
