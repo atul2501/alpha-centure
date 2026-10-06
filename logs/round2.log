@@ -1,0 +1,21 @@
+11:21:40 | panels: 23 1084784 rows, 37 1790097 rows, fresh 764598 rows
+11:21:50 | features ready
+11:22:25 | scores ready
+11:22:33 | CURRENT_P6_23: DEV $30k->114,721 sharpe 1.67 | last12 $30k->32,753 | fresh +1.819
+11:22:35 | R1_ensemble: DEV $30k->103,447 sharpe 1.79 | last12 $30k->38,720 | fresh +1.294
+11:22:37 | R2_multi_horizon: DEV $30k->65,203 sharpe 1.11 | last12 $30k->28,418 | fresh +0.218
+11:22:39 | R3_rolling_2y: DEV $30k->82,754 sharpe 1.30 | last12 $30k->23,904 | fresh +1.666
+11:22:41 | R4_beta_neutral: DEV $30k->39,915 sharpe 0.91 | last12 $30k->31,029 | fresh +0.375
+11:22:42 | R5_cost_band: DEV $30k->115,323 sharpe 1.66 | last12 $30k->33,610 | fresh +1.999
+11:22:44 | R6_carry_sleeve: DEV $30k->93,530 sharpe 1.79 | last12 $30k->32,113 | fresh +1.662
+11:22:46 | R7_wide_37: DEV $30k->100,232 sharpe 1.54 | last12 $30k->34,980 | fresh +0.516
+11:22:46 | better than current: none
+            name    dev_30k  dev_sharpe  dev_max_dd  dev_gate  info_30k  last12_30k  unseen_30k  unseen_net_x15  unseen_pass  better_than_current  trades_per_month  costs_per_month_30k
+   CURRENT_P6_23 114,720.84        1.67        0.16      True 41,919.88   32,753.34  165,832.85            1.82         True                False            112.79                45.88
+     R1_ensemble 103,446.61        1.79        0.13      True 45,180.29   38,720.10  102,230.77            1.29         True                False            101.43                32.23
+R2_multi_horizon  65,203.39        1.11        0.20     False 25,033.42   28,417.69   37,218.16            0.22         True                False            151.05               132.86
+   R3_rolling_2y  82,754.26        1.30        0.28      True 33,411.63   23,904.45  143,533.46            1.67         True                False            113.03                46.13
+ R4_beta_neutral  39,914.69        0.91        0.12      True 32,055.55   31,029.27   45,413.59            0.38         True                False            121.86                43.24
+    R5_cost_band 115,323.06        1.66        0.16      True 43,855.05   33,610.06  195,612.19            2.00         True                False            154.23                46.07
+ R6_carry_sleeve  93,529.81        1.79        0.12      True 43,332.52   32,113.50  151,772.68            1.66         True                False            119.76                49.08
+      R7_wide_37 100,232.22        1.54        0.16      True 39,162.22   34,979.95         NaN            0.52         True                False            141.30                52.16

@@ -99,9 +99,12 @@ def _train_rows(X, y, fs):
     return tr[list(X.columns)], tr["y"]
 
 
-def fit_predict(model: str, X_tr, y_tr, X_ap, fs):
+def fit_predict(model: str, X_tr, y_tr, X_ap, fs, h: int = p6.H, window_days: int | None = None):
+    if window_days:  # rolling training window: only rows from the last `window_days` before the fold
+        keep = X_tr.index.get_level_values("time") >= fs - pd.Timedelta(days=window_days)
+        X_tr, y_tr = X_tr[keep], y_tr[keep]
     if model == "ridge":
-        b = p6.fit(X_tr, y_tr, fs)
+        b = p6.fit(X_tr, y_tr, fs, h)
         return b.model.predict((X_ap[b.cols].fillna(0.0) - b.mu) / b.sd)
     Xt, yt = _train_rows(X_tr, y_tr, fs)
     if model == "xgboost":
@@ -117,7 +120,8 @@ def fit_predict(model: str, X_tr, y_tr, X_ap, fs):
     raise ValueError(model)
 
 
-def walk_scores(X_tr, y_tr, X_ap, model: str = "ridge", start=OOS_START, end=None) -> pd.DataFrame:
+def walk_scores(X_tr, y_tr, X_ap, model: str = "ridge", start=OOS_START, end=None, h: int = p6.H,
+                window_days: int | None = None) -> pd.DataFrame:
     end = end or pd.Timestamp.now(tz="UTC").floor("h")
     folds = pd.date_range(start, end, freq="QS", inclusive="left")
     t_ap = X_ap.index.get_level_values("time")
@@ -127,7 +131,7 @@ def walk_scores(X_tr, y_tr, X_ap, model: str = "ridge", start=OOS_START, end=Non
         rows = X_ap[(t_ap >= fs) & (t_ap < fe)]
         if rows.empty:
             continue
-        parts.append(pd.Series(fit_predict(model, X_tr, y_tr, rows, fs), index=rows.index))
+        parts.append(pd.Series(fit_predict(model, X_tr, y_tr, rows, fs, h, window_days), index=rows.index))
     return pd.concat(parts).unstack("symbol")
 
 
@@ -156,7 +160,8 @@ def guard_dispersion(panel) -> pd.Series:
 
 
 def book(panel, score, costs, *, h=p6.H, scale=None, blend=None, fill=1.0, maker=p6.MAKER_SHARE_ASSUMED,
-         cost_mult=1.0, start=OOS_START, end=None):
+         cost_mult=1.0, start=OOS_START, end=None, blend_w=0.5, post=None, band_fn=None):
+    """post(w, t) -> w runs after vol targeting / blend / scale; band_fn(w, ret, vol, h) replaces the 1% band."""
     ret = wide(panel, "ret")
     end = end or ret.index.max() + pd.Timedelta(hours=1)
     vol = ret.rolling(sig.VOL_WINDOW, min_periods=48).std()
@@ -165,10 +170,13 @@ def book(panel, score, costs, *, h=p6.H, scale=None, blend=None, fill=1.0, maker
     w = to_weights(score.reindex(t).reindex(columns=ret.columns), vol.loc[t], el.loc[t], "ts", every=h)
     w = vol_target(w, ret.loc[t])
     if blend is not None:
-        w = 0.5 * (w + blend.reindex_like(w).fillna(0.0))
+        w = (1 - blend_w) * w + blend_w * blend.reindex_like(w).fillna(0.0)
     if scale is not None:
         w = w.mul(scale.reindex(t).fillna(1.0).to_numpy(), axis=0)
-    w = apply_band_and_stop(w, ret.loc[t], vol.loc[t], p6.BAND, None, h)
+    if post is not None:
+        w = post(w, t)
+    w = (band_fn(w, ret.loc[t], vol.loc[t], h) if band_fn is not None
+         else apply_band_and_stop(w, ret.loc[t], vol.loc[t], p6.BAND, None, h))
     if fill < 1.0:  # passive-only: each rebalance gets only `fill` of the way to target
         hours = ((w.index - pd.Timestamp(0, tz="UTC")) // pd.Timedelta(hours=1)).to_numpy()
         W, out, prev = w.to_numpy(), np.zeros_like(w.to_numpy()), np.zeros(w.shape[1])
