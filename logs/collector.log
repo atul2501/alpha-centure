@@ -32,3 +32,168 @@
 2026-10-06 03:42:55 | INFO    | backfill UNIUSDT.P 1m: 4 candles
 2026-10-06 03:42:56 | INFO    | backfill LTCUSDT.P 1m: 4 candles
 2026-10-06 03:42:56 | INFO    | backfill AVAXUSDT.P 1m: 4 candles
+2026-10-06 04:52:03 | WARNING | [book_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-06 04:52:03 | WARNING | [klines_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-06 04:52:19 | WARNING | [book_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 2s
+2026-10-06 04:52:19 | WARNING | [klines_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 2s
+2026-10-06 04:52:20 | WARNING | GET https://fapi.binance.com/fapi/v1/openInterest failed (), retry in 1s
+2026-10-06 04:52:23 | WARNING | [flow_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-06 04:52:23 | WARNING | [liquidations] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-06 04:52:36 | WARNING | [book_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 4s
+2026-10-06 04:52:36 | WARNING | [klines_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 4s
+2026-10-06 04:52:39 | WARNING | [liquidations] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 2s
+2026-10-06 04:52:39 | WARNING | [flow_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 2s
+2026-10-06 04:52:41 | WARNING | GET https://fapi.binance.com/fapi/v1/openInterest failed (), retry in 2s
+2026-10-06 04:52:55 | WARNING | [book_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 8s
+2026-10-06 04:52:55 | WARNING | [klines_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 8s
+2026-10-06 04:52:56 | WARNING | [liquidations] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 4s
+2026-10-06 04:52:56 | WARNING | [flow_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 4s
+2026-10-06 04:53:15 | WARNING | [liquidations] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 8s
+2026-10-06 04:53:15 | WARNING | [flow_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 8s
+2026-10-06 04:53:18 | WARNING | [book_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 16s
+2026-10-06 04:53:18 | WARNING | [klines_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 16s
+2026-10-06 04:53:38 | WARNING | [liquidations] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 16s
+2026-10-06 04:53:38 | WARNING | [flow_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 16s
+2026-10-06 04:53:49 | WARNING | [book_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 32s
+2026-10-06 04:53:49 | WARNING | [klines_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 32s
+2026-10-06 04:54:09 | WARNING | [liquidations] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 32s
+2026-10-06 04:54:09 | WARNING | [flow_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 32s
+2026-10-06 04:54:20 | WARNING | GET https://fapi.binance.com/fapi/v1/openInterest failed (), retry in 1s
+2026-10-06 04:54:36 | WARNING | [klines_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:54:36 | WARNING | [book_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:54:41 | WARNING | GET https://fapi.binance.com/fapi/v1/openInterest failed (), retry in 2s
+2026-10-06 04:54:56 | WARNING | [liquidations] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:54:56 | WARNING | [flow_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:55:03 | WARNING | GET https://fapi.binance.com/fapi/v1/openInterest failed (), retry in 4s
+2026-10-06 04:55:27 | WARNING | GET https://fapi.binance.com/fapi/v1/openInterest failed (), retry in 8s
+2026-10-06 04:55:40 | WARNING | GET https://fapi.binance.com/futures/data/openInterestHist failed (), retry in 1s
+2026-10-06 04:55:51 | WARNING | [klines_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:55:51 | WARNING | [book_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:55:55 | WARNING | GET https://fapi.binance.com/fapi/v1/openInterest failed (), retry in 16s
+2026-10-06 04:56:01 | WARNING | GET https://fapi.binance.com/futures/data/openInterestHist failed (), retry in 2s
+2026-10-06 04:56:11 | WARNING | open interest BTCUSDT failed: GET https://fapi.binance.com/fapi/v1/openInterest {'symbol': 'BTCUSDT'} failed after 5 attempts
+2026-10-06 04:56:11 | WARNING | [liquidations] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:56:11 | WARNING | [flow_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:56:23 | WARNING | GET https://fapi.binance.com/futures/data/openInterestHist failed (), retry in 4s
+2026-10-06 04:56:31 | WARNING | GET https://fapi.binance.com/fapi/v1/openInterest failed (), retry in 1s
+2026-10-06 04:57:06 | WARNING | [book_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:57:06 | WARNING | [klines_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:57:26 | WARNING | [liquidations] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:57:26 | WARNING | [flow_perp] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:58:07 | INFO    | [book_perp] connected
+2026-10-06 04:58:07 | INFO    | [klines_perp] connected
+2026-10-06 04:58:27 | INFO    | [flow_perp] connected
+2026-10-06 04:58:27 | INFO    | [liquidations] connected
+2026-10-06 04:58:49 | INFO    | backfill BTCUSDT.P 5m: 1 candles
+2026-10-06 04:58:49 | INFO    | backfill ETHUSDT.P 5m: 1 candles
+2026-10-06 04:58:50 | INFO    | backfill SOLUSDT.P 5m: 1 candles
+2026-10-06 04:58:51 | INFO    | backfill SUIUSDT.P 5m: 1 candles
+2026-10-06 04:58:51 | INFO    | backfill TRXUSDT.P 5m: 1 candles
+2026-10-06 04:58:52 | INFO    | backfill AAVEUSDT.P 5m: 1 candles
+2026-10-06 04:58:53 | INFO    | backfill BNBUSDT.P 5m: 1 candles
+2026-10-06 04:58:54 | INFO    | backfill XRPUSDT.P 5m: 1 candles
+2026-10-06 04:58:54 | INFO    | backfill HYPEUSDT.P 5m: 1 candles
+2026-10-06 04:58:55 | INFO    | backfill LINKUSDT.P 5m: 1 candles
+2026-10-06 04:58:56 | INFO    | backfill ADAUSDT.P 5m: 1 candles
+2026-10-06 04:58:56 | INFO    | backfill UNIUSDT.P 5m: 1 candles
+2026-10-06 04:58:57 | INFO    | backfill LTCUSDT.P 5m: 1 candles
+2026-10-06 04:58:58 | INFO    | backfill AVAXUSDT.P 5m: 1 candles
+2026-10-06 04:58:58 | INFO    | backfill BTCUSDT.P 1m: 7 candles
+2026-10-06 04:58:59 | INFO    | backfill ETHUSDT.P 1m: 7 candles
+2026-10-06 04:58:59 | INFO    | backfill SOLUSDT.P 1m: 7 candles
+2026-10-06 04:58:59 | INFO    | backfill SUIUSDT.P 1m: 7 candles
+2026-10-06 04:59:00 | INFO    | backfill TRXUSDT.P 1m: 8 candles
+2026-10-06 04:59:00 | INFO    | backfill AAVEUSDT.P 1m: 8 candles
+2026-10-06 04:59:00 | INFO    | backfill BNBUSDT.P 1m: 8 candles
+2026-10-06 04:59:01 | INFO    | backfill XRPUSDT.P 1m: 8 candles
+2026-10-06 04:59:01 | INFO    | backfill HYPEUSDT.P 1m: 8 candles
+2026-10-06 04:59:01 | INFO    | backfill LINKUSDT.P 1m: 8 candles
+2026-10-06 04:59:02 | INFO    | backfill ADAUSDT.P 1m: 8 candles
+2026-10-06 04:59:02 | INFO    | backfill UNIUSDT.P 1m: 8 candles
+2026-10-06 04:59:03 | INFO    | backfill LTCUSDT.P 1m: 8 candles
+2026-10-06 04:59:03 | INFO    | backfill AVAXUSDT.P 1m: 8 candles
+2026-10-06 06:27:53 | INFO    | shutting down
+--- restart 23 coins Tue Oct  6 06:27:55 IST 2026
+2026-10-06 06:27:55 | INFO    | schema ready
+2026-10-06 06:27:55 | INFO    | collecting ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'SUIUSDT', 'TRXUSDT', 'AAVEUSDT', 'BNBUSDT', 'XRPUSDT', 'HYPEUSDT', 'LINKUSDT', 'ADAUSDT', 'UNIUSDT', 'LTCUSDT', 'AVAXUSDT', 'ATOMUSDT', 'DOGEUSDT', 'DOTUSDT', 'NEARUSDT', 'OPUSDT', 'ARBUSDT', 'WLDUSDT', 'CAKEUSDT', 'POLUSDT'] perp ['1m', '5m', '15m', '1h', '4h', '1d'] spot off
+2026-10-06 06:27:56 | INFO    | [book_perp] connected
+2026-10-06 06:27:56 | INFO    | [liquidations] connected
+2026-10-06 06:27:56 | INFO    | [flow_perp] connected
+2026-10-06 06:27:56 | INFO    | [klines_perp] connected
+2026-10-06 06:28:01 | INFO    | backfill ATOMUSDT.P 1d: 1 candles
+2026-10-06 06:28:02 | INFO    | backfill DOGEUSDT.P 1d: 1 candles
+2026-10-06 06:28:02 | INFO    | backfill DOTUSDT.P 1d: 1 candles
+2026-10-06 06:28:03 | INFO    | backfill NEARUSDT.P 1d: 1 candles
+2026-10-06 06:28:03 | INFO    | backfill OPUSDT.P 1d: 1 candles
+2026-10-06 06:28:03 | INFO    | backfill ARBUSDT.P 1d: 1 candles
+2026-10-06 06:28:04 | INFO    | backfill WLDUSDT.P 1d: 1 candles
+2026-10-06 06:28:04 | INFO    | backfill CAKEUSDT.P 1d: 1 candles
+2026-10-06 06:28:05 | INFO    | backfill POLUSDT.P 1d: 1 candles
+2026-10-06 06:28:11 | INFO    | backfill ATOMUSDT.P 4h: 6 candles
+2026-10-06 06:28:11 | INFO    | backfill DOGEUSDT.P 4h: 6 candles
+2026-10-06 06:28:11 | INFO    | backfill DOTUSDT.P 4h: 6 candles
+2026-10-06 06:28:12 | INFO    | backfill NEARUSDT.P 4h: 6 candles
+2026-10-06 06:28:12 | INFO    | backfill OPUSDT.P 4h: 6 candles
+2026-10-06 06:28:13 | INFO    | backfill ARBUSDT.P 4h: 6 candles
+2026-10-06 06:28:13 | INFO    | backfill WLDUSDT.P 4h: 6 candles
+2026-10-06 06:28:14 | INFO    | backfill CAKEUSDT.P 4h: 6 candles
+2026-10-06 06:28:15 | INFO    | backfill POLUSDT.P 4h: 6 candles
+2026-10-06 06:28:21 | INFO    | backfill ATOMUSDT.P 1h: 24 candles
+2026-10-06 06:28:21 | INFO    | backfill DOGEUSDT.P 1h: 24 candles
+2026-10-06 06:28:22 | INFO    | backfill DOTUSDT.P 1h: 24 candles
+2026-10-06 06:28:22 | INFO    | backfill NEARUSDT.P 1h: 24 candles
+2026-10-06 06:28:23 | INFO    | backfill OPUSDT.P 1h: 23 candles
+2026-10-06 06:28:23 | INFO    | backfill ARBUSDT.P 1h: 23 candles
+2026-10-06 06:28:24 | INFO    | backfill WLDUSDT.P 1h: 24 candles
+2026-10-06 06:28:24 | INFO    | backfill CAKEUSDT.P 1h: 24 candles
+2026-10-06 06:28:25 | INFO    | backfill POLUSDT.P 1h: 24 candles
+2026-10-06 06:28:31 | INFO    | backfill ATOMUSDT.P 15m: 97 candles
+2026-10-06 06:28:31 | INFO    | backfill DOGEUSDT.P 15m: 98 candles
+2026-10-06 06:28:32 | INFO    | backfill DOTUSDT.P 15m: 96 candles
+2026-10-06 06:28:32 | INFO    | backfill NEARUSDT.P 15m: 95 candles
+2026-10-06 06:28:32 | INFO    | backfill OPUSDT.P 15m: 95 candles
+2026-10-06 06:28:33 | INFO    | backfill ARBUSDT.P 15m: 95 candles
+2026-10-06 06:28:33 | INFO    | backfill WLDUSDT.P 15m: 97 candles
+2026-10-06 06:28:34 | INFO    | backfill CAKEUSDT.P 15m: 97 candles
+2026-10-06 06:28:34 | INFO    | backfill POLUSDT.P 15m: 97 candles
+2026-10-06 06:32:48 | INFO    | backfill ATOMUSDT.P 5m: 700570 candles
+2026-10-06 06:40:23 | INFO    | backfill DOGEUSDT.P 5m: 1312513 candles
+2026-10-06 06:47:29 | INFO    | backfill DOTUSDT.P 5m: 1287794 candles
+2026-10-06 06:54:17 | INFO    | backfill NEARUSDT.P 5m: 1256667 candles
+2026-10-06 06:57:56 | INFO    | gap ATOMUSDT.P 1m 2026-10-05 00:38:00+00:00 -> 2026-10-06 00:57:00+00:00: repaired 1458
+2026-10-06 06:57:57 | INFO    | gap DOGEUSDT.P 1m 2026-10-05 00:18:00+00:00 -> 2026-10-06 00:57:00+00:00: repaired 1478
+2026-10-06 06:57:58 | INFO    | gap DOTUSDT.P 1m 2026-10-05 00:53:00+00:00 -> 2026-10-06 00:57:00+00:00: repaired 1443
+2026-10-06 06:57:58 | INFO    | gap NEARUSDT.P 1m 2026-10-05 00:59:00+00:00 -> 2026-10-06 00:57:00+00:00: repaired 1437
+2026-10-06 06:57:59 | INFO    | gap OPUSDT.P 1m 2026-10-05 01:04:00+00:00 -> 2026-10-06 00:57:00+00:00: repaired 1432
+2026-10-06 06:57:59 | INFO    | gap ARBUSDT.P 1m 2026-10-05 01:01:00+00:00 -> 2026-10-06 00:57:00+00:00: repaired 1435
+2026-10-06 06:58:00 | INFO    | gap WLDUSDT.P 1m 2026-10-05 00:29:00+00:00 -> 2026-10-06 00:57:00+00:00: repaired 1467
+2026-10-06 06:58:00 | INFO    | gap CAKEUSDT.P 1m 2026-10-05 00:40:00+00:00 -> 2026-10-06 00:57:00+00:00: repaired 1456
+2026-10-06 06:58:01 | INFO    | gap POLUSDT.P 1m 2026-10-05 00:42:00+00:00 -> 2026-10-06 00:57:00+00:00: repaired 1454
+2026-10-06 06:59:33 | INFO    | backfill OPUSDT.P 5m: 914380 candles
+2026-10-06 07:03:46 | INFO    | backfill ARBUSDT.P 5m: 744437 candles
+2026-10-06 07:08:12 | INFO    | backfill WLDUSDT.P 5m: 673662 candles
+2026-10-06 07:11:49 | INFO    | backfill CAKEUSDT.P 5m: 615469 candles
+2026-10-06 07:14:10 | INFO    | backfill POLUSDT.P 5m: 433465 candles
+2026-10-06 07:14:10 | INFO    | backfill BTCUSDT.P 1m: 47 candles
+2026-10-06 07:14:10 | INFO    | backfill ETHUSDT.P 1m: 47 candles
+2026-10-06 07:14:11 | INFO    | backfill SOLUSDT.P 1m: 47 candles
+2026-10-06 07:14:11 | INFO    | backfill SUIUSDT.P 1m: 47 candles
+2026-10-06 07:14:11 | INFO    | backfill TRXUSDT.P 1m: 47 candles
+2026-10-06 07:14:11 | INFO    | backfill AAVEUSDT.P 1m: 47 candles
+2026-10-06 07:14:11 | INFO    | backfill BNBUSDT.P 1m: 47 candles
+2026-10-06 07:14:12 | INFO    | backfill XRPUSDT.P 1m: 47 candles
+2026-10-06 07:14:12 | INFO    | backfill HYPEUSDT.P 1m: 47 candles
+2026-10-06 07:14:12 | INFO    | backfill LINKUSDT.P 1m: 47 candles
+2026-10-06 07:14:12 | INFO    | backfill ADAUSDT.P 1m: 47 candles
+2026-10-06 07:14:12 | INFO    | backfill UNIUSDT.P 1m: 47 candles
+2026-10-06 07:14:13 | INFO    | backfill LTCUSDT.P 1m: 47 candles
+2026-10-06 07:14:13 | INFO    | backfill AVAXUSDT.P 1m: 47 candles
+2026-10-06 07:14:13 | INFO    | backfill ATOMUSDT.P 1m: 47 candles
+2026-10-06 07:14:13 | INFO    | backfill DOGEUSDT.P 1m: 47 candles
+2026-10-06 07:14:13 | INFO    | backfill DOTUSDT.P 1m: 47 candles
+2026-10-06 07:14:13 | INFO    | backfill NEARUSDT.P 1m: 47 candles
+2026-10-06 07:14:14 | INFO    | backfill OPUSDT.P 1m: 47 candles
+2026-10-06 07:14:14 | INFO    | backfill ARBUSDT.P 1m: 47 candles
+2026-10-06 07:14:14 | INFO    | backfill WLDUSDT.P 1m: 47 candles
+2026-10-06 07:14:14 | INFO    | backfill CAKEUSDT.P 1m: 47 candles
+2026-10-06 07:14:15 | INFO    | backfill POLUSDT.P 1m: 47 candles

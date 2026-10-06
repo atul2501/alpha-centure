@@ -36,3 +36,38 @@
 2026-10-06 04:40:49 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
 2026-10-06 04:40:49 | INFO    | [paper_market] connected
 2026-10-06 04:40:49 | INFO    | [paper_book] connected
+2026-10-06 04:52:16 | WARNING | [paper_market] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-06 04:52:18 | WARNING | [paper_book] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-06 04:52:32 | WARNING | [paper_market] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 2s
+2026-10-06 04:52:34 | WARNING | [paper_book] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 2s
+2026-10-06 04:52:49 | WARNING | [paper_market] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 4s
+2026-10-06 04:52:51 | WARNING | [paper_book] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 4s
+2026-10-06 04:53:08 | WARNING | [paper_market] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 8s
+2026-10-06 04:53:10 | WARNING | [paper_book] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 8s
+2026-10-06 04:53:31 | WARNING | [paper_market] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 16s
+2026-10-06 04:53:33 | WARNING | [paper_book] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 16s
+2026-10-06 04:54:02 | WARNING | [paper_market] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 32s
+2026-10-06 04:54:04 | WARNING | [paper_book] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 32s
+2026-10-06 04:54:49 | WARNING | [paper_market] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:54:51 | WARNING | [paper_book] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:56:04 | WARNING | [paper_market] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:56:06 | WARNING | [paper_book] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:57:19 | WARNING | [paper_market] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:57:21 | WARNING | [paper_book] disconnected (TimeoutError: timed out during opening handshake), reconnecting in 60s
+2026-10-06 04:58:19 | INFO    | [paper_market] connected
+2026-10-06 04:58:22 | INFO    | [paper_book] connected
+2026-10-06 05:31:30 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
+--- restart 23 coins Tue Oct  6 06:29:51 IST 2026
+2026-10-06 06:29:54 | INFO    | schema ready
+2026-10-06 06:29:54 | INFO    | restored: cash 30000.00, positions {}, halted False
+2026-10-06 06:29:54 | INFO    | training ridge on data up to 2026-10-01 00:00:00+00:00
+2026-10-06 06:33:28 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
+2026-10-06 06:33:28 | INFO    | [paper_market] connected
+2026-10-06 06:33:28 | INFO    | [paper_book] connected
+--- restart eligibility fix Tue Oct  6 06:51:54 IST 2026
+2026-10-06 06:51:57 | INFO    | schema ready
+2026-10-06 06:51:57 | INFO    | restored: cash 30000.00, positions {}, halted False
+2026-10-06 06:51:58 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
+2026-10-06 06:51:59 | INFO    | [paper_market] connected
+2026-10-06 06:51:59 | INFO    | [paper_book] connected
+2026-10-06 07:31:30 | INFO    | model trained up to 2026-10-01 00:00:00+00:00

@@ -2,6 +2,8 @@
 
     DEV      2020-01-01 -> 2024-07-01   all research, purged walk-forward
     VALID-A  2024-07-01 -> 2025-10-01   never seen by the new system: <= 3 finalists, each run once
+    UNSEEN-9 the 9 perps never used by any model (ATOM, DOGE, DOT, NEAR, OP, ARB, WLD, CAKE, POL): one look
+             per overnight candidate (2026-10-06)
     VALID-B  2025-10-01 -> paper start  run once at the very end (mildly contaminated: the old 4-token system's
                                         aggregate results there were looked at); the only history HYPE has
     PAPER    mainnet paper trading      the truly unseen test
@@ -60,7 +62,7 @@ def _ledger(path: Path) -> list[dict]:
 
 def open_lockbox(candidate: str, split: str, ledger: Path = LEDGER) -> None:
     """Record a look at held-out data, or refuse it. Call before evaluating `candidate` on VALID-A / VALID-B."""
-    if split not in ("VALID-A", "VALID-B"):
+    if split not in ("VALID-A", "VALID-B", "UNSEEN-9"):
         raise ValueError(f"lockbox only guards held-out splits, got {split!r}")
     rows = _ledger(ledger)
     if any(r["candidate"] == candidate and r["split"] == split for r in rows):

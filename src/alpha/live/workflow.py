@@ -53,6 +53,18 @@ def by_level(x: float | None, warn: float, fail: float) -> str:
     return OK if x < warn else WARN if x < fail else FAIL
 
 
+def disconnect_status(last_15m: int, last_hour: int, data_fresh: bool, last_age_s: float | None) -> tuple[str, str]:
+    """Red only while it is still happening (many drops in 15 min and data not flowing); a finished outage is amber
+    with the time since it ended, and clears after an hour."""
+    if last_15m >= 3 and not data_fresh:
+        return FAIL, f"{last_15m} in 15 min, data stopped"
+    if last_hour and data_fresh:
+        return WARN, f"{last_hour} in 1h · recovered, last {fmt_age(last_age_s)}"
+    if last_hour:
+        return WARN, f"{last_hour} in 1h"
+    return OK, "0"
+
+
 def fmt_age(age_s: float | None) -> str:
     if age_s is None:
         return "never"
@@ -91,15 +103,19 @@ def stages(conn: psycopg.Connection, symbols: list[str]) -> list[Stage]:
                           WHERE minute > now() - interval '10 minutes' GROUP BY 1""").fetchall()
     lat = {r[0]: (float(r[1]), float(r[2])) for r in lat}
     tick_age = _age(conn, "SELECT max(ts) FROM book_tick")
-    disc = _one(conn, """SELECT count(*) FROM fetch_log WHERE kind = 'ws' AND status = 'disconnected'
-                         AND fetched_at > now() - interval '1 hour'""")[0]
+    disc = _one(conn, """SELECT count(*), count(*) FILTER (WHERE fetched_at > now() - interval '15 minutes'),
+                                extract(epoch FROM now() - max(fetched_at))
+                         FROM fetch_log WHERE kind = 'ws' AND status = 'disconnected'
+                         AND fetched_at > now() - interval '1 hour'""")
     st = Stage("binance", "1 · Binance mainnet", "Live websockets: order book (/public), trades + mark price (/market)")
     st.checks.append(Check("Order book stream", by_age(tick_age, 15, 60), fmt_age(tick_age), "1s top-of-book sample"))
     for k, label in (("depth20", "Book latency p95"), ("aggtrade", "Trade latency p95"), ("markprice", "Mark latency p95")):
         v = lat.get(k)
         st.checks.append(Check(label, by_level(v[0], 500, 2000) if v else FAIL,
                                f"{v[0]:.0f} ms" if v else "no data", "exchange event → received"))
-    st.checks.append(Check("Disconnects (1h)", OK if disc == 0 else WARN if disc < 5 else FAIL, str(disc)))
+    d_status, d_text = disconnect_status(int(disc[1] or 0), int(disc[0] or 0), by_age(tick_age, 15, 60) == OK,
+                                         float(disc[2]) if disc[2] is not None else None)
+    st.checks.append(Check("Disconnects", d_status, d_text, "red only while an outage is ongoing"))
     out.append(st)
 
     # 2. Collector -> database

@@ -23,3 +23,10 @@ def test_volume_spike_on_day_d_does_not_make_day_d_eligible():
     assert not e.iloc[150] and not e.iloc[151]   # median of the 3 previous completed days still low
     assert e.iloc[152]                            # 2 of 3 previous days high -> median high
     assert eligibility(_daily([])).empty
+
+
+def test_today_is_known_before_its_daily_candle_closes():
+    vols = np.full(120, 30e6)                       # completed days up to yesterday
+    e = eligibility(_daily(vols), min_age_days=90, window=30, min_median_vol=20e6)
+    today = _daily(vols).index[-1] + pd.Timedelta(days=1)
+    assert today in e.index and bool(e.loc[today])  # live code needs today's value

@@ -24,6 +24,9 @@ def eligibility(daily: pd.DataFrame, min_age_days: int = MIN_AGE_DAYS, window: i
     """daily: 1d candles indexed by open time (UTC midnight) with quote_volume. Returns bool per day."""
     if daily.empty:
         return pd.Series(dtype=bool)
+    # Day D's eligibility only needs days before D, so it is known when D starts. Add the next day (whose own
+    # daily candle has not closed yet) so live code has a value for today, not just for completed days.
+    daily = daily.reindex(daily.index.append(pd.DatetimeIndex([daily.index[-1] + pd.Timedelta(days=1)])))
     days = daily.index
     age = (days - days[0]).days
     med = daily["quote_volume"].rolling(window, min_periods=window).median().shift(1)  # completed days only

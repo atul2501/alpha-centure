@@ -19,3 +19,11 @@ def test_stage_takes_worst_live_check_and_ignores_idle():
     s.checks.append(Check("d", FAIL, ""))
     assert s.status == FAIL
     assert Stage("y", "Y", "", [Check("a", IDLE, "")]).status == IDLE
+
+
+def test_finished_outage_is_amber_not_red():
+    from alpha.live.workflow import disconnect_status
+    assert disconnect_status(0, 0, True, None)[0] == OK
+    assert disconnect_status(6, 30, False, 20)[0] == FAIL                 # still happening, no data
+    st, text = disconnect_status(0, 36, True, 300)                        # tonight's case after recovery
+    assert st == WARN and "recovered" in text
