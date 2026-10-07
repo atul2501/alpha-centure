@@ -8,8 +8,9 @@ Type=oneshot
 User=alpha
 WorkingDirectory=/opt/alpha
 EnvironmentFile=/etc/alpha/.env
-# small datasets first, then the large ones (1m candles, aggTrades -> 1m flow)
+# History P6 needs (5m-1d candles, premium, OI metrics, book depth). Full 1m candles / aggTrades are not downloaded:
+# 1m candles are kept for BACKFILL_1M_DAYS only (freshness checks); for 1m research run
+#   python -m alpha.binance.vision --datasets klines,aggTrades --intervals 1m   by hand.
 ExecStart=/home/alpha/.local/bin/uv run --no-dev python -m alpha.binance.vision --datasets klines,premium,metrics,bookDepth --intervals 5m,15m,1h,4h,1d
-ExecStart=/home/alpha/.local/bin/uv run --no-dev python -m alpha.binance.vision --datasets klines,aggTrades --intervals 1m --workers 3
 Nice=10
 TimeoutStartSec=infinity

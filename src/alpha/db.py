@@ -130,5 +130,12 @@ class DB:
             return await self.pool.fetchval(sql, symbol, before)
         return await self.pool.fetchval(sql + " AND interval = $3", symbol, before, interval)
 
+    async def prune_candles_1m(self, symbols: list[str], days: int) -> None:
+        """1m candles are only used for freshness / audit checks: keep the same window the backfill fetches.
+        Per symbol so the (symbol, interval, open_time) primary key is used instead of a full-table scan."""
+        for s in symbols:
+            await self.pool.execute("DELETE FROM candles WHERE symbol = $1 AND interval = '1m' "
+                                    "AND open_time < now() - make_interval(days => $2)", s, days)
+
     async def prune_fetch_log(self, days: int = 30) -> None:
         await self.pool.execute("DELETE FROM fetch_log WHERE fetched_at < now() - make_interval(days => $1)", days)

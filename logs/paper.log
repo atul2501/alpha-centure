@@ -26,3 +26,15 @@
 2026-10-06 18:31:29 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
 2026-10-06 19:31:29 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
 2026-10-06 20:31:30 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
+--- start Wed Oct  7 21:18:51 IST 2026 (fresh paper account)
+2026-10-07 21:18:57 | INFO    | schema ready
+2026-10-07 21:18:57 | INFO    | restored: cash 30000.00, positions {}, halted False
+2026-10-07 21:18:57 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
+2026-10-07 21:18:58 | INFO    | [paper_book] connected
+2026-10-07 21:18:58 | INFO    | [paper_market] connected
+--- start Wed Oct  7 21:21:36 IST 2026 (latency outlier fix)
+2026-10-07 21:21:38 | INFO    | schema ready
+2026-10-07 21:21:38 | INFO    | restored: cash 30000.00, positions {}, halted False
+2026-10-07 21:21:40 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
+2026-10-07 21:21:40 | INFO    | [paper_market] connected
+2026-10-07 21:21:41 | INFO    | [paper_book] connected

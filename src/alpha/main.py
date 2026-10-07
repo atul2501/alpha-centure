@@ -27,6 +27,8 @@ async def maintenance(db: DB, rest: BinanceREST, settings) -> None:
             await repair_gaps(db, rest, settings, lookback=lookback)
             lookback = timedelta(days=2)
             await db.prune_fetch_log(days=30)
+            await db.prune_candles_1m([f.db_symbol for f in settings.candle_feeds() if f.interval == "1m"],
+                                      settings.backfill_1m_days)
         except Exception:
             logger.exception("maintenance failed")
 

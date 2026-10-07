@@ -36,7 +36,7 @@ class Settings(BaseSettings):
     intervals_csv: str = Field("1m,5m,15m,1h,4h,1d,1w", validation_alias=AliasChoices("INTERVALS", "intervals_csv"))
     # USD-M perpetual candles (what long/short trades execute on). Stored as e.g. BTCUSDT.P
     perp_intervals_csv: str = Field("1m,5m,15m,1h,4h,1d", validation_alias=AliasChoices("PERP_INTERVALS", "perp_intervals_csv"))
-    backfill_1m_days: int = 365
+    backfill_1m_days: int = 30  # 1m candles kept (and backfilled) for this many days
     backfill_start: str = "2017-08-01"
     futures_enabled: bool = True
     orderflow_enabled: bool = True

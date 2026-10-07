@@ -341,7 +341,8 @@ class PaperEngine:
 
     async def measure_latency(self) -> None:
         p95 = await self.db.pool.fetchval("SELECT percentile_cont(0.95) WITHIN GROUP (ORDER BY p95_ms) FROM ws_latency "
-                                          "WHERE stream = 'depth20' AND minute > now() - interval '1 hour'")
+                                          "WHERE stream = 'depth20' AND minute > now() - interval '1 hour' "
+                                          "AND p95_ms < 5000")  # >5 s = sleep / outage backlog, not latency
         if p95:
             self.latency_ms = float(p95) + ORDER_ACK_MS
 

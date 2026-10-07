@@ -72,7 +72,7 @@ journalctl -u alpha-paper-gate -f     # wait for "starting alpha-paper"
 Then stop the paper engine on your own machine.
 
 1. **Launch** Ubuntu 24.04 in **Tokyo (ap-northeast-1)** or **Mumbai (ap-south-1)**. Binance blocks US regions
-   (HTTP 451). Instance `t4g.medium`, **200 GB** gp3 disk. Security group: SSH (22) from your IP only; Postgres and the
+   (HTTP 451). Instance `t4g.medium`, **100 GB** gp3 disk (database ~13 GB at start; 1s top-of-book adds ~150 MB/day; 1m candles are kept for 30 days only). Security group: SSH (22) from your IP only; Postgres and the
    dashboard stay on localhost.
 2. **Copy the repo** to the server (`git clone`, or copy the folder). The P6 model `models/p6_ridge_*.joblib` is in
    git, so it comes along; the rest of `models/` stays ignored.
