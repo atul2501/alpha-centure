@@ -61,6 +61,16 @@ on `/market`; the collector opens one connection to each.
 
 The server builds its own database from Binance; only the code and the P6 model file are copied.
 
+Quick start on the new server (details below):
+
+```bash
+git clone -b main_v1 https://github.com/atul2501/alpha-centure.git
+cd alpha-centure
+bash deploy/setup_ec2.sh
+journalctl -u alpha-paper-gate -f     # wait for "starting alpha-paper"
+```
+Then stop the paper engine on your own machine.
+
 1. **Launch** Ubuntu 24.04 in **Tokyo (ap-northeast-1)** or **Mumbai (ap-south-1)**. Binance blocks US regions
    (HTTP 451). Instance `t4g.medium`, **200 GB** gp3 disk. Security group: SSH (22) from your IP only; Postgres and the
    dashboard stay on localhost.
