@@ -17,8 +17,6 @@ dependencies = [
     "lightgbm>=4.7.0",
     "scikit-learn>=1.9.1",
     "pyarrow>=25.0.1",
-    "xgboost>=3.4.1",
-    "catboost>=1.2.10",
 ]
 
 [dependency-groups]
