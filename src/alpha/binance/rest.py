@@ -29,7 +29,7 @@ class BinanceREST:
                 logger.warning("GET {} failed ({}), retry in {}s", url, e, wait)
                 await asyncio.sleep(wait)
                 continue
-            if r.status_code in (418, 429):
+            if r.status_code in (403, 418, 429):  # 403 = Binance WAF limit (e.g. fundingRate's 500 req / 5 min per IP)
                 wait = int(r.headers.get("Retry-After", 60))
                 logger.warning("rate limited ({}) on {}, sleeping {}s", r.status_code, url, wait)
                 await asyncio.sleep(wait)
