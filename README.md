@@ -150,8 +150,6 @@ Every candidate is stored in `signals` with its reason, and later scored (PASS r
 | `uv run python -m alpha.trainer --drift` | Daily health check: marks the model degraded (all PASS) on bad live results / feature drift |
 | `uv run python -m alpha.predict` | Live predictor + scorer (needs a champion model). `--replay-hours 24` to evaluate recent bars offline |
 
-Dashboard: the **Signals** page (sidebar) shows the champion model, last decisions with reasons, current regime, live results per strategy, and the "would-have" result of passed setups.
-
 Notes:
 - Trading is on USD-M perpetuals (`BTCUSDT.P` …); spot candles and futures data are used as context.
 - Costs in all labels/backtests: 0.05% taker + 0.01% slippage per side, plus funding at 00/08/16 UTC.
