@@ -4,4 +4,5 @@ __pycache__/
 .env
 .pytest_cache/
 data/
-/models/
+/models/*
+!/models/p6_ridge_*.joblib

@@ -57,16 +57,51 @@ uv run python -m alpha.binance.vision --report
 Binance serves futures depth streams only on `wss://fstream.binance.com/public` and trades / mark price / klines only
 on `/market`; the collector opens one connection to each.
 
-## Deploy on EC2
+## Deploy on EC2 (paper trading)
 
-1. Launch Ubuntu 24.04 in **ap-northeast-1 (Tokyo)** or **ap-south-1 (Mumbai)**. Binance blocks US regions with HTTP 451. `t4g.medium` with a **200 GB** gp3 disk (14 perps of 1m candles + 1m flow since 2020 ≈ 95M rows, ~15–20 GB before
-TimescaleDB compression, plus 1s top-of-book going forward). An existing `/etc/alpha/.env` is not overwritten: update
-`SYMBOLS`, `SPOT_ENABLED=false` and `PERP_INTERVALS=1m,5m,15m,1h,4h,1d` by hand.
-2. Security group: only SSH (22) from your IP. Postgres and the dashboard stay on localhost.
-3. Copy the repo to the instance and run `bash deploy/setup_ec2.sh`. It installs Postgres 16 + TimescaleDB, creates the DB and user, writes `/etc/alpha/.env`, and enables the systemd services.
-4. Open the dashboard through a tunnel: `ssh -L 8501:localhost:8501 ubuntu@<ip>` → http://localhost:8501
-5. Logs: `journalctl -u alpha-collector -f`
-6. Backups: set `S3_BACKUP_URI` in `/etc/alpha/.env` and give the instance an IAM role with `s3:PutObject`. `alpha-backup.timer` runs daily at 02:30 UTC.
+The server builds its own database from Binance; only the code and the P6 model file are copied.
+
+1. **Launch** Ubuntu 24.04 in **Tokyo (ap-northeast-1)** or **Mumbai (ap-south-1)**. Binance blocks US regions
+   (HTTP 451). Instance `t4g.medium`, **200 GB** gp3 disk. Security group: SSH (22) from your IP only; Postgres and the
+   dashboard stay on localhost.
+2. **Copy the repo** to the server (`git clone`, or copy the folder). The P6 model `models/p6_ridge_*.joblib` is in
+   git, so it comes along; the rest of `models/` stays ignored.
+3. **Run the setup** on the server, from the repo folder:
+   ```bash
+   bash deploy/setup_ec2.sh
+   ```
+   It installs Postgres 16 + TimescaleDB, creates the database, writes `/etc/alpha/.env`, copies the model (it stops
+   with an error if the model file is missing) and starts the collector, dashboard, backups and history download.
+4. **Wait for paper trading to start by itself.** `alpha-paper-gate` checks every 5 minutes that all 23 coins have
+   200 days of 1h candles, funding, premium and open-interest history, then starts `alpha-paper` (a few hours):
+   ```bash
+   journalctl -u alpha-paper-gate -f     # prints the coins it is waiting for, then "starting alpha-paper"
+   ```
+5. **Stop the paper engine on your own machine** once AWS is trading, so only one paper account runs.
+
+Day to day:
+```bash
+systemctl status alpha-collector alpha-paper     # running?
+journalctl -u alpha-paper -f                     # live log
+sudo systemctl restart alpha-paper               # after a code change
+ssh -L 8501:localhost:8501 ubuntu@<ip>           # dashboard at http://localhost:8501
+```
+Backups: set `S3_BACKUP_URI` in `/etc/alpha/.env` and give the instance an IAM role with `s3:PutObject`
+(`alpha-backup.timer`, daily 02:30 UTC). An existing `/etc/alpha/.env` is never overwritten.
+
+### When it stops on its own
+
+systemd restarts any crashed service within ~10 s and starts everything again after a reboot, so no extra
+supervisor is needed. The engine itself stops or holds trading in these cases:
+
+| Situation | What happens | What you do |
+|---|---|---|
+| Equity falls 30% from its peak (kill switch) | All positions closed, trading halted; stays halted across restarts | Review, then reset the `risk` row in `paper_state` by hand |
+| Loss of 3% in one UTC day | Reduce-only for the rest of the day (no new exposure) | Nothing: resets next day |
+| Order-book data stale (>10 s) for more than half the coins | That rebalance is skipped (logged as NO_TRADE) | Check `journalctl -u alpha-collector` / network |
+| Instance stopped, disk full, or Binance unreachable | Collector and engine stop updating | Check `df -h`, AWS console, region |
+
+Paper mode only: there is no real-order path in the code (`tests/test_no_real_orders.py`).
 
 ## Layout
 

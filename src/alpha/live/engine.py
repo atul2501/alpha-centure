@@ -5,7 +5,7 @@ Same strategy, risk and order logic that live trading would use; only order subm
               fills, marks and funding. Candles / funding / OI / premium come from the collector's tables.
     decide    hourly at HH:01:30 (after the collector has the closed bar and the 5m stats); trades only on the
               strategy's rebalance bars (every 72h, UTC-aligned) -> alpha.strategy.p6
-    risk      caps (3x gross, 0.5x per coin), -10% drawdown kill switch (flatten + halt), -3%/day reduce-only
+    risk      caps (3x gross, 0.5x per coin), -30% drawdown kill switch (flatten + halt), -3%/day reduce-only
     execute   per coin: post at our side's best price for MAKER_TIMEOUT_S, remainder goes taker after the measured
               latency, walking the real book (alpha.exec.fillsim)
     ledger    paper_decisions / orders / fills / funding / equity (sql/006_paper.sql); the account is rebuilt from

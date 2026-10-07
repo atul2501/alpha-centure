@@ -40,8 +40,19 @@ sudo -u postgres psql -d "$DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS timescale
 echo "==> app user, code, python env"
 id alpha &>/dev/null || sudo useradd --system --create-home --shell /usr/sbin/nologin alpha
 sudo mkdir -p "$APP_DIR"
+# The P6 model trained locally must come along: without it the paper engine would train a new one at start-up on a
+# database that is still nearly empty. models/p6_ridge_*.joblib is tracked in git, so a clone includes it.
+MODEL=$(ls models/p6_ridge_*.joblib 2>/dev/null | sort | tail -n 1 || true)
+if [ -z "$MODEL" ]; then
+  echo "ERROR: models/p6_ridge_*.joblib not found (pull the latest main, or copy it from your machine):" >&2
+  echo "  scp models/p6_ridge_20261001.joblib ubuntu@<ec2-ip>:<repo>/models/" >&2
+  exit 1
+fi
 sudo rsync -a --delete --exclude .venv --exclude .git --exclude .env --exclude models --exclude data ./ "$APP_DIR"/
+sudo mkdir -p "$APP_DIR/models"
+sudo cp "$MODEL" "$APP_DIR/models/"
 sudo chown -R alpha:alpha "$APP_DIR"
+echo "    model: $(basename "$MODEL")"
 sudo -u alpha bash -c 'curl -LsSf https://astral.sh/uv/install.sh | sh'
 sudo -u alpha bash -c "cd $APP_DIR && ~/.local/bin/uv sync --no-dev"
 
@@ -75,14 +86,17 @@ sudo systemctl enable --now alpha-collector.service alpha-dashboard.service alph
 # Full history from data.binance.vision (1m candles + aggTrades -> 1m flow, ~15-20 GB before compression).
 # One-shot and resumable: re-run with `sudo systemctl start alpha-vision` if it is interrupted.
 sudo systemctl start --no-block alpha-vision.service
-# Mainnet PAPER trading of P6 (simulated fills; there is no real order path in the code)
-sudo systemctl enable --now alpha-paper.service
+# Mainnet PAPER trading of P6 (simulated fills; there is no real order path in the code). It is NOT started here:
+# alpha-paper-gate starts it once every coin has 200 days of 1h candles, funding, premium and OI history
+# (a few hours on a fresh server). Follow it with: journalctl -u alpha-paper-gate -f
+sudo systemctl enable --now --no-block alpha-paper-gate.service
 # The old 4-token setup predictor/trainer (roll730_risk) is retired: it is not validated on the 14-perp universe.
 # Do not enable alpha-predictor / alpha-trainer / alpha-drift until a new system passes DEV -> VALID.
 sudo -u alpha mkdir -p "$APP_DIR/models"
 
 echo
 echo "Done. Check: systemctl status alpha-collector; journalctl -u alpha-collector -f"
+echo "Paper trading starts by itself when the history is ready: journalctl -u alpha-paper-gate -f"
 echo "Dashboard: ssh -L 8501:localhost:8501 ubuntu@<ec2-ip> then open http://localhost:8501"
 echo "History backfill: journalctl -u alpha-vision -f; coverage report:"
 echo "  sudo -u alpha bash -c 'cd $APP_DIR && set -a && . /etc/alpha/.env && ~/.local/bin/uv run python -m alpha.binance.vision --report'"

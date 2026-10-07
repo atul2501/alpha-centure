@@ -1,0 +1,12 @@
+[Unit]
+Description=Start the P6 paper engine once 200 days of history are in the database (fresh-server guard)
+After=network-online.target postgresql.service alpha-collector.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/alpha/.env
+ExecStart=/bin/bash /opt/alpha/deploy/paper_gate.sh
+TimeoutStartSec=infinity
+
+[Install]
+WantedBy=multi-user.target
