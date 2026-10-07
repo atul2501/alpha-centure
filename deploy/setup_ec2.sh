@@ -11,7 +11,8 @@ DB_PASS=${DB_PASS:-$(openssl rand -hex 16)}
 
 echo "==> PostgreSQL 16 + TimescaleDB"
 sudo apt-get update
-sudo apt-get install -y gnupg curl lsb-release ca-certificates awscli chrony
+# libgomp1: OpenMP runtime that lightgbm/xgboost load at import (missing on minimal Ubuntu images)
+sudo apt-get install -y gnupg curl lsb-release ca-certificates awscli chrony libgomp1
 # websocket latency (ws_latency) = receive time - exchange time: the clock must be NTP-synced
 sudo systemctl enable --now chrony
 sudo install -d /usr/share/postgresql-common/pgdg
