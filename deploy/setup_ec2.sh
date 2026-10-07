@@ -75,7 +75,6 @@ ORDERFLOW_ENABLED=true
 BOOK_TICK_SECONDS=1
 OI_POLL_SECONDS=60
 MODELS_DIR=/opt/alpha/models
-PRODUCTION_CONFIG=roll730_risk
 # S3_BACKUP_URI=s3://your-bucket/alpha-backups
 ENV
   sudo chmod 640 /etc/alpha/.env
@@ -93,8 +92,6 @@ sudo systemctl start --no-block alpha-vision.service
 # alpha-paper-gate starts it once every coin has 200 days of 1h candles, funding, premium and OI history
 # (a few hours on a fresh server). Follow it with: journalctl -u alpha-paper-gate -f
 sudo systemctl enable --now --no-block alpha-paper-gate.service
-# The old 4-token setup predictor/trainer (roll730_risk) is retired: it is not validated on the 14-perp universe.
-# Do not enable alpha-predictor / alpha-trainer / alpha-drift until a new system passes DEV -> VALID.
 sudo -u alpha mkdir -p "$APP_DIR/models"
 
 echo

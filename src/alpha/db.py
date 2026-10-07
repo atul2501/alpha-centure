@@ -31,9 +31,6 @@ TABLES: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
     "premium_kline": (("symbol", "interval", "open_time", "close_time", "open", "high", "low", "close"),
                       ("symbol", "interval", "open_time")),
     "vision_files": (("path", "dataset", "symbol", "period", "rows"), ("path",)),
-    "signals": (("symbol", "tf", "bar_time", "strategy", "side", "model_version", "action", "reason", "regime",
-                 "regime_probs", "p_win", "ev_r", "close_px", "stop", "target", "max_bars", "features", "exit_policy"),
-                ("symbol", "tf", "bar_time", "strategy", "side", "model_version")),
 }
 
 

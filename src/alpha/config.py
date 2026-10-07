@@ -49,9 +49,6 @@ class Settings(BaseSettings):
     # Strategy monitor (pause at 20% shadow drawdown, auto-resume). Off: neutral on DEV (never triggered) and it cost
     # -$3,500 on $30k over Oct 2025 -> Oct 2026 (paused near lows, resumed after rebounds). See alpha.strategy.monitor.
     monitor_enabled: bool = False
-    # experiment config used by alpha.trainer (see alpha.research.experiment): breakeven exits, calibrated per-setup EV,
-    # cost gate, 3-window threshold selection, 2-year rolling training, EV sizing + exposure cap + daily loss stop
-    production_config: str = "roll730_risk"
 
     spot_rest: str = "https://api.binance.com"
     futures_rest: str = "https://fapi.binance.com"

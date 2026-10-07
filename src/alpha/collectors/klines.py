@@ -6,13 +6,11 @@ from datetime import datetime, timezone
 from loguru import logger
 
 from alpha.backfill import backfill_all_candles
-from alpha.binance.parse import dt_to_ms, ws_kline_to_row
+from alpha.binance.parse import ws_kline_to_row
 from alpha.binance.rest import BinanceREST
 from alpha.binance.ws import combined_url, run_stream
 from alpha.config import Settings
 from alpha.db import DB
-
-CANDLE_CLOSED_CHANNEL = "candle_closed"
 
 
 async def run_klines(db: DB, rest: BinanceREST, settings: Settings, market: str = "spot") -> None:
@@ -43,9 +41,6 @@ async def run_klines(db: DB, rest: BinanceREST, settings: Settings, market: str 
         row = ws_kline_to_row(k, db_symbol[k["s"]])
         await db.upsert("candles", [row])
         await db.log_fetch("candle", "ws", symbol=row[0], interval=row[1], ref_time=row[3], rows=1)
-        # Wake the predictor (alpha.predict LISTENs on this channel).
-        await db.pool.execute("SELECT pg_notify($1, $2)", CANDLE_CLOSED_CHANNEL,
-                              f"{row[0]}|{row[1]}|{dt_to_ms(row[2])}")
         logger.debug("closed {} {} {} c={}", row[0], row[1], row[2], row[7])
 
     await run_stream(name, combined_url(base, streams), on_message, on_connect, on_disconnect)
