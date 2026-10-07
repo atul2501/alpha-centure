@@ -1,0 +1,45 @@
+# Stage 6: hybrids of sequence models + trees, ensembles, stacking, meta-labeling.
+# Members and meta-label bases are PRE-DECLARED by family (the brief's examples), never picked by OOS rank.
+stage: stage_6
+dataset: real
+defaults: {targets: [reg_4, reg_16], seed: 0}
+entries:
+  - {entry: voting_families, model: voting, params: [{members: [stage_3.hmm, stage_3.lightgbm, stage_3.xgboost, stage_3.catboost, stage_4.mamba, stage_4.patchtst]}]}
+  - {entry: voting_simple, model: voting, params: [{members: [stage_2.ridge, stage_3.lightgbm, stage_2.momentum]}]}
+  - {entry: prob_average_families, model: prob_average, params: [{members: [stage_3.hmm, stage_3.lightgbm, stage_3.xgboost, stage_3.catboost, stage_4.mamba, stage_4.patchtst]}]}
+  - {entry: prob_average_simple, model: prob_average, params: [{members: [stage_2.ridge, stage_3.lightgbm, stage_2.momentum]}]}
+  - {entry: stacking_families, model: stacking, params: [{members: [stage_3.hmm, stage_3.lightgbm, stage_3.xgboost, stage_3.catboost, stage_4.mamba, stage_4.patchtst]}]}
+  - {entry: stacking_simple, model: stacking, params: [{members: [stage_2.ridge, stage_3.lightgbm, stage_2.momentum]}]}
+  - {entry: meta_momentum_logistic, model: meta, params: [{base: stage_2.momentum, meta_model: logistic}]}
+  - {entry: meta_momentum_lightgbm, model: meta, params: [{base: stage_2.momentum, meta_model: lightgbm}]}
+  - {entry: meta_momentum_xgboost, model: meta, params: [{base: stage_2.momentum, meta_model: xgboost}]}
+  - {entry: meta_momentum_catboost, model: meta, params: [{base: stage_2.momentum, meta_model: catboost}]}
+  - {entry: meta_momentum_random_forest, model: meta, params: [{base: stage_2.momentum, meta_model: random_forest}]}
+  - {entry: meta_momentum_mlp, model: meta, params: [{base: stage_2.momentum, meta_model: mlp}]}
+  - {entry: meta_breakout_logistic, model: meta, params: [{base: stage_2.breakout, meta_model: logistic}]}
+  - {entry: meta_breakout_lightgbm, model: meta, params: [{base: stage_2.breakout, meta_model: lightgbm}]}
+  - {entry: meta_breakout_xgboost, model: meta, params: [{base: stage_2.breakout, meta_model: xgboost}]}
+  - {entry: meta_breakout_catboost, model: meta, params: [{base: stage_2.breakout, meta_model: catboost}]}
+  - {entry: meta_breakout_random_forest, model: meta, params: [{base: stage_2.breakout, meta_model: random_forest}]}
+  - {entry: meta_breakout_mlp, model: meta, params: [{base: stage_2.breakout, meta_model: mlp}]}
+  - {entry: meta_lightgbm_logistic, model: meta, params: [{base: stage_3.lightgbm, meta_model: logistic}]}
+  - {entry: meta_lightgbm_lightgbm, model: meta, params: [{base: stage_3.lightgbm, meta_model: lightgbm}]}
+  - {entry: meta_lightgbm_xgboost, model: meta, params: [{base: stage_3.lightgbm, meta_model: xgboost}]}
+  - {entry: meta_lightgbm_catboost, model: meta, params: [{base: stage_3.lightgbm, meta_model: catboost}]}
+  - {entry: meta_lightgbm_random_forest, model: meta, params: [{base: stage_3.lightgbm, meta_model: random_forest}]}
+  - {entry: meta_lightgbm_mlp, model: meta, params: [{base: stage_3.lightgbm, meta_model: mlp}]}
+  - {entry: meta_hsmm_lightgbm_logistic, model: meta, params: [{base: stage_3.hsmm_lightgbm, meta_model: logistic}]}
+  - {entry: meta_hsmm_lightgbm_lightgbm, model: meta, params: [{base: stage_3.hsmm_lightgbm, meta_model: lightgbm}]}
+  - {entry: meta_hsmm_lightgbm_xgboost, model: meta, params: [{base: stage_3.hsmm_lightgbm, meta_model: xgboost}]}
+  - {entry: meta_hsmm_lightgbm_catboost, model: meta, params: [{base: stage_3.hsmm_lightgbm, meta_model: catboost}]}
+  - {entry: meta_hsmm_lightgbm_random_forest, model: meta, params: [{base: stage_3.hsmm_lightgbm, meta_model: random_forest}]}
+  - {entry: meta_hsmm_lightgbm_mlp, model: meta, params: [{base: stage_3.hsmm_lightgbm, meta_model: mlp}]}
+  # sequence-model -> tree hybrids (deep families): full sweep only if G1 opens
+  - {entry: mamba_lightgbm, model: hybrid, requires_g1: true, params: [{regime: mamba, predictor: lightgbm, feature_set: core, regime_params: {seq_len: 64, max_steps: 1000}}]}
+  - {entry: mamba_xgboost, model: hybrid, requires_g1: true, params: [{regime: mamba, predictor: xgboost, feature_set: core, regime_params: {seq_len: 64, max_steps: 1000}}]}
+  - {entry: mamba_catboost, model: hybrid, requires_g1: true, params: [{regime: mamba, predictor: catboost, feature_set: core, regime_params: {seq_len: 64, max_steps: 1000}}]}
+  - {entry: transformer_lightgbm, model: hybrid, requires_g1: true, params: [{regime: transformer, predictor: lightgbm, feature_set: core, regime_params: {seq_len: 64, max_steps: 1000}}]}
+  - {entry: transformer_xgboost, model: hybrid, requires_g1: true, params: [{regime: transformer, predictor: xgboost, feature_set: core, regime_params: {seq_len: 64, max_steps: 1000}}]}
+  - {entry: tcn_lightgbm, model: hybrid, requires_g1: true, params: [{regime: tcn, predictor: lightgbm, feature_set: core, regime_params: {seq_len: 64, max_steps: 1000}}]}
+  - {entry: lstm_lightgbm, model: hybrid, requires_g1: true, params: [{regime: lstm, predictor: lightgbm, feature_set: core, regime_params: {seq_len: 64, max_steps: 1000}}]}
+  - {entry: gru_lightgbm, model: hybrid, requires_g1: true, params: [{regime: gru, predictor: lightgbm, feature_set: core, regime_params: {seq_len: 64, max_steps: 1000}}]}

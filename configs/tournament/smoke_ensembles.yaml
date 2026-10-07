@@ -1,0 +1,9 @@
+# Smoke test of the members-based entries on stage-2 output (stage 'smoke_*' is excluded from analysis).
+stage: smoke_ens
+dataset: real
+defaults: {targets: [reg_4]}
+entries:
+  - {entry: vote, model: voting, params: [{members: [stage_2.lasso, stage_2.elasticnet, stage_2.logistic], quorum: 0.5}]}
+  - {entry: avg, model: prob_average, params: [{members: [stage_2.lasso, stage_2.elasticnet, stage_2.logistic]}]}
+  - {entry: stack, model: stacking, params: [{members: [stage_2.lasso, stage_2.elasticnet, stage_2.logistic]}]}
+  - {entry: meta_lgb, model: meta, params: [{base: stage_2.logistic, meta_model: lightgbm}]}

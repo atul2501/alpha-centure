@@ -1,0 +1,30 @@
+# Stage 2: naive baselines, fixed rules, linear models. Every entry: same data, folds, costs, policy.
+# targets: reg_<h> = vol-normalized forward return over h bars; cls_<h>_<k> = LONG/SHORT/FLAT at k x round-trip cost.
+# A grid's configs are chosen per fold on validation only; the grid size is recorded as n_configs.
+stage: stage_2
+dataset: real
+defaults:
+  feature_set: core
+  targets: [reg_1, reg_2, reg_4, reg_8, reg_16]
+  seed: 0
+entries:
+  - {entry: flat, model: flat, targets: [reg_4]}
+  - {entry: buy_hold, model: buy_hold, targets: [reg_16]}
+  - {entry: random, model: random}
+  - {entry: momentum, model: momentum, params: [{lookback: 16}, {lookback: 96}, {lookback: 384}]}
+  - {entry: reversal, model: reversal, params: [{lookback: 1}, {lookback: 4}, {lookback: 16}]}
+  - {entry: breakout, model: breakout, params: [{lookback: 96}, {lookback: 384}]}
+  - {entry: flow_follow, model: flow_follow, params: [{window: 15}, {window: 60}, {window: 240}]}
+  - {entry: linear_regression, model: linear_regression}
+  - {entry: ridge, model: ridge, params: [{alpha: 10}, {alpha: 1000}, {alpha: 30000}]}
+  - {entry: lasso, model: lasso, params: [{alpha: 0.001}, {alpha: 0.01}]}
+  - {entry: elasticnet, model: elasticnet, params: [{alpha: 0.003, l1_ratio: 0.5}]}
+  - entry: logistic
+    model: logistic
+    targets: [cls_1_0, cls_4_0, cls_16_0, cls_4_1, cls_16_1, cls_8_2, cls_16_2, cls_16_3]
+    params: [{C: 0.001}, {C: 0.1}]
+  - entry: linear_svm
+    model: linear_svm
+    targets: [cls_4_0, cls_16_0, cls_16_1, cls_16_2]
+    params: [{C: 0.0001}]
+  - {entry: svr, model: svr, targets: [reg_4, reg_16], params: [{C: 0.1, epsilon: 0.5}]}

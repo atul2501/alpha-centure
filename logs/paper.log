@@ -26,3 +26,105 @@
 2026-10-06 18:31:29 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
 2026-10-06 19:31:29 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
 2026-10-06 20:31:30 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
+2026-10-06 21:31:30 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
+2026-10-06 22:31:30 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
+2026-10-06 23:31:30 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
+2026-10-07 00:05:12 | WARNING | [paper_book] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 00:05:12 | WARNING | [paper_market] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 00:05:14 | INFO    | [paper_book] connected
+2026-10-07 00:05:14 | INFO    | [paper_market] connected
+2026-10-07 00:06:42 | WARNING | [paper_book] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 00:06:44 | INFO    | [paper_book] connected
+2026-10-07 00:06:52 | WARNING | [paper_market] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 00:06:53 | INFO    | [paper_market] connected
+2026-10-07 00:22:13 | WARNING | [paper_market] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 00:22:14 | INFO    | [paper_market] connected
+2026-10-07 00:22:20 | WARNING | [paper_book] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 00:22:22 | INFO    | [paper_book] connected
+2026-10-07 00:38:49 | WARNING | [paper_market] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 00:38:50 | INFO    | [paper_market] connected
+2026-10-07 00:39:19 | WARNING | [paper_book] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 00:39:21 | INFO    | [paper_book] connected
+2026-10-07 00:54:33 | WARNING | [paper_book] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 00:54:35 | INFO    | [paper_book] connected
+2026-10-07 00:54:50 | WARNING | [paper_market] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 00:54:51 | INFO    | [paper_market] connected
+2026-10-07 01:11:10 | WARNING | [paper_market] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 01:11:12 | INFO    | [paper_market] connected
+2026-10-07 01:11:15 | WARNING | [paper_book] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 01:11:16 | INFO    | [paper_book] connected
+2026-10-07 01:27:31 | WARNING | [paper_market] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 01:27:32 | INFO    | [paper_market] connected
+2026-10-07 01:27:40 | WARNING | [paper_book] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 01:27:41 | INFO    | [paper_book] connected
+2026-10-07 01:43:31 | WARNING | [paper_market] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 01:43:33 | INFO    | [paper_market] connected
+2026-10-07 01:43:40 | WARNING | [paper_book] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 01:43:41 | INFO    | [paper_book] connected
+2026-10-07 01:59:17 | WARNING | [paper_market] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 01:59:17 | WARNING | [paper_book] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 01:59:18 | INFO    | [paper_market] connected
+2026-10-07 01:59:19 | INFO    | [paper_book] connected
+2026-10-07 02:05:45 | WARNING | [paper_book] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 02:05:47 | INFO    | [paper_book] connected
+2026-10-07 02:06:20 | WARNING | [paper_market] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:06:21 | INFO    | [paper_market] connected
+2026-10-07 02:21:41 | WARNING | [paper_market] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 02:21:42 | INFO    | [paper_market] connected
+2026-10-07 02:22:05 | WARNING | [paper_book] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:22:07 | INFO    | [paper_book] connected
+2026-10-07 02:26:36 | WARNING | [paper_market] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 02:26:38 | INFO    | [paper_market] connected
+2026-10-07 02:26:42 | WARNING | [paper_book] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 02:26:43 | INFO    | [paper_book] connected
+2026-10-07 02:31:33 | WARNING | [paper_market] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 02:31:34 | INFO    | [paper_market] connected
+2026-10-07 02:31:57 | WARNING | [paper_book] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:31:59 | INFO    | [paper_book] connected
+2026-10-07 02:36:33 | WARNING | [paper_market] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 02:36:34 | INFO    | [paper_market] connected
+2026-10-07 02:36:43 | WARNING | [paper_book] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 02:36:44 | INFO    | [paper_book] connected
+2026-10-07 02:53:12 | WARNING | [paper_market] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 02:53:13 | INFO    | [paper_market] connected
+2026-10-07 02:53:21 | WARNING | [paper_book] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:53:23 | INFO    | [paper_book] connected
+2026-10-07 03:21:44 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
+2026-10-07 03:31:30 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
+2026-10-07 04:31:30 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
+2026-10-07 05:07:16 | WARNING | [paper_market] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 05:07:16 | WARNING | [paper_book] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 05:07:18 | INFO    | [paper_market] connected
+2026-10-07 05:07:18 | INFO    | [paper_book] connected
+2026-10-07 05:23:42 | WARNING | [paper_market] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 05:23:42 | WARNING | [paper_book] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 05:23:43 | INFO    | [paper_market] connected
+2026-10-07 05:23:43 | INFO    | [paper_book] connected
+2026-10-07 06:25:37 | WARNING | [paper_market] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 06:25:37 | WARNING | [paper_book] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 06:25:39 | INFO    | [paper_market] connected
+2026-10-07 06:25:39 | INFO    | [paper_book] connected
+2026-10-07 06:30:36 | WARNING | [paper_book] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 06:30:37 | INFO    | [paper_book] connected
+2026-10-07 06:30:38 | WARNING | [paper_market] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 06:30:40 | INFO    | [paper_market] connected
+2026-10-07 06:58:35 | INFO    | model trained up to 2026-10-01 00:00:00+00:00
+2026-10-07 07:05:15 | INFO    | rebalance 2026-10-07 00:00:00+00:00: 15 orders, targets {'AAVEUSDT': 0.02011, 'ADAUSDT': -0.00026, 'ARBUSDT': -0.02417, 'ATOMUSDT': -0.03905, 'AVAXUSDT': -0.00422, 'BNBUSDT': -0.04022, 'BTCUSDT': 0.02645, 'DOGEUSDT': -0.02278, 'DOTUSDT': -0.0064, 'ETHUSDT': -0.04236, 'HYPEUSDT': -0.02166, 'LINKUSDT': 0.0086, 'LTCUSDT': 0.03061, 'NEARUSDT': 0.00861, 'OPUSDT': 0.00957, 'POLUSDT': 0.01522, 'SOLUSDT': 0.0182, 'SUIUSDT': 0.01788, 'TRXUSDT': 0.01282, 'UNIUSDT': -0.02864, 'WLDUSDT': 0.00612, 'XRPUSDT': -0.01257}
+2026-10-07 07:05:16 | INFO    | fill XRPUSDT SELL 253.1 @ 1.4895 (maker, slip -0.34 bps)
+2026-10-07 07:05:16 | INFO    | fill ARBUSDT SELL 3707.3 @ 0.19554 (maker, slip -0.26 bps)
+2026-10-07 07:05:16 | INFO    | fill SUIUSDT BUY 461.1 @ 1.1632 (maker, slip -0.43 bps)
+2026-10-07 07:05:16 | INFO    | fill UNIUSDT SELL 102.0 @ 8.408 (maker, slip -0.59 bps)
+2026-10-07 07:05:17 | INFO    | fill AAVEUSDT BUY 3.3 @ 177.55 (maker, slip -0.28 bps)
+2026-10-07 07:05:18 | INFO    | fill HYPEUSDT SELL 7.09 @ 91.531 (maker, slip -0.05 bps)
+2026-10-07 07:05:19 | INFO    | fill SOLUSDT BUY 4.55 @ 119.82 (maker, slip -0.42 bps)
+2026-10-07 07:05:20 | INFO    | fill ETHUSDT SELL 0.473 @ 2685.21 (maker, slip -0.02 bps)
+2026-10-07 07:05:20 | INFO    | fill BNBUSDT SELL 1.55 @ 777.7 (maker, slip -0.06 bps)
+2026-10-07 07:05:20 | INFO    | fill DOGEUSDT SELL 7326.0 @ 0.09328 (maker, slip -0.54 bps)
+2026-10-07 07:05:20 | INFO    | fill ATOMUSDT SELL 661.22 @ 1.772 (maker, slip -2.82 bps)
+2026-10-07 07:05:44 | INFO    | fill BTCUSDT BUY 0.009 @ 85180.3 (maker, slip -0.01 bps)
+2026-10-07 07:05:52 | INFO    | fill TRXUSDT BUY 94.0 @ 0.33483 (maker, slip -0.15 bps)
+2026-10-07 07:05:53 | INFO    | fill TRXUSDT BUY 1054.0 @ 0.33483 (maker, slip -0.15 bps)
+2026-10-07 07:06:05 | INFO    | fill POLUSDT BUY 1592.0 @ 0.10681 (maker, slip -1.40 bps)
+2026-10-07 07:06:05 | INFO    | fill POLUSDT BUY 2682.0 @ 0.10681 (maker, slip -1.40 bps)
+2026-10-07 07:07:15 | INFO    | fill LTCUSDT BUY 13.323 @ 68.9 (maker, slip -0.73 bps)
+2026-10-07 07:31:30 | INFO    | model trained up to 2026-10-01 00:00:00+00:00

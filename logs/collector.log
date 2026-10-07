@@ -232,3 +232,1522 @@
 2026-10-06 15:50:45 | INFO    | backfill WLDUSDT.P 1m: 1 candles
 2026-10-06 15:50:45 | INFO    | backfill CAKEUSDT.P 1m: 1 candles
 2026-10-06 15:50:46 | INFO    | backfill POLUSDT.P 1m: 1 candles
+2026-10-07 00:04:44 | WARNING | GET https://fapi.binance.com/fapi/v1/openInterest failed ([Errno 8] nodename nor servname provided, or not known), retry in 1s
+2026-10-07 00:04:45 | WARNING | GET https://fapi.binance.com/fapi/v1/openInterest failed ([Errno 8] nodename nor servname provided, or not known), retry in 2s
+2026-10-07 00:04:47 | WARNING | GET https://fapi.binance.com/fapi/v1/openInterest failed ([Errno 8] nodename nor servname provided, or not known), retry in 4s
+2026-10-07 00:04:51 | WARNING | GET https://fapi.binance.com/fapi/v1/openInterest failed ([Errno 8] nodename nor servname provided, or not known), retry in 8s
+2026-10-07 00:05:08 | WARNING | [klines_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 00:05:09 | INFO    | [klines_perp] connected
+2026-10-07 00:05:12 | WARNING | [liquidations] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 00:05:12 | WARNING | [flow_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 00:05:12 | WARNING | [book_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 00:05:14 | INFO    | [liquidations] connected
+2026-10-07 00:05:14 | INFO    | [flow_perp] connected
+2026-10-07 00:05:14 | INFO    | [book_perp] connected
+2026-10-07 00:06:37 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 00:06:37 | WARNING | [klines_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 00:06:39 | INFO    | [klines_perp] connected
+2026-10-07 00:06:42 | WARNING | [book_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 00:06:44 | INFO    | [book_perp] connected
+2026-10-07 00:06:52 | WARNING | [flow_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 00:06:52 | INFO    | backfill BTCUSDT.P 15m: 1 candles
+2026-10-07 00:06:52 | INFO    | backfill ETHUSDT.P 15m: 1 candles
+2026-10-07 00:06:52 | INFO    | backfill SOLUSDT.P 15m: 1 candles
+2026-10-07 00:06:52 | INFO    | backfill SUIUSDT.P 15m: 1 candles
+2026-10-07 00:06:53 | INFO    | backfill TRXUSDT.P 15m: 1 candles
+2026-10-07 00:06:53 | INFO    | backfill AAVEUSDT.P 15m: 1 candles
+2026-10-07 00:06:53 | INFO    | [flow_perp] connected
+2026-10-07 00:06:53 | INFO    | backfill BNBUSDT.P 15m: 1 candles
+2026-10-07 00:06:53 | INFO    | backfill XRPUSDT.P 15m: 1 candles
+2026-10-07 00:06:54 | INFO    | backfill HYPEUSDT.P 15m: 1 candles
+2026-10-07 00:06:54 | INFO    | backfill LINKUSDT.P 15m: 1 candles
+2026-10-07 00:06:55 | INFO    | backfill ADAUSDT.P 15m: 1 candles
+2026-10-07 00:06:55 | INFO    | backfill UNIUSDT.P 15m: 1 candles
+2026-10-07 00:06:56 | INFO    | backfill LTCUSDT.P 15m: 1 candles
+2026-10-07 00:06:56 | INFO    | backfill AVAXUSDT.P 15m: 1 candles
+2026-10-07 00:06:57 | INFO    | backfill ATOMUSDT.P 15m: 1 candles
+2026-10-07 00:06:57 | INFO    | backfill DOGEUSDT.P 15m: 1 candles
+2026-10-07 00:06:58 | INFO    | backfill DOTUSDT.P 15m: 1 candles
+2026-10-07 00:06:58 | INFO    | backfill NEARUSDT.P 15m: 1 candles
+2026-10-07 00:06:58 | INFO    | backfill OPUSDT.P 15m: 1 candles
+2026-10-07 00:06:59 | INFO    | backfill ARBUSDT.P 15m: 1 candles
+2026-10-07 00:06:59 | INFO    | backfill WLDUSDT.P 15m: 1 candles
+2026-10-07 00:06:59 | INFO    | backfill CAKEUSDT.P 15m: 1 candles
+2026-10-07 00:06:59 | INFO    | backfill POLUSDT.P 15m: 1 candles
+2026-10-07 00:07:00 | INFO    | backfill BTCUSDT.P 5m: 4 candles
+2026-10-07 00:07:00 | INFO    | backfill ETHUSDT.P 5m: 4 candles
+2026-10-07 00:07:00 | INFO    | backfill SOLUSDT.P 5m: 4 candles
+2026-10-07 00:07:01 | INFO    | backfill SUIUSDT.P 5m: 4 candles
+2026-10-07 00:07:01 | INFO    | backfill TRXUSDT.P 5m: 4 candles
+2026-10-07 00:07:01 | INFO    | backfill AAVEUSDT.P 5m: 4 candles
+2026-10-07 00:07:01 | INFO    | backfill BNBUSDT.P 5m: 4 candles
+2026-10-07 00:07:02 | INFO    | backfill XRPUSDT.P 5m: 4 candles
+2026-10-07 00:07:02 | INFO    | backfill HYPEUSDT.P 5m: 4 candles
+2026-10-07 00:07:02 | INFO    | backfill LINKUSDT.P 5m: 4 candles
+2026-10-07 00:07:03 | INFO    | backfill ADAUSDT.P 5m: 4 candles
+2026-10-07 00:07:03 | INFO    | backfill UNIUSDT.P 5m: 4 candles
+2026-10-07 00:07:03 | INFO    | backfill LTCUSDT.P 5m: 4 candles
+2026-10-07 00:07:04 | INFO    | backfill AVAXUSDT.P 5m: 4 candles
+2026-10-07 00:07:04 | INFO    | backfill ATOMUSDT.P 5m: 4 candles
+2026-10-07 00:07:04 | INFO    | backfill DOGEUSDT.P 5m: 4 candles
+2026-10-07 00:22:03 | WARNING | GET https://fapi.binance.com/futures/data/openInterestHist failed (), retry in 1s
+2026-10-07 00:22:03 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 00:22:04 | WARNING | GET https://fapi.binance.com/futures/data/openInterestHist failed (), retry in 2s
+2026-10-07 00:22:05 | INFO    | backfill ADAUSDT.P 15m: 1 candles
+2026-10-07 00:22:06 | INFO    | backfill UNIUSDT.P 15m: 1 candles
+2026-10-07 00:22:07 | INFO    | backfill LTCUSDT.P 15m: 1 candles
+2026-10-07 00:22:08 | INFO    | backfill AVAXUSDT.P 15m: 1 candles
+2026-10-07 00:22:08 | INFO    | backfill ATOMUSDT.P 15m: 1 candles
+2026-10-07 00:22:09 | INFO    | backfill DOGEUSDT.P 15m: 1 candles
+2026-10-07 00:22:10 | INFO    | backfill DOTUSDT.P 15m: 1 candles
+2026-10-07 00:22:11 | INFO    | backfill NEARUSDT.P 15m: 1 candles
+2026-10-07 00:22:12 | INFO    | backfill OPUSDT.P 15m: 1 candles
+2026-10-07 00:22:12 | INFO    | backfill ARBUSDT.P 15m: 1 candles
+2026-10-07 00:22:12 | WARNING | [flow_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 00:22:13 | INFO    | backfill WLDUSDT.P 15m: 1 candles
+2026-10-07 00:22:14 | INFO    | backfill CAKEUSDT.P 15m: 1 candles
+2026-10-07 00:22:14 | INFO    | [flow_perp] connected
+2026-10-07 00:22:14 | INFO    | backfill POLUSDT.P 15m: 1 candles
+2026-10-07 00:22:15 | INFO    | backfill BTCUSDT.P 5m: 3 candles
+2026-10-07 00:22:15 | INFO    | backfill ETHUSDT.P 5m: 3 candles
+2026-10-07 00:22:16 | INFO    | backfill SOLUSDT.P 5m: 3 candles
+2026-10-07 00:22:17 | INFO    | backfill SUIUSDT.P 5m: 3 candles
+2026-10-07 00:22:17 | INFO    | backfill TRXUSDT.P 5m: 3 candles
+2026-10-07 00:22:18 | INFO    | backfill AAVEUSDT.P 5m: 3 candles
+2026-10-07 00:22:19 | INFO    | backfill BNBUSDT.P 5m: 3 candles
+2026-10-07 00:22:20 | INFO    | backfill XRPUSDT.P 5m: 3 candles
+2026-10-07 00:22:20 | WARNING | [liquidations] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 00:22:20 | INFO    | backfill HYPEUSDT.P 5m: 3 candles
+2026-10-07 00:22:21 | INFO    | backfill LINKUSDT.P 5m: 3 candles
+2026-10-07 00:22:21 | INFO    | [liquidations] connected
+2026-10-07 00:22:22 | INFO    | backfill ADAUSDT.P 5m: 3 candles
+2026-10-07 00:22:22 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 00:22:23 | INFO    | backfill UNIUSDT.P 5m: 3 candles
+2026-10-07 00:22:24 | INFO    | backfill LTCUSDT.P 5m: 3 candles
+2026-10-07 00:22:24 | INFO    | backfill DOTUSDT.P 5m: 7 candles
+2026-10-07 00:22:25 | INFO    | backfill AVAXUSDT.P 5m: 3 candles
+2026-10-07 00:22:25 | INFO    | backfill NEARUSDT.P 5m: 7 candles
+2026-10-07 00:22:26 | INFO    | backfill ATOMUSDT.P 5m: 3 candles
+2026-10-07 00:22:26 | INFO    | backfill OPUSDT.P 5m: 7 candles
+2026-10-07 00:22:26 | INFO    | backfill DOGEUSDT.P 5m: 3 candles
+2026-10-07 00:22:26 | INFO    | backfill ARBUSDT.P 5m: 7 candles
+2026-10-07 00:22:27 | INFO    | backfill WLDUSDT.P 5m: 7 candles
+2026-10-07 00:22:27 | INFO    | backfill DOTUSDT.P 5m: 3 candles
+2026-10-07 00:22:28 | INFO    | backfill CAKEUSDT.P 5m: 7 candles
+2026-10-07 00:22:28 | INFO    | backfill NEARUSDT.P 5m: 3 candles
+2026-10-07 00:22:29 | INFO    | backfill OPUSDT.P 5m: 3 candles
+2026-10-07 00:22:29 | INFO    | backfill POLUSDT.P 5m: 7 candles
+2026-10-07 00:22:30 | WARNING | [book_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 00:22:30 | INFO    | backfill ARBUSDT.P 5m: 3 candles
+2026-10-07 00:22:30 | INFO    | backfill BTCUSDT.P 1m: 34 candles
+2026-10-07 00:22:31 | INFO    | backfill ETHUSDT.P 1m: 34 candles
+2026-10-07 00:22:31 | INFO    | backfill WLDUSDT.P 5m: 3 candles
+2026-10-07 00:22:31 | INFO    | backfill SOLUSDT.P 1m: 34 candles
+2026-10-07 00:22:31 | INFO    | backfill SUIUSDT.P 1m: 34 candles
+2026-10-07 00:22:32 | INFO    | [book_perp] connected
+2026-10-07 00:22:32 | INFO    | backfill CAKEUSDT.P 5m: 3 candles
+2026-10-07 00:22:32 | INFO    | backfill TRXUSDT.P 1m: 34 candles
+2026-10-07 00:22:32 | INFO    | backfill AAVEUSDT.P 1m: 34 candles
+2026-10-07 00:22:32 | INFO    | backfill BNBUSDT.P 1m: 34 candles
+2026-10-07 00:22:33 | INFO    | backfill POLUSDT.P 5m: 3 candles
+2026-10-07 00:22:33 | INFO    | backfill XRPUSDT.P 1m: 34 candles
+2026-10-07 00:22:33 | INFO    | backfill BTCUSDT.P 1m: 16 candles
+2026-10-07 00:22:33 | INFO    | backfill HYPEUSDT.P 1m: 34 candles
+2026-10-07 00:22:33 | INFO    | backfill ETHUSDT.P 1m: 16 candles
+2026-10-07 00:22:34 | INFO    | backfill LINKUSDT.P 1m: 34 candles
+2026-10-07 00:22:34 | INFO    | backfill SOLUSDT.P 1m: 16 candles
+2026-10-07 00:22:34 | INFO    | backfill ADAUSDT.P 1m: 34 candles
+2026-10-07 00:22:34 | INFO    | backfill SUIUSDT.P 1m: 16 candles
+2026-10-07 00:22:34 | INFO    | backfill UNIUSDT.P 1m: 34 candles
+2026-10-07 00:22:34 | INFO    | backfill TRXUSDT.P 1m: 16 candles
+2026-10-07 00:22:35 | INFO    | backfill LTCUSDT.P 1m: 34 candles
+2026-10-07 00:22:35 | INFO    | backfill AAVEUSDT.P 1m: 16 candles
+2026-10-07 00:22:35 | INFO    | backfill AVAXUSDT.P 1m: 34 candles
+2026-10-07 00:22:35 | INFO    | backfill ATOMUSDT.P 1m: 34 candles
+2026-10-07 00:22:35 | INFO    | backfill BNBUSDT.P 1m: 16 candles
+2026-10-07 00:22:36 | INFO    | backfill DOGEUSDT.P 1m: 34 candles
+2026-10-07 00:22:36 | INFO    | backfill XRPUSDT.P 1m: 16 candles
+2026-10-07 00:22:36 | INFO    | backfill DOTUSDT.P 1m: 34 candles
+2026-10-07 00:22:36 | INFO    | backfill HYPEUSDT.P 1m: 16 candles
+2026-10-07 00:22:36 | INFO    | backfill NEARUSDT.P 1m: 34 candles
+2026-10-07 00:22:36 | INFO    | backfill LINKUSDT.P 1m: 16 candles
+2026-10-07 00:22:37 | INFO    | backfill OPUSDT.P 1m: 34 candles
+2026-10-07 00:22:37 | INFO    | backfill ADAUSDT.P 1m: 16 candles
+2026-10-07 00:22:37 | INFO    | backfill ARBUSDT.P 1m: 34 candles
+2026-10-07 00:22:37 | INFO    | backfill UNIUSDT.P 1m: 16 candles
+2026-10-07 00:22:37 | INFO    | backfill WLDUSDT.P 1m: 34 candles
+2026-10-07 00:22:38 | WARNING | [klines_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 00:22:38 | INFO    | backfill LTCUSDT.P 1m: 16 candles
+2026-10-07 00:22:38 | INFO    | backfill CAKEUSDT.P 1m: 34 candles
+2026-10-07 00:22:38 | INFO    | backfill AVAXUSDT.P 1m: 16 candles
+2026-10-07 00:22:38 | INFO    | backfill POLUSDT.P 1m: 34 candles
+2026-10-07 00:22:38 | INFO    | backfill ATOMUSDT.P 1m: 16 candles
+2026-10-07 00:22:39 | INFO    | backfill DOGEUSDT.P 1m: 16 candles
+2026-10-07 00:22:39 | INFO    | [klines_perp] connected
+2026-10-07 00:22:39 | INFO    | backfill DOTUSDT.P 1m: 16 candles
+2026-10-07 00:22:40 | INFO    | backfill NEARUSDT.P 1m: 16 candles
+2026-10-07 00:22:40 | INFO    | backfill OPUSDT.P 1m: 16 candles
+2026-10-07 00:22:40 | INFO    | backfill ARBUSDT.P 1m: 16 candles
+2026-10-07 00:22:41 | INFO    | backfill WLDUSDT.P 1m: 16 candles
+2026-10-07 00:22:41 | INFO    | backfill CAKEUSDT.P 1m: 16 candles
+2026-10-07 00:22:42 | INFO    | backfill POLUSDT.P 1m: 16 candles
+2026-10-07 00:23:33 | INFO    | backfill BTCUSDT.P 15m: 1 candles
+2026-10-07 00:23:34 | INFO    | backfill ETHUSDT.P 15m: 1 candles
+2026-10-07 00:23:35 | INFO    | backfill SOLUSDT.P 15m: 1 candles
+2026-10-07 00:23:35 | INFO    | backfill SUIUSDT.P 15m: 1 candles
+2026-10-07 00:23:36 | INFO    | backfill TRXUSDT.P 15m: 1 candles
+2026-10-07 00:23:37 | INFO    | backfill AAVEUSDT.P 15m: 1 candles
+2026-10-07 00:23:38 | INFO    | backfill BNBUSDT.P 15m: 1 candles
+2026-10-07 00:23:39 | INFO    | backfill XRPUSDT.P 15m: 1 candles
+2026-10-07 00:23:40 | INFO    | backfill HYPEUSDT.P 15m: 1 candles
+2026-10-07 00:23:41 | INFO    | backfill LINKUSDT.P 15m: 1 candles
+2026-10-07 00:38:48 | WARNING | [flow_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 00:38:49 | INFO    | [flow_perp] connected
+2026-10-07 00:38:52 | WARNING | [book_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 00:38:52 | WARNING | [klines_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 00:38:53 | INFO    | [book_perp] connected
+2026-10-07 00:38:53 | INFO    | [klines_perp] connected
+2026-10-07 00:38:54 | WARNING | [liquidations] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 00:38:55 | INFO    | [liquidations] connected
+2026-10-07 00:39:05 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 00:39:07 | INFO    | backfill OPUSDT.P 15m: 1 candles
+2026-10-07 00:39:08 | INFO    | backfill ARBUSDT.P 15m: 1 candles
+2026-10-07 00:39:08 | INFO    | backfill WLDUSDT.P 15m: 1 candles
+2026-10-07 00:39:09 | INFO    | backfill CAKEUSDT.P 15m: 1 candles
+2026-10-07 00:39:10 | INFO    | backfill POLUSDT.P 15m: 1 candles
+2026-10-07 00:39:10 | INFO    | backfill BTCUSDT.P 5m: 3 candles
+2026-10-07 00:39:10 | INFO    | backfill ETHUSDT.P 5m: 3 candles
+2026-10-07 00:39:11 | INFO    | backfill SOLUSDT.P 5m: 3 candles
+2026-10-07 00:39:12 | INFO    | backfill SUIUSDT.P 5m: 3 candles
+2026-10-07 00:39:13 | INFO    | backfill TRXUSDT.P 5m: 3 candles
+2026-10-07 00:39:13 | INFO    | backfill AAVEUSDT.P 5m: 3 candles
+2026-10-07 00:39:14 | INFO    | backfill BNBUSDT.P 5m: 3 candles
+2026-10-07 00:39:15 | INFO    | backfill XRPUSDT.P 5m: 3 candles
+2026-10-07 00:39:15 | INFO    | backfill HYPEUSDT.P 5m: 3 candles
+2026-10-07 00:39:16 | INFO    | backfill LINKUSDT.P 5m: 3 candles
+2026-10-07 00:39:17 | INFO    | backfill ADAUSDT.P 5m: 3 candles
+2026-10-07 00:39:17 | INFO    | backfill UNIUSDT.P 5m: 3 candles
+2026-10-07 00:39:18 | INFO    | backfill LTCUSDT.P 5m: 3 candles
+2026-10-07 00:39:19 | INFO    | backfill AVAXUSDT.P 5m: 3 candles
+2026-10-07 00:39:20 | INFO    | backfill ATOMUSDT.P 5m: 3 candles
+2026-10-07 00:39:20 | INFO    | backfill DOGEUSDT.P 5m: 3 candles
+2026-10-07 00:39:21 | INFO    | backfill DOTUSDT.P 5m: 3 candles
+2026-10-07 00:39:22 | INFO    | backfill NEARUSDT.P 5m: 3 candles
+2026-10-07 00:39:22 | INFO    | backfill OPUSDT.P 5m: 3 candles
+2026-10-07 00:39:23 | INFO    | backfill ARBUSDT.P 5m: 3 candles
+2026-10-07 00:39:24 | INFO    | backfill WLDUSDT.P 5m: 3 candles
+2026-10-07 00:39:24 | INFO    | backfill CAKEUSDT.P 5m: 3 candles
+2026-10-07 00:39:25 | INFO    | backfill POLUSDT.P 5m: 3 candles
+2026-10-07 00:39:25 | INFO    | backfill BTCUSDT.P 1m: 17 candles
+2026-10-07 00:39:26 | INFO    | backfill ETHUSDT.P 1m: 17 candles
+2026-10-07 00:39:26 | INFO    | backfill BTCUSDT.P 1h: 1 candles
+2026-10-07 00:39:26 | INFO    | backfill SOLUSDT.P 1m: 17 candles
+2026-10-07 00:39:26 | INFO    | backfill ETHUSDT.P 1h: 1 candles
+2026-10-07 00:39:27 | INFO    | backfill SUIUSDT.P 1m: 17 candles
+2026-10-07 00:39:27 | INFO    | backfill TRXUSDT.P 1m: 17 candles
+2026-10-07 00:39:27 | INFO    | backfill SOLUSDT.P 1h: 1 candles
+2026-10-07 00:39:27 | INFO    | backfill AAVEUSDT.P 1m: 17 candles
+2026-10-07 00:39:28 | INFO    | backfill SUIUSDT.P 1h: 1 candles
+2026-10-07 00:39:28 | INFO    | backfill BNBUSDT.P 1m: 17 candles
+2026-10-07 00:39:29 | INFO    | backfill XRPUSDT.P 1m: 17 candles
+2026-10-07 00:39:29 | INFO    | backfill TRXUSDT.P 1h: 1 candles
+2026-10-07 00:39:29 | INFO    | backfill HYPEUSDT.P 1m: 17 candles
+2026-10-07 00:39:30 | INFO    | backfill LINKUSDT.P 1m: 17 candles
+2026-10-07 00:39:30 | INFO    | backfill AAVEUSDT.P 1h: 1 candles
+2026-10-07 00:39:31 | INFO    | backfill ADAUSDT.P 1m: 17 candles
+2026-10-07 00:39:31 | INFO    | backfill BNBUSDT.P 1h: 1 candles
+2026-10-07 00:39:32 | INFO    | backfill UNIUSDT.P 1m: 17 candles
+2026-10-07 00:39:32 | INFO    | backfill LTCUSDT.P 1m: 17 candles
+2026-10-07 00:39:32 | INFO    | backfill XRPUSDT.P 1h: 1 candles
+2026-10-07 00:39:32 | INFO    | backfill AVAXUSDT.P 1m: 17 candles
+2026-10-07 00:39:33 | INFO    | backfill ATOMUSDT.P 1m: 17 candles
+2026-10-07 00:39:33 | INFO    | backfill HYPEUSDT.P 1h: 1 candles
+2026-10-07 00:39:33 | INFO    | backfill DOGEUSDT.P 1m: 17 candles
+2026-10-07 00:54:34 | WARNING | [klines_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 00:54:36 | INFO    | [klines_perp] connected
+2026-10-07 00:54:47 | WARNING | [flow_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 00:54:50 | INFO    | [flow_perp] connected
+2026-10-07 00:54:51 | WARNING | [book_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 00:54:51 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 00:54:51 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 00:54:52 | INFO    | [book_perp] connected
+2026-10-07 00:54:52 | INFO    | backfill LINKUSDT.P 1h: 1 candles
+2026-10-07 00:54:52 | INFO    | backfill DOTUSDT.P 1m: 32 candles
+2026-10-07 00:54:53 | INFO    | backfill NEARUSDT.P 1m: 32 candles
+2026-10-07 00:54:53 | INFO    | backfill ADAUSDT.P 1h: 1 candles
+2026-10-07 00:54:53 | INFO    | backfill OPUSDT.P 1m: 32 candles
+2026-10-07 00:54:53 | INFO    | backfill ARBUSDT.P 1m: 32 candles
+2026-10-07 00:54:53 | INFO    | backfill UNIUSDT.P 1h: 1 candles
+2026-10-07 00:54:53 | INFO    | backfill WLDUSDT.P 1m: 32 candles
+2026-10-07 00:54:53 | INFO    | backfill CAKEUSDT.P 1m: 32 candles
+2026-10-07 00:54:53 | INFO    | backfill LTCUSDT.P 1h: 1 candles
+2026-10-07 00:54:53 | INFO    | backfill POLUSDT.P 1m: 32 candles
+2026-10-07 00:54:54 | WARNING | [liquidations] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 00:54:54 | INFO    | backfill AVAXUSDT.P 1h: 1 candles
+2026-10-07 00:54:54 | INFO    | backfill ATOMUSDT.P 1h: 1 candles
+2026-10-07 00:54:54 | INFO    | backfill DOGEUSDT.P 1h: 1 candles
+2026-10-07 00:54:55 | INFO    | backfill DOTUSDT.P 1h: 1 candles
+2026-10-07 00:54:55 | INFO    | [liquidations] connected
+2026-10-07 00:54:55 | INFO    | backfill NEARUSDT.P 1h: 1 candles
+2026-10-07 00:54:56 | INFO    | backfill OPUSDT.P 1h: 1 candles
+2026-10-07 00:54:56 | INFO    | backfill ARBUSDT.P 1h: 1 candles
+2026-10-07 00:54:56 | INFO    | backfill WLDUSDT.P 1h: 1 candles
+2026-10-07 00:54:57 | INFO    | backfill CAKEUSDT.P 1h: 1 candles
+2026-10-07 00:54:57 | INFO    | backfill POLUSDT.P 1h: 1 candles
+2026-10-07 00:54:57 | INFO    | backfill BTCUSDT.P 15m: 2 candles
+2026-10-07 00:54:57 | INFO    | backfill ETHUSDT.P 15m: 2 candles
+2026-10-07 00:54:58 | INFO    | backfill SOLUSDT.P 15m: 2 candles
+2026-10-07 00:54:58 | INFO    | backfill SUIUSDT.P 15m: 2 candles
+2026-10-07 00:54:58 | INFO    | backfill TRXUSDT.P 15m: 2 candles
+2026-10-07 00:54:59 | INFO    | backfill AAVEUSDT.P 15m: 2 candles
+2026-10-07 00:54:59 | INFO    | backfill BNBUSDT.P 15m: 2 candles
+2026-10-07 00:54:59 | INFO    | backfill XRPUSDT.P 15m: 2 candles
+2026-10-07 00:55:00 | INFO    | backfill HYPEUSDT.P 15m: 2 candles
+2026-10-07 00:55:00 | INFO    | backfill LINKUSDT.P 15m: 2 candles
+2026-10-07 00:55:00 | INFO    | backfill ADAUSDT.P 15m: 2 candles
+2026-10-07 00:55:01 | INFO    | backfill UNIUSDT.P 15m: 2 candles
+2026-10-07 00:55:01 | INFO    | backfill LTCUSDT.P 15m: 2 candles
+2026-10-07 00:55:02 | INFO    | backfill AVAXUSDT.P 15m: 2 candles
+2026-10-07 00:55:02 | INFO    | backfill ATOMUSDT.P 15m: 2 candles
+2026-10-07 00:55:02 | INFO    | backfill DOGEUSDT.P 15m: 2 candles
+2026-10-07 00:55:03 | INFO    | backfill DOTUSDT.P 15m: 2 candles
+2026-10-07 00:55:04 | INFO    | backfill NEARUSDT.P 15m: 2 candles
+2026-10-07 00:55:04 | INFO    | backfill OPUSDT.P 15m: 1 candles
+2026-10-07 00:55:04 | INFO    | backfill ARBUSDT.P 15m: 1 candles
+2026-10-07 00:55:05 | INFO    | backfill WLDUSDT.P 15m: 1 candles
+2026-10-07 00:55:05 | INFO    | backfill CAKEUSDT.P 15m: 1 candles
+2026-10-07 00:55:06 | INFO    | backfill POLUSDT.P 15m: 1 candles
+2026-10-07 00:55:06 | INFO    | backfill BTCUSDT.P 5m: 4 candles
+2026-10-07 00:55:06 | INFO    | backfill ETHUSDT.P 5m: 4 candles
+2026-10-07 00:55:07 | INFO    | backfill SOLUSDT.P 5m: 4 candles
+2026-10-07 00:55:07 | INFO    | backfill SUIUSDT.P 5m: 4 candles
+2026-10-07 00:55:07 | INFO    | backfill TRXUSDT.P 5m: 4 candles
+2026-10-07 00:55:08 | INFO    | backfill AAVEUSDT.P 5m: 4 candles
+2026-10-07 00:55:08 | INFO    | backfill BNBUSDT.P 5m: 4 candles
+2026-10-07 00:55:08 | INFO    | backfill XRPUSDT.P 5m: 4 candles
+2026-10-07 00:55:09 | INFO    | backfill HYPEUSDT.P 5m: 4 candles
+2026-10-07 00:55:09 | INFO    | backfill LINKUSDT.P 5m: 4 candles
+2026-10-07 00:55:09 | INFO    | backfill ADAUSDT.P 5m: 4 candles
+2026-10-07 00:55:10 | INFO    | backfill UNIUSDT.P 5m: 4 candles
+2026-10-07 00:55:10 | INFO    | backfill LTCUSDT.P 5m: 4 candles
+2026-10-07 00:55:10 | INFO    | backfill AVAXUSDT.P 5m: 4 candles
+2026-10-07 00:55:11 | INFO    | backfill ATOMUSDT.P 5m: 4 candles
+2026-10-07 00:55:11 | INFO    | backfill DOGEUSDT.P 5m: 4 candles
+2026-10-07 00:55:11 | INFO    | backfill DOTUSDT.P 5m: 4 candles
+2026-10-07 00:55:11 | INFO    | backfill BTCUSDT.P 5m: 1 candles
+2026-10-07 00:55:12 | INFO    | backfill ETHUSDT.P 5m: 1 candles
+2026-10-07 00:55:12 | INFO    | backfill NEARUSDT.P 5m: 4 candles
+2026-10-07 00:55:12 | INFO    | backfill SOLUSDT.P 5m: 1 candles
+2026-10-07 00:55:12 | INFO    | backfill OPUSDT.P 5m: 4 candles
+2026-10-07 00:55:12 | INFO    | backfill SUIUSDT.P 5m: 1 candles
+2026-10-07 00:55:12 | INFO    | backfill ARBUSDT.P 5m: 4 candles
+2026-10-07 00:55:13 | INFO    | backfill TRXUSDT.P 5m: 1 candles
+2026-10-07 00:55:13 | INFO    | backfill WLDUSDT.P 5m: 4 candles
+2026-10-07 00:55:13 | INFO    | backfill AAVEUSDT.P 5m: 1 candles
+2026-10-07 00:55:13 | INFO    | backfill CAKEUSDT.P 5m: 4 candles
+2026-10-07 00:55:13 | INFO    | backfill BNBUSDT.P 5m: 1 candles
+2026-10-07 00:55:14 | INFO    | backfill POLUSDT.P 5m: 4 candles
+2026-10-07 00:55:14 | INFO    | backfill XRPUSDT.P 5m: 1 candles
+2026-10-07 00:55:14 | INFO    | backfill BTCUSDT.P 1m: 17 candles
+2026-10-07 00:55:14 | INFO    | backfill ETHUSDT.P 1m: 17 candles
+2026-10-07 00:55:14 | INFO    | backfill HYPEUSDT.P 5m: 1 candles
+2026-10-07 00:55:14 | INFO    | backfill SOLUSDT.P 1m: 17 candles
+2026-10-07 00:55:14 | INFO    | backfill SUIUSDT.P 1m: 17 candles
+2026-10-07 00:55:14 | INFO    | backfill LINKUSDT.P 5m: 1 candles
+2026-10-07 00:55:14 | INFO    | backfill TRXUSDT.P 1m: 17 candles
+2026-10-07 00:55:15 | INFO    | backfill AAVEUSDT.P 1m: 17 candles
+2026-10-07 00:55:15 | INFO    | backfill BNBUSDT.P 1m: 17 candles
+2026-10-07 00:55:15 | INFO    | backfill XRPUSDT.P 1m: 17 candles
+2026-10-07 00:55:15 | INFO    | backfill ADAUSDT.P 5m: 1 candles
+2026-10-07 00:55:15 | INFO    | backfill HYPEUSDT.P 1m: 17 candles
+2026-10-07 00:55:15 | INFO    | backfill LINKUSDT.P 1m: 17 candles
+2026-10-07 00:55:15 | INFO    | backfill UNIUSDT.P 5m: 1 candles
+2026-10-07 00:55:15 | INFO    | backfill ADAUSDT.P 1m: 17 candles
+2026-10-07 00:55:16 | INFO    | backfill UNIUSDT.P 1m: 17 candles
+2026-10-07 00:55:16 | INFO    | backfill LTCUSDT.P 5m: 1 candles
+2026-10-07 00:55:16 | INFO    | backfill LTCUSDT.P 1m: 17 candles
+2026-10-07 00:55:16 | INFO    | backfill AVAXUSDT.P 5m: 1 candles
+2026-10-07 00:55:16 | INFO    | backfill AVAXUSDT.P 1m: 17 candles
+2026-10-07 00:55:16 | INFO    | backfill ATOMUSDT.P 5m: 1 candles
+2026-10-07 00:55:16 | INFO    | backfill ATOMUSDT.P 1m: 17 candles
+2026-10-07 00:55:17 | INFO    | backfill DOGEUSDT.P 5m: 1 candles
+2026-10-07 00:55:17 | INFO    | backfill DOGEUSDT.P 1m: 17 candles
+2026-10-07 00:55:17 | INFO    | backfill DOTUSDT.P 1m: 17 candles
+2026-10-07 00:55:17 | INFO    | backfill DOTUSDT.P 5m: 1 candles
+2026-10-07 00:55:17 | INFO    | backfill NEARUSDT.P 1m: 17 candles
+2026-10-07 00:55:17 | INFO    | backfill OPUSDT.P 1m: 17 candles
+2026-10-07 00:55:17 | INFO    | backfill NEARUSDT.P 5m: 1 candles
+2026-10-07 00:55:17 | INFO    | backfill ARBUSDT.P 1m: 17 candles
+2026-10-07 00:55:18 | INFO    | backfill WLDUSDT.P 1m: 17 candles
+2026-10-07 00:55:18 | INFO    | backfill OPUSDT.P 5m: 1 candles
+2026-10-07 00:55:18 | INFO    | backfill CAKEUSDT.P 1m: 17 candles
+2026-10-07 00:55:18 | INFO    | backfill POLUSDT.P 1m: 17 candles
+2026-10-07 00:55:18 | INFO    | backfill ARBUSDT.P 5m: 1 candles
+2026-10-07 00:55:19 | INFO    | backfill WLDUSDT.P 5m: 1 candles
+2026-10-07 00:55:19 | INFO    | backfill CAKEUSDT.P 5m: 1 candles
+2026-10-07 00:55:19 | INFO    | backfill POLUSDT.P 5m: 1 candles
+2026-10-07 00:55:19 | INFO    | backfill BTCUSDT.P 1m: 1 candles
+2026-10-07 00:55:20 | INFO    | backfill ETHUSDT.P 1m: 1 candles
+2026-10-07 00:55:20 | INFO    | backfill SOLUSDT.P 1m: 1 candles
+2026-10-07 00:55:20 | INFO    | backfill SUIUSDT.P 1m: 1 candles
+2026-10-07 00:55:20 | INFO    | backfill TRXUSDT.P 1m: 1 candles
+2026-10-07 00:55:21 | INFO    | backfill AAVEUSDT.P 1m: 1 candles
+2026-10-07 00:55:21 | INFO    | backfill BNBUSDT.P 1m: 1 candles
+2026-10-07 00:55:21 | INFO    | backfill XRPUSDT.P 1m: 1 candles
+2026-10-07 00:55:21 | INFO    | backfill HYPEUSDT.P 1m: 1 candles
+2026-10-07 00:55:21 | INFO    | backfill LINKUSDT.P 1m: 1 candles
+2026-10-07 00:55:21 | INFO    | backfill ADAUSDT.P 1m: 1 candles
+2026-10-07 00:55:22 | INFO    | backfill UNIUSDT.P 1m: 1 candles
+2026-10-07 00:55:22 | INFO    | backfill LTCUSDT.P 1m: 1 candles
+2026-10-07 00:55:22 | INFO    | backfill AVAXUSDT.P 1m: 1 candles
+2026-10-07 00:55:22 | INFO    | backfill ATOMUSDT.P 1m: 1 candles
+2026-10-07 00:55:22 | INFO    | backfill DOGEUSDT.P 1m: 1 candles
+2026-10-07 00:55:22 | INFO    | backfill DOTUSDT.P 1m: 1 candles
+2026-10-07 00:55:23 | INFO    | backfill NEARUSDT.P 1m: 1 candles
+2026-10-07 00:55:23 | INFO    | backfill OPUSDT.P 1m: 1 candles
+2026-10-07 00:55:23 | INFO    | backfill ARBUSDT.P 1m: 1 candles
+2026-10-07 00:55:23 | INFO    | backfill WLDUSDT.P 1m: 1 candles
+2026-10-07 00:55:23 | INFO    | backfill CAKEUSDT.P 1m: 1 candles
+2026-10-07 00:55:24 | INFO    | backfill POLUSDT.P 1m: 1 candles
+2026-10-07 01:11:11 | WARNING | [book_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 01:11:12 | INFO    | [book_perp] connected
+2026-10-07 01:11:33 | WARNING | [liquidations] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 01:11:34 | WARNING | [klines_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 01:11:35 | INFO    | [liquidations] connected
+2026-10-07 01:11:35 | INFO    | [klines_perp] connected
+2026-10-07 01:11:48 | WARNING | [flow_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 01:11:49 | INFO    | [flow_perp] connected
+2026-10-07 01:12:22 | INFO    | backfill BTCUSDT.P 15m: 1 candles
+2026-10-07 01:12:22 | INFO    | backfill ETHUSDT.P 15m: 1 candles
+2026-10-07 01:12:23 | INFO    | backfill SOLUSDT.P 15m: 1 candles
+2026-10-07 01:12:23 | INFO    | backfill SUIUSDT.P 15m: 1 candles
+2026-10-07 01:12:24 | INFO    | backfill TRXUSDT.P 15m: 1 candles
+2026-10-07 01:27:25 | WARNING | [flow_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 01:27:27 | INFO    | [flow_perp] connected
+2026-10-07 01:27:33 | WARNING | [liquidations] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 01:27:35 | INFO    | [liquidations] connected
+2026-10-07 01:27:41 | WARNING | [book_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 01:27:42 | INFO    | [book_perp] connected
+2026-10-07 01:27:43 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 01:27:44 | INFO    | backfill AAVEUSDT.P 15m: 2 candles
+2026-10-07 01:27:45 | INFO    | backfill BNBUSDT.P 15m: 2 candles
+2026-10-07 01:27:45 | INFO    | backfill XRPUSDT.P 15m: 2 candles
+2026-10-07 01:27:45 | INFO    | backfill HYPEUSDT.P 15m: 2 candles
+2026-10-07 01:27:46 | INFO    | backfill LINKUSDT.P 15m: 2 candles
+2026-10-07 01:27:46 | INFO    | backfill ADAUSDT.P 15m: 2 candles
+2026-10-07 01:27:47 | INFO    | backfill UNIUSDT.P 15m: 2 candles
+2026-10-07 01:27:47 | INFO    | backfill LTCUSDT.P 15m: 2 candles
+2026-10-07 01:27:47 | INFO    | backfill AVAXUSDT.P 15m: 2 candles
+2026-10-07 01:27:48 | INFO    | backfill ATOMUSDT.P 15m: 2 candles
+2026-10-07 01:27:48 | INFO    | backfill DOGEUSDT.P 15m: 2 candles
+2026-10-07 01:27:48 | INFO    | backfill DOTUSDT.P 15m: 2 candles
+2026-10-07 01:27:49 | INFO    | backfill NEARUSDT.P 15m: 2 candles
+2026-10-07 01:27:49 | INFO    | backfill OPUSDT.P 15m: 2 candles
+2026-10-07 01:27:50 | INFO    | backfill ARBUSDT.P 15m: 2 candles
+2026-10-07 01:27:50 | INFO    | backfill WLDUSDT.P 15m: 2 candles
+2026-10-07 01:27:50 | INFO    | backfill CAKEUSDT.P 15m: 2 candles
+2026-10-07 01:27:51 | INFO    | backfill POLUSDT.P 15m: 2 candles
+2026-10-07 01:27:51 | INFO    | backfill BTCUSDT.P 5m: 6 candles
+2026-10-07 01:27:51 | INFO    | backfill ETHUSDT.P 5m: 6 candles
+2026-10-07 01:27:51 | INFO    | backfill SOLUSDT.P 5m: 6 candles
+2026-10-07 01:27:52 | INFO    | backfill SUIUSDT.P 5m: 6 candles
+2026-10-07 01:27:52 | INFO    | backfill TRXUSDT.P 5m: 6 candles
+2026-10-07 01:27:52 | INFO    | backfill AAVEUSDT.P 5m: 6 candles
+2026-10-07 01:27:53 | INFO    | backfill BNBUSDT.P 5m: 6 candles
+2026-10-07 01:27:53 | INFO    | backfill XRPUSDT.P 5m: 6 candles
+2026-10-07 01:27:53 | INFO    | backfill HYPEUSDT.P 5m: 6 candles
+2026-10-07 01:27:54 | WARNING | [klines_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 01:27:54 | INFO    | backfill LINKUSDT.P 5m: 6 candles
+2026-10-07 01:27:54 | INFO    | backfill ADAUSDT.P 5m: 6 candles
+2026-10-07 01:27:54 | INFO    | backfill UNIUSDT.P 5m: 6 candles
+2026-10-07 01:27:55 | INFO    | backfill LTCUSDT.P 5m: 6 candles
+2026-10-07 01:27:55 | INFO    | backfill AVAXUSDT.P 5m: 6 candles
+2026-10-07 01:27:55 | INFO    | [klines_perp] connected
+2026-10-07 01:27:56 | INFO    | backfill ATOMUSDT.P 5m: 6 candles
+2026-10-07 01:27:56 | INFO    | backfill DOGEUSDT.P 5m: 6 candles
+2026-10-07 01:27:56 | INFO    | backfill DOTUSDT.P 5m: 6 candles
+2026-10-07 01:27:56 | INFO    | backfill NEARUSDT.P 5m: 6 candles
+2026-10-07 01:27:57 | INFO    | backfill OPUSDT.P 5m: 6 candles
+2026-10-07 01:27:57 | INFO    | backfill ARBUSDT.P 5m: 6 candles
+2026-10-07 01:27:57 | INFO    | backfill WLDUSDT.P 5m: 6 candles
+2026-10-07 01:27:57 | INFO    | backfill CAKEUSDT.P 5m: 6 candles
+2026-10-07 01:27:58 | INFO    | backfill POLUSDT.P 5m: 6 candles
+2026-10-07 01:27:58 | INFO    | backfill BTCUSDT.P 1m: 31 candles
+2026-10-07 01:27:58 | INFO    | backfill ETHUSDT.P 1m: 31 candles
+2026-10-07 01:27:58 | INFO    | backfill SOLUSDT.P 1m: 31 candles
+2026-10-07 01:27:58 | INFO    | backfill SUIUSDT.P 1m: 31 candles
+2026-10-07 01:27:58 | INFO    | backfill TRXUSDT.P 1m: 31 candles
+2026-10-07 01:27:59 | INFO    | backfill AAVEUSDT.P 1m: 31 candles
+2026-10-07 01:27:59 | INFO    | backfill BNBUSDT.P 1m: 31 candles
+2026-10-07 01:27:59 | INFO    | backfill XRPUSDT.P 1m: 31 candles
+2026-10-07 01:27:59 | INFO    | backfill HYPEUSDT.P 1m: 31 candles
+2026-10-07 01:27:59 | INFO    | backfill LINKUSDT.P 1m: 31 candles
+2026-10-07 01:27:59 | INFO    | backfill ADAUSDT.P 1m: 31 candles
+2026-10-07 01:27:59 | INFO    | backfill UNIUSDT.P 1m: 31 candles
+2026-10-07 01:28:00 | INFO    | backfill LTCUSDT.P 1m: 32 candles
+2026-10-07 01:28:00 | INFO    | backfill AVAXUSDT.P 1m: 32 candles
+2026-10-07 01:28:00 | INFO    | backfill ATOMUSDT.P 1m: 32 candles
+2026-10-07 01:28:00 | INFO    | backfill DOGEUSDT.P 1m: 32 candles
+2026-10-07 01:28:00 | INFO    | backfill DOTUSDT.P 1m: 32 candles
+2026-10-07 01:28:00 | INFO    | backfill NEARUSDT.P 1m: 32 candles
+2026-10-07 01:28:00 | INFO    | backfill OPUSDT.P 1m: 32 candles
+2026-10-07 01:28:01 | INFO    | backfill ARBUSDT.P 1m: 32 candles
+2026-10-07 01:28:01 | INFO    | backfill WLDUSDT.P 1m: 32 candles
+2026-10-07 01:28:01 | INFO    | backfill CAKEUSDT.P 1m: 32 candles
+2026-10-07 01:28:01 | INFO    | backfill POLUSDT.P 1m: 32 candles
+2026-10-07 01:43:09 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 01:43:11 | INFO    | backfill ARBUSDT.P 4h: 1 candles
+2026-10-07 01:43:12 | INFO    | backfill WLDUSDT.P 4h: 1 candles
+2026-10-07 01:43:12 | INFO    | backfill CAKEUSDT.P 4h: 1 candles
+2026-10-07 01:43:13 | INFO    | backfill POLUSDT.P 4h: 1 candles
+2026-10-07 01:43:13 | WARNING | [liquidations] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 01:43:13 | INFO    | backfill BTCUSDT.P 1h: 1 candles
+2026-10-07 01:43:14 | INFO    | backfill ETHUSDT.P 1h: 1 candles
+2026-10-07 01:43:15 | INFO    | backfill SOLUSDT.P 1h: 1 candles
+2026-10-07 01:43:15 | INFO    | [liquidations] connected
+2026-10-07 01:43:15 | WARNING | [klines_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 01:43:15 | INFO    | backfill SUIUSDT.P 1h: 1 candles
+2026-10-07 01:43:16 | INFO    | backfill TRXUSDT.P 1h: 1 candles
+2026-10-07 01:43:16 | INFO    | [klines_perp] connected
+2026-10-07 01:43:17 | INFO    | backfill AAVEUSDT.P 1h: 1 candles
+2026-10-07 01:43:17 | INFO    | backfill BNBUSDT.P 1h: 1 candles
+2026-10-07 01:43:18 | INFO    | backfill XRPUSDT.P 1h: 1 candles
+2026-10-07 01:43:20 | INFO    | backfill HYPEUSDT.P 1h: 1 candles
+2026-10-07 01:43:21 | INFO    | backfill LINKUSDT.P 1h: 1 candles
+2026-10-07 01:43:22 | INFO    | backfill ADAUSDT.P 1h: 1 candles
+2026-10-07 01:43:22 | INFO    | backfill UNIUSDT.P 1h: 1 candles
+2026-10-07 01:43:23 | INFO    | backfill LTCUSDT.P 1h: 1 candles
+2026-10-07 01:43:24 | INFO    | backfill AVAXUSDT.P 1h: 1 candles
+2026-10-07 01:43:24 | INFO    | backfill ATOMUSDT.P 1h: 1 candles
+2026-10-07 01:43:25 | INFO    | backfill DOGEUSDT.P 1h: 1 candles
+2026-10-07 01:43:26 | INFO    | backfill DOTUSDT.P 1h: 1 candles
+2026-10-07 01:43:27 | INFO    | backfill NEARUSDT.P 1h: 1 candles
+2026-10-07 01:43:27 | INFO    | backfill OPUSDT.P 1h: 1 candles
+2026-10-07 01:43:28 | INFO    | backfill ARBUSDT.P 1h: 1 candles
+2026-10-07 01:43:29 | INFO    | backfill WLDUSDT.P 1h: 1 candles
+2026-10-07 01:43:30 | INFO    | backfill CAKEUSDT.P 1h: 1 candles
+2026-10-07 01:43:30 | INFO    | backfill POLUSDT.P 1h: 1 candles
+2026-10-07 01:43:31 | INFO    | backfill BTCUSDT.P 15m: 2 candles
+2026-10-07 01:43:31 | INFO    | backfill ETHUSDT.P 15m: 2 candles
+2026-10-07 01:43:32 | INFO    | backfill SOLUSDT.P 15m: 2 candles
+2026-10-07 01:43:33 | INFO    | backfill SUIUSDT.P 15m: 2 candles
+2026-10-07 01:43:34 | INFO    | backfill TRXUSDT.P 15m: 2 candles
+2026-10-07 01:43:35 | INFO    | backfill BTCUSDT.P 4h: 1 candles
+2026-10-07 01:43:35 | INFO    | backfill AAVEUSDT.P 15m: 1 candles
+2026-10-07 01:43:35 | INFO    | backfill ETHUSDT.P 4h: 1 candles
+2026-10-07 01:43:36 | INFO    | backfill BNBUSDT.P 15m: 1 candles
+2026-10-07 01:43:36 | INFO    | backfill SOLUSDT.P 4h: 1 candles
+2026-10-07 01:43:37 | INFO    | backfill SUIUSDT.P 4h: 1 candles
+2026-10-07 01:43:37 | INFO    | backfill XRPUSDT.P 15m: 1 candles
+2026-10-07 01:43:37 | INFO    | backfill TRXUSDT.P 4h: 1 candles
+2026-10-07 01:43:37 | INFO    | backfill HYPEUSDT.P 15m: 1 candles
+2026-10-07 01:43:38 | INFO    | backfill AAVEUSDT.P 4h: 1 candles
+2026-10-07 01:43:38 | INFO    | backfill LINKUSDT.P 15m: 1 candles
+2026-10-07 01:43:39 | INFO    | backfill BNBUSDT.P 4h: 1 candles
+2026-10-07 01:43:39 | INFO    | backfill ADAUSDT.P 15m: 1 candles
+2026-10-07 01:43:39 | INFO    | backfill XRPUSDT.P 4h: 1 candles
+2026-10-07 01:43:40 | INFO    | backfill UNIUSDT.P 15m: 1 candles
+2026-10-07 01:43:40 | INFO    | backfill HYPEUSDT.P 4h: 1 candles
+2026-10-07 01:43:40 | INFO    | backfill LTCUSDT.P 15m: 1 candles
+2026-10-07 01:43:41 | WARNING | [book_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 01:43:41 | INFO    | backfill LINKUSDT.P 4h: 1 candles
+2026-10-07 01:43:41 | INFO    | backfill AVAXUSDT.P 15m: 1 candles
+2026-10-07 01:43:42 | INFO    | backfill ADAUSDT.P 4h: 1 candles
+2026-10-07 01:43:42 | INFO    | backfill ATOMUSDT.P 15m: 1 candles
+2026-10-07 01:43:42 | INFO    | [book_perp] connected
+2026-10-07 01:43:42 | INFO    | backfill UNIUSDT.P 4h: 1 candles
+2026-10-07 01:43:42 | INFO    | backfill DOGEUSDT.P 15m: 1 candles
+2026-10-07 01:43:43 | INFO    | backfill LTCUSDT.P 4h: 1 candles
+2026-10-07 01:43:43 | INFO    | backfill DOTUSDT.P 15m: 1 candles
+2026-10-07 01:43:44 | INFO    | backfill AVAXUSDT.P 4h: 1 candles
+2026-10-07 01:43:44 | INFO    | backfill NEARUSDT.P 15m: 1 candles
+2026-10-07 01:43:44 | INFO    | backfill ATOMUSDT.P 4h: 1 candles
+2026-10-07 01:43:45 | INFO    | backfill OPUSDT.P 15m: 1 candles
+2026-10-07 01:43:45 | INFO    | backfill DOGEUSDT.P 4h: 1 candles
+2026-10-07 01:43:45 | WARNING | [flow_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 01:43:46 | INFO    | backfill DOTUSDT.P 4h: 1 candles
+2026-10-07 01:43:46 | INFO    | backfill ARBUSDT.P 15m: 1 candles
+2026-10-07 01:43:47 | INFO    | backfill NEARUSDT.P 4h: 1 candles
+2026-10-07 01:43:47 | INFO    | [flow_perp] connected
+2026-10-07 01:43:47 | INFO    | backfill WLDUSDT.P 15m: 1 candles
+2026-10-07 01:43:47 | INFO    | backfill OPUSDT.P 4h: 1 candles
+2026-10-07 01:43:48 | INFO    | backfill CAKEUSDT.P 15m: 1 candles
+2026-10-07 01:43:48 | INFO    | backfill POLUSDT.P 15m: 1 candles
+2026-10-07 01:43:49 | INFO    | backfill BTCUSDT.P 5m: 3 candles
+2026-10-07 01:43:50 | INFO    | backfill ETHUSDT.P 5m: 3 candles
+2026-10-07 01:43:51 | INFO    | backfill SOLUSDT.P 5m: 3 candles
+2026-10-07 01:43:52 | INFO    | backfill SUIUSDT.P 5m: 3 candles
+2026-10-07 01:43:53 | INFO    | backfill TRXUSDT.P 5m: 3 candles
+2026-10-07 01:43:54 | INFO    | backfill AAVEUSDT.P 5m: 3 candles
+2026-10-07 01:43:54 | INFO    | backfill BNBUSDT.P 5m: 3 candles
+2026-10-07 01:43:55 | INFO    | backfill XRPUSDT.P 5m: 3 candles
+2026-10-07 01:43:56 | INFO    | backfill HYPEUSDT.P 5m: 3 candles
+2026-10-07 01:43:57 | INFO    | backfill LINKUSDT.P 5m: 3 candles
+2026-10-07 01:43:57 | INFO    | backfill ADAUSDT.P 5m: 3 candles
+2026-10-07 01:43:59 | INFO    | backfill UNIUSDT.P 5m: 3 candles
+2026-10-07 01:43:59 | INFO    | backfill LTCUSDT.P 5m: 3 candles
+2026-10-07 01:44:00 | INFO    | backfill AVAXUSDT.P 5m: 3 candles
+2026-10-07 01:44:01 | INFO    | backfill ATOMUSDT.P 5m: 3 candles
+2026-10-07 01:44:01 | INFO    | backfill DOGEUSDT.P 5m: 3 candles
+2026-10-07 01:44:02 | INFO    | backfill DOTUSDT.P 5m: 3 candles
+2026-10-07 01:44:03 | INFO    | backfill NEARUSDT.P 5m: 3 candles
+2026-10-07 01:44:04 | INFO    | backfill OPUSDT.P 5m: 3 candles
+2026-10-07 01:44:04 | INFO    | backfill ARBUSDT.P 5m: 3 candles
+2026-10-07 01:44:05 | INFO    | backfill WLDUSDT.P 5m: 3 candles
+2026-10-07 01:44:06 | INFO    | backfill CAKEUSDT.P 5m: 3 candles
+2026-10-07 01:44:07 | INFO    | backfill POLUSDT.P 5m: 3 candles
+2026-10-07 01:44:07 | INFO    | backfill BTCUSDT.P 1m: 17 candles
+2026-10-07 01:44:07 | INFO    | backfill ETHUSDT.P 1m: 17 candles
+2026-10-07 01:44:08 | INFO    | backfill SOLUSDT.P 1m: 17 candles
+2026-10-07 01:44:08 | INFO    | backfill SUIUSDT.P 1m: 17 candles
+2026-10-07 01:44:08 | INFO    | backfill TRXUSDT.P 1m: 17 candles
+2026-10-07 01:44:09 | INFO    | backfill AAVEUSDT.P 1m: 17 candles
+2026-10-07 01:44:09 | INFO    | backfill BNBUSDT.P 1m: 17 candles
+2026-10-07 01:44:10 | INFO    | backfill XRPUSDT.P 1m: 17 candles
+2026-10-07 01:44:10 | INFO    | backfill HYPEUSDT.P 1m: 17 candles
+2026-10-07 01:44:10 | INFO    | backfill LINKUSDT.P 1m: 17 candles
+2026-10-07 01:44:11 | INFO    | backfill ADAUSDT.P 1m: 17 candles
+2026-10-07 01:44:11 | INFO    | backfill UNIUSDT.P 1m: 17 candles
+2026-10-07 01:44:11 | INFO    | backfill LTCUSDT.P 1m: 17 candles
+2026-10-07 01:44:12 | INFO    | backfill AVAXUSDT.P 1m: 17 candles
+2026-10-07 01:44:12 | INFO    | backfill ATOMUSDT.P 1m: 17 candles
+2026-10-07 01:44:12 | INFO    | backfill DOGEUSDT.P 1m: 17 candles
+2026-10-07 01:44:13 | INFO    | backfill DOTUSDT.P 1m: 17 candles
+2026-10-07 01:44:13 | INFO    | backfill NEARUSDT.P 1m: 17 candles
+2026-10-07 01:44:14 | INFO    | backfill OPUSDT.P 1m: 17 candles
+2026-10-07 01:44:14 | INFO    | backfill ARBUSDT.P 1m: 17 candles
+2026-10-07 01:44:14 | INFO    | backfill WLDUSDT.P 1m: 17 candles
+2026-10-07 01:44:15 | INFO    | backfill CAKEUSDT.P 1m: 17 candles
+2026-10-07 01:44:15 | INFO    | backfill POLUSDT.P 1m: 17 candles
+2026-10-07 01:59:17 | WARNING | [book_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 01:59:19 | INFO    | [book_perp] connected
+2026-10-07 01:59:25 | WARNING | [klines_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 01:59:26 | INFO    | [klines_perp] connected
+2026-10-07 01:59:26 | WARNING | [flow_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 01:59:28 | INFO    | [flow_perp] connected
+2026-10-07 01:59:33 | WARNING | [liquidations] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 01:59:35 | INFO    | [liquidations] connected
+2026-10-07 01:59:35 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 01:59:36 | INFO    | backfill DOGEUSDT.P 15m: 1 candles
+2026-10-07 01:59:37 | INFO    | backfill DOTUSDT.P 15m: 1 candles
+2026-10-07 01:59:37 | INFO    | backfill NEARUSDT.P 15m: 1 candles
+2026-10-07 01:59:38 | INFO    | backfill OPUSDT.P 15m: 1 candles
+2026-10-07 01:59:38 | INFO    | backfill ARBUSDT.P 15m: 1 candles
+2026-10-07 01:59:39 | INFO    | backfill WLDUSDT.P 15m: 1 candles
+2026-10-07 01:59:39 | INFO    | backfill CAKEUSDT.P 15m: 1 candles
+2026-10-07 01:59:39 | INFO    | backfill POLUSDT.P 15m: 1 candles
+2026-10-07 01:59:40 | INFO    | backfill BTCUSDT.P 5m: 3 candles
+2026-10-07 01:59:40 | INFO    | backfill ETHUSDT.P 5m: 3 candles
+2026-10-07 01:59:40 | INFO    | backfill SOLUSDT.P 5m: 3 candles
+2026-10-07 01:59:41 | INFO    | backfill SUIUSDT.P 5m: 3 candles
+2026-10-07 01:59:41 | INFO    | backfill TRXUSDT.P 5m: 3 candles
+2026-10-07 01:59:41 | INFO    | backfill AAVEUSDT.P 5m: 3 candles
+2026-10-07 01:59:42 | INFO    | backfill BNBUSDT.P 5m: 3 candles
+2026-10-07 01:59:42 | INFO    | backfill XRPUSDT.P 5m: 3 candles
+2026-10-07 01:59:43 | INFO    | backfill HYPEUSDT.P 5m: 3 candles
+2026-10-07 01:59:43 | INFO    | backfill LINKUSDT.P 5m: 3 candles
+2026-10-07 01:59:43 | INFO    | backfill ADAUSDT.P 5m: 3 candles
+2026-10-07 01:59:44 | INFO    | backfill UNIUSDT.P 5m: 3 candles
+2026-10-07 01:59:44 | INFO    | backfill LTCUSDT.P 5m: 3 candles
+2026-10-07 01:59:45 | INFO    | backfill AVAXUSDT.P 5m: 3 candles
+2026-10-07 01:59:45 | INFO    | backfill ATOMUSDT.P 5m: 3 candles
+2026-10-07 01:59:45 | INFO    | backfill DOGEUSDT.P 5m: 3 candles
+2026-10-07 01:59:46 | INFO    | backfill DOTUSDT.P 5m: 3 candles
+2026-10-07 01:59:47 | INFO    | backfill NEARUSDT.P 5m: 3 candles
+2026-10-07 01:59:47 | INFO    | backfill OPUSDT.P 5m: 3 candles
+2026-10-07 01:59:47 | INFO    | backfill ARBUSDT.P 5m: 3 candles
+2026-10-07 01:59:48 | INFO    | backfill WLDUSDT.P 5m: 3 candles
+2026-10-07 01:59:48 | INFO    | backfill CAKEUSDT.P 5m: 3 candles
+2026-10-07 01:59:48 | INFO    | backfill POLUSDT.P 5m: 3 candles
+2026-10-07 01:59:49 | INFO    | backfill BTCUSDT.P 1m: 16 candles
+2026-10-07 01:59:49 | INFO    | backfill ETHUSDT.P 1m: 16 candles
+2026-10-07 01:59:49 | INFO    | backfill BTCUSDT.P 15m: 1 candles
+2026-10-07 01:59:49 | INFO    | backfill ETHUSDT.P 15m: 1 candles
+2026-10-07 01:59:49 | INFO    | backfill SOLUSDT.P 1m: 16 candles
+2026-10-07 01:59:50 | INFO    | backfill SUIUSDT.P 1m: 16 candles
+2026-10-07 01:59:50 | INFO    | backfill SOLUSDT.P 15m: 1 candles
+2026-10-07 01:59:50 | INFO    | backfill TRXUSDT.P 1m: 16 candles
+2026-10-07 01:59:50 | INFO    | backfill AAVEUSDT.P 1m: 16 candles
+2026-10-07 01:59:50 | INFO    | backfill SUIUSDT.P 15m: 1 candles
+2026-10-07 01:59:50 | INFO    | backfill BNBUSDT.P 1m: 16 candles
+2026-10-07 01:59:50 | INFO    | backfill XRPUSDT.P 1m: 16 candles
+2026-10-07 01:59:50 | INFO    | backfill TRXUSDT.P 15m: 1 candles
+2026-10-07 01:59:50 | INFO    | backfill HYPEUSDT.P 1m: 16 candles
+2026-10-07 01:59:50 | INFO    | backfill LINKUSDT.P 1m: 16 candles
+2026-10-07 01:59:51 | INFO    | backfill AAVEUSDT.P 15m: 1 candles
+2026-10-07 01:59:51 | INFO    | backfill ADAUSDT.P 1m: 16 candles
+2026-10-07 01:59:51 | INFO    | backfill UNIUSDT.P 1m: 16 candles
+2026-10-07 01:59:51 | INFO    | backfill BNBUSDT.P 15m: 1 candles
+2026-10-07 01:59:51 | INFO    | backfill LTCUSDT.P 1m: 16 candles
+2026-10-07 01:59:51 | INFO    | backfill XRPUSDT.P 15m: 1 candles
+2026-10-07 01:59:51 | INFO    | backfill AVAXUSDT.P 1m: 16 candles
+2026-10-07 01:59:51 | INFO    | backfill HYPEUSDT.P 15m: 1 candles
+2026-10-07 01:59:51 | INFO    | backfill ATOMUSDT.P 1m: 16 candles
+2026-10-07 01:59:52 | INFO    | backfill DOGEUSDT.P 1m: 16 candles
+2026-10-07 01:59:52 | INFO    | backfill LINKUSDT.P 15m: 1 candles
+2026-10-07 01:59:52 | INFO    | backfill DOTUSDT.P 1m: 16 candles
+2026-10-07 01:59:52 | INFO    | backfill NEARUSDT.P 1m: 16 candles
+2026-10-07 01:59:52 | INFO    | backfill ADAUSDT.P 15m: 1 candles
+2026-10-07 01:59:52 | INFO    | backfill OPUSDT.P 1m: 16 candles
+2026-10-07 01:59:52 | INFO    | backfill ARBUSDT.P 1m: 16 candles
+2026-10-07 01:59:52 | INFO    | backfill UNIUSDT.P 15m: 1 candles
+2026-10-07 01:59:52 | INFO    | backfill WLDUSDT.P 1m: 16 candles
+2026-10-07 01:59:53 | INFO    | backfill CAKEUSDT.P 1m: 16 candles
+2026-10-07 01:59:53 | INFO    | backfill LTCUSDT.P 15m: 1 candles
+2026-10-07 01:59:53 | INFO    | backfill POLUSDT.P 1m: 16 candles
+2026-10-07 01:59:53 | INFO    | backfill AVAXUSDT.P 15m: 1 candles
+2026-10-07 01:59:53 | INFO    | backfill ATOMUSDT.P 15m: 1 candles
+2026-10-07 02:00:00 | INFO    | backfill AVAXUSDT.P 5m: 1 candles
+2026-10-07 02:00:00 | INFO    | backfill ATOMUSDT.P 5m: 1 candles
+2026-10-07 02:00:00 | INFO    | backfill DOGEUSDT.P 5m: 1 candles
+2026-10-07 02:00:01 | INFO    | backfill DOTUSDT.P 5m: 1 candles
+2026-10-07 02:00:01 | INFO    | backfill NEARUSDT.P 5m: 1 candles
+2026-10-07 02:05:44 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 02:05:44 | WARNING | GET https://fapi.binance.com/fapi/v1/openInterest failed (), retry in 1s
+2026-10-07 02:05:46 | INFO    | backfill OPUSDT.P 5m: 2 candles
+2026-10-07 02:05:47 | INFO    | backfill ARBUSDT.P 5m: 2 candles
+2026-10-07 02:05:47 | INFO    | backfill WLDUSDT.P 5m: 2 candles
+2026-10-07 02:05:48 | INFO    | backfill CAKEUSDT.P 5m: 2 candles
+2026-10-07 02:05:49 | INFO    | backfill POLUSDT.P 5m: 2 candles
+2026-10-07 02:05:49 | INFO    | backfill BTCUSDT.P 1m: 6 candles
+2026-10-07 02:05:49 | INFO    | backfill ETHUSDT.P 1m: 6 candles
+2026-10-07 02:05:50 | INFO    | backfill SOLUSDT.P 1m: 6 candles
+2026-10-07 02:05:50 | INFO    | backfill SUIUSDT.P 1m: 6 candles
+2026-10-07 02:05:50 | INFO    | backfill TRXUSDT.P 1m: 6 candles
+2026-10-07 02:05:51 | INFO    | backfill AAVEUSDT.P 1m: 6 candles
+2026-10-07 02:05:51 | INFO    | backfill BNBUSDT.P 1m: 6 candles
+2026-10-07 02:05:51 | INFO    | backfill XRPUSDT.P 1m: 6 candles
+2026-10-07 02:05:52 | INFO    | backfill HYPEUSDT.P 1m: 6 candles
+2026-10-07 02:05:52 | INFO    | backfill LINKUSDT.P 1m: 6 candles
+2026-10-07 02:05:52 | INFO    | backfill ADAUSDT.P 1m: 6 candles
+2026-10-07 02:05:53 | INFO    | backfill UNIUSDT.P 1m: 6 candles
+2026-10-07 02:05:53 | INFO    | backfill LTCUSDT.P 1m: 6 candles
+2026-10-07 02:05:53 | INFO    | backfill AVAXUSDT.P 1m: 6 candles
+2026-10-07 02:05:54 | INFO    | backfill ATOMUSDT.P 1m: 6 candles
+2026-10-07 02:05:54 | INFO    | backfill DOGEUSDT.P 1m: 6 candles
+2026-10-07 02:05:54 | INFO    | backfill DOTUSDT.P 1m: 6 candles
+2026-10-07 02:05:55 | INFO    | backfill NEARUSDT.P 1m: 6 candles
+2026-10-07 02:05:55 | INFO    | backfill OPUSDT.P 1m: 6 candles
+2026-10-07 02:05:55 | INFO    | backfill ARBUSDT.P 1m: 6 candles
+2026-10-07 02:05:56 | INFO    | backfill WLDUSDT.P 1m: 6 candles
+2026-10-07 02:05:56 | INFO    | backfill CAKEUSDT.P 1m: 6 candles
+2026-10-07 02:05:56 | INFO    | backfill POLUSDT.P 1m: 6 candles
+2026-10-07 02:06:08 | WARNING | [klines_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:06:10 | INFO    | [klines_perp] connected
+2026-10-07 02:06:10 | WARNING | [flow_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:06:11 | INFO    | [flow_perp] connected
+2026-10-07 02:06:21 | WARNING | [book_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:06:22 | INFO    | [book_perp] connected
+2026-10-07 02:06:26 | WARNING | [liquidations] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:06:28 | INFO    | [liquidations] connected
+2026-10-07 02:21:29 | WARNING | [liquidations] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 02:21:31 | INFO    | [liquidations] connected
+2026-10-07 02:21:41 | WARNING | [book_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 02:21:43 | INFO    | [book_perp] connected
+2026-10-07 02:21:48 | WARNING | GET https://fapi.binance.com/fapi/v1/fundingRate failed (), retry in 1s
+2026-10-07 02:21:48 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 02:21:50 | WARNING | [flow_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:21:52 | INFO    | [flow_perp] connected
+2026-10-07 02:22:08 | WARNING | [klines_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:22:10 | INFO    | [klines_perp] connected
+2026-10-07 02:26:46 | WARNING | [flow_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 02:26:47 | INFO    | [flow_perp] connected
+2026-10-07 02:26:49 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 02:26:49 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 02:26:52 | INFO    | backfill BTCUSDT.P 15m: 1 candles
+2026-10-07 02:26:52 | INFO    | backfill ETHUSDT.P 15m: 1 candles
+2026-10-07 02:26:53 | INFO    | backfill SOLUSDT.P 15m: 1 candles
+2026-10-07 02:26:54 | INFO    | backfill SUIUSDT.P 15m: 1 candles
+2026-10-07 02:26:55 | INFO    | backfill TRXUSDT.P 15m: 2 candles
+2026-10-07 02:26:55 | INFO    | backfill AAVEUSDT.P 15m: 1 candles
+2026-10-07 02:26:56 | INFO    | backfill BNBUSDT.P 15m: 1 candles
+2026-10-07 02:26:56 | WARNING | [book_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:26:57 | INFO    | backfill XRPUSDT.P 15m: 1 candles
+2026-10-07 02:26:58 | INFO    | backfill HYPEUSDT.P 15m: 1 candles
+2026-10-07 02:26:58 | INFO    | [book_perp] connected
+2026-10-07 02:26:58 | INFO    | backfill LINKUSDT.P 15m: 2 candles
+2026-10-07 02:26:59 | INFO    | backfill ADAUSDT.P 15m: 2 candles
+2026-10-07 02:27:00 | INFO    | backfill UNIUSDT.P 15m: 1 candles
+2026-10-07 02:27:00 | INFO    | backfill LTCUSDT.P 15m: 1 candles
+2026-10-07 02:27:01 | INFO    | backfill AVAXUSDT.P 15m: 1 candles
+2026-10-07 02:27:02 | INFO    | backfill ATOMUSDT.P 15m: 2 candles
+2026-10-07 02:27:02 | INFO    | backfill DOGEUSDT.P 15m: 1 candles
+2026-10-07 02:27:03 | WARNING | [klines_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:27:03 | INFO    | backfill DOTUSDT.P 15m: 1 candles
+2026-10-07 02:27:04 | INFO    | backfill NEARUSDT.P 15m: 1 candles
+2026-10-07 02:27:05 | INFO    | [klines_perp] connected
+2026-10-07 02:27:05 | INFO    | backfill OPUSDT.P 15m: 1 candles
+2026-10-07 02:27:06 | INFO    | backfill ARBUSDT.P 15m: 1 candles
+2026-10-07 02:27:07 | INFO    | backfill WLDUSDT.P 15m: 1 candles
+2026-10-07 02:27:08 | INFO    | backfill CAKEUSDT.P 15m: 2 candles
+2026-10-07 02:27:09 | INFO    | backfill POLUSDT.P 15m: 1 candles
+2026-10-07 02:27:09 | INFO    | backfill BTCUSDT.P 5m: 5 candles
+2026-10-07 02:27:09 | INFO    | backfill ETHUSDT.P 5m: 5 candles
+2026-10-07 02:27:10 | INFO    | backfill SOLUSDT.P 5m: 5 candles
+2026-10-07 02:27:11 | INFO    | backfill SUIUSDT.P 5m: 5 candles
+2026-10-07 02:27:11 | INFO    | backfill TRXUSDT.P 5m: 6 candles
+2026-10-07 02:27:12 | INFO    | backfill AAVEUSDT.P 5m: 5 candles
+2026-10-07 02:27:13 | INFO    | backfill BNBUSDT.P 5m: 5 candles
+2026-10-07 02:27:14 | INFO    | backfill XRPUSDT.P 5m: 5 candles
+2026-10-07 02:27:14 | WARNING | [liquidations] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:27:14 | INFO    | backfill HYPEUSDT.P 5m: 5 candles
+2026-10-07 02:27:15 | INFO    | backfill LINKUSDT.P 5m: 6 candles
+2026-10-07 02:27:16 | INFO    | [liquidations] connected
+2026-10-07 02:27:16 | INFO    | backfill ADAUSDT.P 5m: 6 candles
+2026-10-07 02:31:33 | WARNING | [book_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 02:31:35 | INFO    | [book_perp] connected
+2026-10-07 02:31:50 | WARNING | GET https://fapi.binance.com/fapi/v1/openInterest failed (), retry in 1s
+2026-10-07 02:31:50 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 02:31:50 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 02:31:50 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 02:31:52 | INFO    | backfill UNIUSDT.P 5m: 6 candles
+2026-10-07 02:31:53 | INFO    | backfill LTCUSDT.P 5m: 6 candles
+2026-10-07 02:31:54 | INFO    | backfill AVAXUSDT.P 5m: 6 candles
+2026-10-07 02:31:55 | INFO    | backfill ATOMUSDT.P 5m: 6 candles
+2026-10-07 02:31:56 | INFO    | backfill DOGEUSDT.P 5m: 6 candles
+2026-10-07 02:31:57 | INFO    | backfill DOTUSDT.P 5m: 6 candles
+2026-10-07 02:31:58 | INFO    | backfill BTCUSDT.P 1h: 1 candles
+2026-10-07 02:31:58 | INFO    | backfill NEARUSDT.P 5m: 6 candles
+2026-10-07 02:31:59 | INFO    | backfill ETHUSDT.P 1h: 1 candles
+2026-10-07 02:31:59 | WARNING | [klines_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:31:59 | INFO    | backfill OPUSDT.P 5m: 5 candles
+2026-10-07 02:31:59 | INFO    | backfill SOLUSDT.P 1h: 1 candles
+2026-10-07 02:32:00 | INFO    | backfill ARBUSDT.P 5m: 5 candles
+2026-10-07 02:32:00 | INFO    | [klines_perp] connected
+2026-10-07 02:32:00 | INFO    | backfill SUIUSDT.P 1h: 1 candles
+2026-10-07 02:32:01 | INFO    | backfill WLDUSDT.P 5m: 5 candles
+2026-10-07 02:32:01 | INFO    | backfill TRXUSDT.P 1h: 1 candles
+2026-10-07 02:32:02 | INFO    | backfill CAKEUSDT.P 5m: 5 candles
+2026-10-07 02:32:02 | WARNING | [flow_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:32:02 | INFO    | backfill AAVEUSDT.P 1h: 1 candles
+2026-10-07 02:32:02 | INFO    | backfill POLUSDT.P 5m: 5 candles
+2026-10-07 02:32:03 | INFO    | backfill BNBUSDT.P 1h: 1 candles
+2026-10-07 02:32:03 | INFO    | backfill BTCUSDT.P 1m: 27 candles
+2026-10-07 02:32:03 | INFO    | [flow_perp] connected
+2026-10-07 02:32:03 | INFO    | backfill ETHUSDT.P 1m: 27 candles
+2026-10-07 02:32:03 | INFO    | backfill XRPUSDT.P 1h: 1 candles
+2026-10-07 02:32:04 | INFO    | backfill SOLUSDT.P 1m: 27 candles
+2026-10-07 02:32:04 | INFO    | backfill SUIUSDT.P 1m: 27 candles
+2026-10-07 02:32:04 | INFO    | backfill HYPEUSDT.P 1h: 1 candles
+2026-10-07 02:32:05 | INFO    | backfill TRXUSDT.P 1m: 27 candles
+2026-10-07 02:32:05 | INFO    | backfill AAVEUSDT.P 1m: 27 candles
+2026-10-07 02:32:05 | INFO    | backfill LINKUSDT.P 1h: 1 candles
+2026-10-07 02:32:05 | INFO    | backfill BNBUSDT.P 1m: 27 candles
+2026-10-07 02:32:06 | INFO    | backfill XRPUSDT.P 1m: 27 candles
+2026-10-07 02:32:06 | INFO    | backfill ADAUSDT.P 1h: 1 candles
+2026-10-07 02:32:06 | INFO    | backfill HYPEUSDT.P 1m: 27 candles
+2026-10-07 02:32:07 | INFO    | backfill LINKUSDT.P 1m: 27 candles
+2026-10-07 02:32:07 | INFO    | backfill UNIUSDT.P 1h: 1 candles
+2026-10-07 02:32:07 | INFO    | backfill ADAUSDT.P 1m: 27 candles
+2026-10-07 02:32:07 | INFO    | backfill UNIUSDT.P 1m: 27 candles
+2026-10-07 02:32:08 | INFO    | backfill LTCUSDT.P 1h: 1 candles
+2026-10-07 02:32:08 | INFO    | backfill LTCUSDT.P 1m: 27 candles
+2026-10-07 02:32:08 | INFO    | backfill AVAXUSDT.P 1m: 27 candles
+2026-10-07 02:32:08 | INFO    | backfill AVAXUSDT.P 1h: 1 candles
+2026-10-07 02:32:09 | INFO    | backfill ATOMUSDT.P 1m: 27 candles
+2026-10-07 02:32:09 | INFO    | backfill DOGEUSDT.P 1m: 27 candles
+2026-10-07 02:32:09 | INFO    | backfill ATOMUSDT.P 1h: 1 candles
+2026-10-07 02:32:09 | INFO    | backfill DOTUSDT.P 1m: 27 candles
+2026-10-07 02:32:10 | INFO    | backfill NEARUSDT.P 1m: 27 candles
+2026-10-07 02:32:10 | INFO    | backfill DOGEUSDT.P 1h: 1 candles
+2026-10-07 02:32:10 | INFO    | backfill OPUSDT.P 1m: 27 candles
+2026-10-07 02:32:11 | INFO    | backfill ARBUSDT.P 1m: 27 candles
+2026-10-07 02:32:11 | INFO    | backfill DOTUSDT.P 1h: 1 candles
+2026-10-07 02:32:11 | INFO    | backfill WLDUSDT.P 1m: 27 candles
+2026-10-07 02:32:12 | INFO    | backfill CAKEUSDT.P 1m: 27 candles
+2026-10-07 02:32:12 | INFO    | backfill NEARUSDT.P 1h: 1 candles
+2026-10-07 02:32:12 | INFO    | backfill POLUSDT.P 1m: 27 candles
+2026-10-07 02:32:12 | INFO    | backfill OPUSDT.P 1h: 1 candles
+2026-10-07 02:32:13 | INFO    | backfill ARBUSDT.P 1h: 1 candles
+2026-10-07 02:32:14 | INFO    | backfill WLDUSDT.P 1h: 1 candles
+2026-10-07 02:32:15 | INFO    | backfill CAKEUSDT.P 1h: 1 candles
+2026-10-07 02:32:16 | INFO    | backfill POLUSDT.P 1h: 1 candles
+2026-10-07 02:32:16 | INFO    | backfill BTCUSDT.P 15m: 1 candles
+2026-10-07 02:32:17 | INFO    | backfill ETHUSDT.P 15m: 1 candles
+2026-10-07 02:32:17 | INFO    | backfill BTCUSDT.P 1h: 1 candles
+2026-10-07 02:32:18 | INFO    | backfill SOLUSDT.P 15m: 1 candles
+2026-10-07 02:32:18 | INFO    | backfill ETHUSDT.P 1h: 1 candles
+2026-10-07 02:32:18 | INFO    | backfill SOLUSDT.P 1h: 1 candles
+2026-10-07 02:32:18 | INFO    | backfill SUIUSDT.P 15m: 1 candles
+2026-10-07 02:32:19 | INFO    | backfill SUIUSDT.P 1h: 1 candles
+2026-10-07 02:32:19 | INFO    | backfill TRXUSDT.P 15m: 1 candles
+2026-10-07 02:32:20 | WARNING | [liquidations] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:32:20 | INFO    | backfill TRXUSDT.P 1h: 1 candles
+2026-10-07 02:32:20 | INFO    | backfill AAVEUSDT.P 15m: 1 candles
+2026-10-07 02:32:21 | INFO    | backfill AAVEUSDT.P 1h: 1 candles
+2026-10-07 02:32:21 | INFO    | backfill BNBUSDT.P 15m: 1 candles
+2026-10-07 02:32:21 | INFO    | [liquidations] connected
+2026-10-07 02:32:22 | INFO    | backfill BNBUSDT.P 1h: 1 candles
+2026-10-07 02:32:22 | INFO    | backfill XRPUSDT.P 15m: 1 candles
+2026-10-07 02:32:23 | INFO    | backfill XRPUSDT.P 1h: 1 candles
+2026-10-07 02:32:23 | INFO    | backfill HYPEUSDT.P 15m: 1 candles
+2026-10-07 02:32:23 | INFO    | backfill HYPEUSDT.P 1h: 1 candles
+2026-10-07 02:32:23 | INFO    | backfill LINKUSDT.P 15m: 1 candles
+2026-10-07 02:32:24 | INFO    | backfill LINKUSDT.P 1h: 1 candles
+2026-10-07 02:32:24 | INFO    | backfill ADAUSDT.P 15m: 1 candles
+2026-10-07 02:32:25 | INFO    | backfill ADAUSDT.P 1h: 1 candles
+2026-10-07 02:32:25 | INFO    | backfill UNIUSDT.P 15m: 1 candles
+2026-10-07 02:32:26 | INFO    | backfill UNIUSDT.P 1h: 1 candles
+2026-10-07 02:32:26 | INFO    | backfill LTCUSDT.P 15m: 1 candles
+2026-10-07 02:32:27 | INFO    | backfill LTCUSDT.P 1h: 1 candles
+2026-10-07 02:32:27 | INFO    | backfill AVAXUSDT.P 15m: 1 candles
+2026-10-07 02:32:28 | INFO    | backfill AVAXUSDT.P 1h: 1 candles
+2026-10-07 02:32:28 | INFO    | backfill ATOMUSDT.P 15m: 1 candles
+2026-10-07 02:32:28 | INFO    | backfill ATOMUSDT.P 1h: 1 candles
+2026-10-07 02:32:28 | INFO    | backfill DOGEUSDT.P 15m: 1 candles
+2026-10-07 02:36:33 | WARNING | [flow_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 02:36:34 | INFO    | [flow_perp] connected
+2026-10-07 02:36:51 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 02:36:51 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 02:36:51 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 02:36:53 | INFO    | backfill DOGEUSDT.P 1h: 1 candles
+2026-10-07 02:36:53 | INFO    | backfill DOTUSDT.P 15m: 1 candles
+2026-10-07 02:36:54 | INFO    | backfill DOTUSDT.P 1h: 1 candles
+2026-10-07 02:36:54 | INFO    | backfill NEARUSDT.P 15m: 1 candles
+2026-10-07 02:36:54 | INFO    | backfill NEARUSDT.P 1h: 1 candles
+2026-10-07 02:36:54 | INFO    | backfill OPUSDT.P 15m: 1 candles
+2026-10-07 02:36:55 | INFO    | backfill OPUSDT.P 1h: 1 candles
+2026-10-07 02:36:55 | INFO    | backfill ARBUSDT.P 15m: 1 candles
+2026-10-07 02:36:56 | INFO    | backfill ARBUSDT.P 1h: 1 candles
+2026-10-07 02:36:56 | INFO    | backfill WLDUSDT.P 15m: 1 candles
+2026-10-07 02:36:57 | INFO    | backfill WLDUSDT.P 1h: 1 candles
+2026-10-07 02:36:57 | INFO    | backfill CAKEUSDT.P 15m: 1 candles
+2026-10-07 02:36:57 | WARNING | [book_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:36:58 | INFO    | backfill CAKEUSDT.P 1h: 1 candles
+2026-10-07 02:36:58 | INFO    | backfill POLUSDT.P 15m: 1 candles
+2026-10-07 02:36:58 | INFO    | backfill POLUSDT.P 1h: 1 candles
+2026-10-07 02:36:58 | INFO    | backfill BTCUSDT.P 5m: 3 candles
+2026-10-07 02:36:59 | INFO    | backfill BTCUSDT.P 15m: 1 candles
+2026-10-07 02:36:59 | INFO    | backfill ETHUSDT.P 5m: 3 candles
+2026-10-07 02:36:59 | INFO    | backfill ETHUSDT.P 15m: 1 candles
+2026-10-07 02:36:59 | INFO    | [book_perp] connected
+2026-10-07 02:36:59 | INFO    | backfill SOLUSDT.P 5m: 3 candles
+2026-10-07 02:37:00 | INFO    | backfill SOLUSDT.P 15m: 1 candles
+2026-10-07 02:37:00 | INFO    | backfill SUIUSDT.P 5m: 3 candles
+2026-10-07 02:37:00 | INFO    | backfill SUIUSDT.P 15m: 1 candles
+2026-10-07 02:37:01 | INFO    | backfill TRXUSDT.P 5m: 3 candles
+2026-10-07 02:37:01 | INFO    | backfill TRXUSDT.P 15m: 1 candles
+2026-10-07 02:37:02 | INFO    | backfill AAVEUSDT.P 5m: 3 candles
+2026-10-07 02:37:02 | INFO    | backfill AAVEUSDT.P 15m: 1 candles
+2026-10-07 02:37:02 | INFO    | backfill BNBUSDT.P 5m: 3 candles
+2026-10-07 02:37:02 | INFO    | backfill BNBUSDT.P 15m: 1 candles
+2026-10-07 02:37:03 | WARNING | [klines_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:37:03 | INFO    | backfill XRPUSDT.P 5m: 3 candles
+2026-10-07 02:37:03 | INFO    | backfill XRPUSDT.P 15m: 1 candles
+2026-10-07 02:37:04 | INFO    | backfill HYPEUSDT.P 5m: 3 candles
+2026-10-07 02:37:04 | INFO    | backfill HYPEUSDT.P 15m: 1 candles
+2026-10-07 02:37:04 | INFO    | [klines_perp] connected
+2026-10-07 02:37:04 | INFO    | backfill LINKUSDT.P 5m: 3 candles
+2026-10-07 02:37:04 | INFO    | backfill LINKUSDT.P 15m: 1 candles
+2026-10-07 02:37:05 | INFO    | backfill ADAUSDT.P 15m: 1 candles
+2026-10-07 02:37:05 | INFO    | backfill ADAUSDT.P 5m: 3 candles
+2026-10-07 02:37:06 | INFO    | backfill UNIUSDT.P 5m: 3 candles
+2026-10-07 02:37:06 | INFO    | backfill UNIUSDT.P 15m: 1 candles
+2026-10-07 02:37:06 | INFO    | backfill LTCUSDT.P 5m: 3 candles
+2026-10-07 02:37:06 | INFO    | backfill LTCUSDT.P 15m: 1 candles
+2026-10-07 02:37:07 | INFO    | backfill AVAXUSDT.P 5m: 3 candles
+2026-10-07 02:37:07 | INFO    | backfill AVAXUSDT.P 15m: 1 candles
+2026-10-07 02:37:08 | INFO    | backfill ATOMUSDT.P 5m: 3 candles
+2026-10-07 02:37:08 | INFO    | backfill ATOMUSDT.P 15m: 1 candles
+2026-10-07 02:37:08 | INFO    | backfill DOGEUSDT.P 5m: 3 candles
+2026-10-07 02:37:08 | INFO    | backfill DOGEUSDT.P 15m: 1 candles
+2026-10-07 02:37:09 | INFO    | backfill DOTUSDT.P 5m: 3 candles
+2026-10-07 02:37:09 | INFO    | backfill DOTUSDT.P 15m: 1 candles
+2026-10-07 02:37:10 | INFO    | backfill NEARUSDT.P 5m: 3 candles
+2026-10-07 02:37:10 | INFO    | backfill NEARUSDT.P 15m: 1 candles
+2026-10-07 02:37:10 | INFO    | backfill OPUSDT.P 5m: 3 candles
+2026-10-07 02:37:10 | INFO    | backfill OPUSDT.P 15m: 1 candles
+2026-10-07 02:37:11 | INFO    | backfill ARBUSDT.P 5m: 3 candles
+2026-10-07 02:37:11 | INFO    | backfill ARBUSDT.P 15m: 1 candles
+2026-10-07 02:37:12 | INFO    | backfill WLDUSDT.P 5m: 3 candles
+2026-10-07 02:37:12 | INFO    | backfill WLDUSDT.P 15m: 1 candles
+2026-10-07 02:37:12 | INFO    | backfill CAKEUSDT.P 5m: 3 candles
+2026-10-07 02:37:12 | INFO    | backfill CAKEUSDT.P 15m: 1 candles
+2026-10-07 02:37:13 | INFO    | backfill POLUSDT.P 5m: 3 candles
+2026-10-07 02:37:13 | INFO    | backfill POLUSDT.P 15m: 1 candles
+2026-10-07 02:37:13 | INFO    | backfill BTCUSDT.P 1m: 15 candles
+2026-10-07 02:37:14 | INFO    | backfill BTCUSDT.P 5m: 2 candles
+2026-10-07 02:37:14 | WARNING | [liquidations] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:37:14 | INFO    | backfill ETHUSDT.P 1m: 15 candles
+2026-10-07 02:37:14 | INFO    | backfill ETHUSDT.P 5m: 2 candles
+2026-10-07 02:37:14 | INFO    | backfill SOLUSDT.P 1m: 15 candles
+2026-10-07 02:37:14 | INFO    | backfill SUIUSDT.P 1m: 15 candles
+2026-10-07 02:37:15 | INFO    | backfill SOLUSDT.P 5m: 2 candles
+2026-10-07 02:37:15 | INFO    | backfill TRXUSDT.P 1m: 15 candles
+2026-10-07 02:37:15 | INFO    | [liquidations] connected
+2026-10-07 02:37:15 | INFO    | backfill AAVEUSDT.P 1m: 15 candles
+2026-10-07 02:37:15 | INFO    | backfill SUIUSDT.P 5m: 2 candles
+2026-10-07 02:37:15 | INFO    | backfill BNBUSDT.P 1m: 15 candles
+2026-10-07 02:37:16 | INFO    | backfill XRPUSDT.P 1m: 15 candles
+2026-10-07 02:37:16 | INFO    | backfill TRXUSDT.P 5m: 2 candles
+2026-10-07 02:37:16 | INFO    | backfill HYPEUSDT.P 1m: 15 candles
+2026-10-07 02:37:16 | INFO    | backfill LINKUSDT.P 1m: 15 candles
+2026-10-07 02:37:17 | INFO    | backfill AAVEUSDT.P 5m: 2 candles
+2026-10-07 02:37:17 | INFO    | backfill ADAUSDT.P 1m: 15 candles
+2026-10-07 02:37:17 | INFO    | backfill UNIUSDT.P 1m: 15 candles
+2026-10-07 02:37:17 | INFO    | backfill BNBUSDT.P 5m: 2 candles
+2026-10-07 02:37:17 | INFO    | backfill LTCUSDT.P 1m: 15 candles
+2026-10-07 02:37:18 | INFO    | backfill AVAXUSDT.P 1m: 15 candles
+2026-10-07 02:37:18 | INFO    | backfill XRPUSDT.P 5m: 2 candles
+2026-10-07 02:37:18 | INFO    | backfill ATOMUSDT.P 1m: 15 candles
+2026-10-07 02:37:19 | INFO    | backfill DOGEUSDT.P 1m: 15 candles
+2026-10-07 02:37:19 | INFO    | backfill HYPEUSDT.P 5m: 2 candles
+2026-10-07 02:37:19 | INFO    | backfill DOTUSDT.P 1m: 15 candles
+2026-10-07 02:37:19 | INFO    | backfill NEARUSDT.P 1m: 15 candles
+2026-10-07 02:53:12 | WARNING | [liquidations] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 02:53:14 | INFO    | [liquidations] connected
+2026-10-07 02:53:16 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 02:53:16 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 02:53:16 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 02:53:16 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 02:53:17 | INFO    | backfill LINKUSDT.P 5m: 5 candles
+2026-10-07 02:53:17 | INFO    | backfill BNBUSDT.P 15m: 1 candles
+2026-10-07 02:53:18 | INFO    | backfill OPUSDT.P 1m: 31 candles
+2026-10-07 02:53:18 | INFO    | backfill ADAUSDT.P 5m: 5 candles
+2026-10-07 02:53:18 | INFO    | backfill ARBUSDT.P 1m: 31 candles
+2026-10-07 02:53:18 | WARNING | [book_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:53:18 | INFO    | backfill XRPUSDT.P 15m: 1 candles
+2026-10-07 02:53:18 | INFO    | backfill WLDUSDT.P 1m: 31 candles
+2026-10-07 02:53:18 | INFO    | backfill UNIUSDT.P 5m: 5 candles
+2026-10-07 02:53:18 | INFO    | backfill CAKEUSDT.P 1m: 31 candles
+2026-10-07 02:53:18 | INFO    | backfill HYPEUSDT.P 15m: 1 candles
+2026-10-07 02:53:18 | INFO    | backfill LTCUSDT.P 5m: 5 candles
+2026-10-07 02:53:18 | INFO    | backfill POLUSDT.P 1m: 31 candles
+2026-10-07 02:53:18 | INFO    | backfill LINKUSDT.P 15m: 1 candles
+2026-10-07 02:53:19 | INFO    | backfill AVAXUSDT.P 5m: 5 candles
+2026-10-07 02:53:19 | INFO    | backfill ADAUSDT.P 15m: 1 candles
+2026-10-07 02:53:19 | INFO    | backfill ATOMUSDT.P 5m: 5 candles
+2026-10-07 02:53:19 | INFO    | backfill UNIUSDT.P 15m: 1 candles
+2026-10-07 02:53:19 | INFO    | [book_perp] connected
+2026-10-07 02:53:19 | INFO    | backfill DOGEUSDT.P 5m: 5 candles
+2026-10-07 02:53:19 | INFO    | backfill LTCUSDT.P 15m: 1 candles
+2026-10-07 02:53:20 | INFO    | backfill DOTUSDT.P 5m: 5 candles
+2026-10-07 02:53:20 | INFO    | backfill AVAXUSDT.P 15m: 1 candles
+2026-10-07 02:53:20 | INFO    | backfill NEARUSDT.P 5m: 5 candles
+2026-10-07 02:53:20 | INFO    | backfill ATOMUSDT.P 15m: 1 candles
+2026-10-07 02:53:20 | INFO    | backfill OPUSDT.P 5m: 5 candles
+2026-10-07 02:53:21 | INFO    | backfill DOGEUSDT.P 15m: 1 candles
+2026-10-07 02:53:21 | INFO    | backfill ARBUSDT.P 5m: 5 candles
+2026-10-07 02:53:21 | INFO    | backfill DOTUSDT.P 15m: 1 candles
+2026-10-07 02:53:21 | INFO    | backfill WLDUSDT.P 5m: 5 candles
+2026-10-07 02:53:21 | INFO    | backfill NEARUSDT.P 15m: 1 candles
+2026-10-07 02:53:22 | WARNING | [klines_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:53:22 | INFO    | backfill CAKEUSDT.P 5m: 5 candles
+2026-10-07 02:53:22 | INFO    | backfill OPUSDT.P 15m: 1 candles
+2026-10-07 02:53:22 | INFO    | backfill POLUSDT.P 5m: 5 candles
+2026-10-07 02:53:22 | INFO    | backfill ARBUSDT.P 15m: 1 candles
+2026-10-07 02:53:22 | INFO    | backfill BTCUSDT.P 1m: 26 candles
+2026-10-07 02:53:22 | INFO    | backfill ETHUSDT.P 1m: 26 candles
+2026-10-07 02:53:22 | INFO    | backfill WLDUSDT.P 15m: 1 candles
+2026-10-07 02:53:22 | INFO    | backfill SOLUSDT.P 1m: 26 candles
+2026-10-07 02:53:23 | INFO    | backfill SUIUSDT.P 1m: 26 candles
+2026-10-07 02:53:23 | INFO    | backfill CAKEUSDT.P 15m: 1 candles
+2026-10-07 02:53:23 | INFO    | backfill TRXUSDT.P 1m: 26 candles
+2026-10-07 02:53:23 | INFO    | backfill AAVEUSDT.P 1m: 26 candles
+2026-10-07 02:53:23 | INFO    | [klines_perp] connected
+2026-10-07 02:53:23 | INFO    | backfill POLUSDT.P 15m: 1 candles
+2026-10-07 02:53:23 | INFO    | backfill BNBUSDT.P 1m: 26 candles
+2026-10-07 02:53:23 | INFO    | backfill BTCUSDT.P 5m: 4 candles
+2026-10-07 02:53:23 | INFO    | backfill XRPUSDT.P 1m: 26 candles
+2026-10-07 02:53:23 | INFO    | backfill ETHUSDT.P 5m: 4 candles
+2026-10-07 02:53:23 | INFO    | backfill HYPEUSDT.P 1m: 26 candles
+2026-10-07 02:53:24 | INFO    | backfill LINKUSDT.P 1m: 26 candles
+2026-10-07 02:53:24 | INFO    | backfill SOLUSDT.P 5m: 4 candles
+2026-10-07 02:53:24 | INFO    | backfill ADAUSDT.P 1m: 26 candles
+2026-10-07 02:53:24 | INFO    | backfill UNIUSDT.P 1m: 26 candles
+2026-10-07 02:53:24 | INFO    | backfill SUIUSDT.P 5m: 4 candles
+2026-10-07 02:53:24 | INFO    | backfill LTCUSDT.P 1m: 26 candles
+2026-10-07 02:53:24 | INFO    | backfill AVAXUSDT.P 1m: 26 candles
+2026-10-07 02:53:24 | INFO    | backfill TRXUSDT.P 5m: 4 candles
+2026-10-07 02:53:24 | INFO    | backfill ATOMUSDT.P 1m: 26 candles
+2026-10-07 02:53:24 | INFO    | backfill DOGEUSDT.P 1m: 26 candles
+2026-10-07 02:53:25 | INFO    | backfill AAVEUSDT.P 5m: 4 candles
+2026-10-07 02:53:25 | INFO    | backfill DOTUSDT.P 1m: 26 candles
+2026-10-07 02:53:25 | INFO    | backfill NEARUSDT.P 1m: 26 candles
+2026-10-07 02:53:25 | INFO    | backfill OPUSDT.P 1m: 26 candles
+2026-10-07 02:53:25 | INFO    | backfill ARBUSDT.P 1m: 26 candles
+2026-10-07 02:53:25 | INFO    | backfill BNBUSDT.P 5m: 4 candles
+2026-10-07 02:53:25 | INFO    | backfill WLDUSDT.P 1m: 26 candles
+2026-10-07 02:53:25 | INFO    | backfill CAKEUSDT.P 1m: 26 candles
+2026-10-07 02:53:25 | INFO    | backfill XRPUSDT.P 5m: 4 candles
+2026-10-07 02:53:25 | INFO    | backfill POLUSDT.P 1m: 26 candles
+2026-10-07 02:53:26 | INFO    | backfill HYPEUSDT.P 5m: 4 candles
+2026-10-07 02:53:26 | INFO    | backfill LINKUSDT.P 5m: 4 candles
+2026-10-07 02:53:27 | INFO    | backfill ADAUSDT.P 5m: 4 candles
+2026-10-07 02:53:27 | INFO    | backfill UNIUSDT.P 5m: 4 candles
+2026-10-07 02:53:28 | INFO    | backfill LTCUSDT.P 5m: 4 candles
+2026-10-07 02:53:28 | INFO    | backfill AVAXUSDT.P 5m: 4 candles
+2026-10-07 02:53:28 | INFO    | backfill ATOMUSDT.P 5m: 4 candles
+2026-10-07 02:53:29 | INFO    | backfill DOGEUSDT.P 5m: 4 candles
+2026-10-07 02:53:29 | INFO    | backfill DOTUSDT.P 5m: 4 candles
+2026-10-07 02:53:29 | INFO    | backfill NEARUSDT.P 5m: 4 candles
+2026-10-07 02:53:30 | INFO    | backfill OPUSDT.P 5m: 4 candles
+2026-10-07 02:53:30 | INFO    | backfill ARBUSDT.P 5m: 4 candles
+2026-10-07 02:53:30 | INFO    | backfill WLDUSDT.P 5m: 4 candles
+2026-10-07 02:53:31 | INFO    | backfill CAKEUSDT.P 5m: 4 candles
+2026-10-07 02:53:31 | INFO    | backfill POLUSDT.P 5m: 4 candles
+2026-10-07 02:53:31 | INFO    | backfill BTCUSDT.P 1m: 21 candles
+2026-10-07 02:53:31 | INFO    | backfill ETHUSDT.P 1m: 21 candles
+2026-10-07 02:53:31 | WARNING | [flow_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 02:53:32 | INFO    | backfill SOLUSDT.P 1m: 21 candles
+2026-10-07 02:53:32 | INFO    | backfill SUIUSDT.P 1m: 21 candles
+2026-10-07 02:53:32 | INFO    | backfill BTCUSDT.P 15m: 1 candles
+2026-10-07 02:53:32 | INFO    | backfill ETHUSDT.P 15m: 1 candles
+2026-10-07 02:53:32 | INFO    | backfill TRXUSDT.P 1m: 21 candles
+2026-10-07 02:53:32 | INFO    | backfill SOLUSDT.P 15m: 1 candles
+2026-10-07 02:53:32 | INFO    | backfill AAVEUSDT.P 1m: 21 candles
+2026-10-07 02:53:33 | INFO    | backfill BNBUSDT.P 1m: 21 candles
+2026-10-07 02:53:33 | INFO    | backfill SUIUSDT.P 15m: 1 candles
+2026-10-07 02:53:33 | INFO    | backfill XRPUSDT.P 1m: 21 candles
+2026-10-07 02:53:33 | INFO    | backfill TRXUSDT.P 15m: 1 candles
+2026-10-07 02:53:33 | INFO    | [flow_perp] connected
+2026-10-07 02:53:33 | INFO    | backfill HYPEUSDT.P 1m: 21 candles
+2026-10-07 02:53:33 | INFO    | backfill AAVEUSDT.P 15m: 1 candles
+2026-10-07 02:53:33 | INFO    | backfill LINKUSDT.P 1m: 21 candles
+2026-10-07 02:53:34 | INFO    | backfill BNBUSDT.P 15m: 1 candles
+2026-10-07 02:53:34 | INFO    | backfill ADAUSDT.P 1m: 21 candles
+2026-10-07 02:53:34 | INFO    | backfill UNIUSDT.P 1m: 21 candles
+2026-10-07 02:53:34 | INFO    | backfill XRPUSDT.P 15m: 1 candles
+2026-10-07 02:53:34 | INFO    | backfill LTCUSDT.P 1m: 21 candles
+2026-10-07 02:53:34 | INFO    | backfill AVAXUSDT.P 1m: 21 candles
+2026-10-07 02:53:34 | INFO    | backfill HYPEUSDT.P 15m: 1 candles
+2026-10-07 02:53:34 | INFO    | backfill ATOMUSDT.P 1m: 21 candles
+2026-10-07 02:53:34 | INFO    | backfill DOGEUSDT.P 1m: 21 candles
+2026-10-07 02:53:35 | INFO    | backfill LINKUSDT.P 15m: 1 candles
+2026-10-07 02:53:35 | INFO    | backfill DOTUSDT.P 1m: 21 candles
+2026-10-07 02:53:35 | INFO    | backfill NEARUSDT.P 1m: 21 candles
+2026-10-07 02:53:35 | INFO    | backfill OPUSDT.P 1m: 21 candles
+2026-10-07 02:53:35 | INFO    | backfill ARBUSDT.P 1m: 21 candles
+2026-10-07 02:53:35 | INFO    | backfill WLDUSDT.P 1m: 21 candles
+2026-10-07 02:53:35 | INFO    | backfill ADAUSDT.P 15m: 1 candles
+2026-10-07 02:53:35 | INFO    | backfill CAKEUSDT.P 1m: 21 candles
+2026-10-07 02:53:35 | INFO    | backfill POLUSDT.P 1m: 21 candles
+2026-10-07 02:53:35 | INFO    | backfill UNIUSDT.P 15m: 1 candles
+2026-10-07 02:53:36 | INFO    | backfill LTCUSDT.P 15m: 1 candles
+2026-10-07 02:53:36 | INFO    | backfill AVAXUSDT.P 15m: 1 candles
+2026-10-07 02:53:36 | INFO    | weight 1802 used this minute, pausing 15s
+2026-10-07 02:53:36 | INFO    | weight 1807 used this minute, pausing 15s
+2026-10-07 02:53:36 | INFO    | weight 1808 used this minute, pausing 15s
+2026-10-07 02:53:37 | INFO    | weight 1809 used this minute, pausing 15s
+2026-10-07 02:53:51 | INFO    | backfill ATOMUSDT.P 15m: 1 candles
+2026-10-07 02:53:52 | INFO    | weight 1814 used this minute, pausing 15s
+2026-10-07 02:53:52 | INFO    | weight 1819 used this minute, pausing 15s
+2026-10-07 02:53:52 | INFO    | weight 1820 used this minute, pausing 15s
+2026-10-07 02:53:52 | INFO    | weight 1822 used this minute, pausing 15s
+2026-10-07 02:54:07 | INFO    | backfill DOGEUSDT.P 15m: 1 candles
+2026-10-07 02:54:07 | INFO    | backfill DOTUSDT.P 15m: 1 candles
+2026-10-07 02:54:08 | INFO    | backfill NEARUSDT.P 15m: 1 candles
+2026-10-07 02:54:08 | INFO    | backfill OPUSDT.P 15m: 1 candles
+2026-10-07 02:54:08 | INFO    | backfill ARBUSDT.P 15m: 1 candles
+2026-10-07 02:54:09 | INFO    | backfill WLDUSDT.P 15m: 1 candles
+2026-10-07 02:54:09 | INFO    | backfill CAKEUSDT.P 15m: 1 candles
+2026-10-07 02:54:09 | INFO    | backfill POLUSDT.P 15m: 1 candles
+2026-10-07 02:54:09 | INFO    | backfill BTCUSDT.P 5m: 3 candles
+2026-10-07 02:54:10 | INFO    | backfill ETHUSDT.P 5m: 3 candles
+2026-10-07 02:54:10 | INFO    | backfill SOLUSDT.P 5m: 3 candles
+2026-10-07 02:54:10 | INFO    | backfill SUIUSDT.P 5m: 3 candles
+2026-10-07 02:54:10 | INFO    | backfill TRXUSDT.P 5m: 3 candles
+2026-10-07 02:54:11 | INFO    | backfill AAVEUSDT.P 5m: 3 candles
+2026-10-07 02:54:11 | INFO    | backfill BNBUSDT.P 5m: 3 candles
+2026-10-07 02:54:11 | INFO    | backfill XRPUSDT.P 5m: 3 candles
+2026-10-07 02:54:12 | INFO    | backfill HYPEUSDT.P 5m: 3 candles
+2026-10-07 02:54:12 | INFO    | backfill LINKUSDT.P 5m: 3 candles
+2026-10-07 02:54:12 | INFO    | backfill ADAUSDT.P 5m: 3 candles
+2026-10-07 02:54:13 | INFO    | backfill UNIUSDT.P 5m: 3 candles
+2026-10-07 02:54:13 | INFO    | backfill LTCUSDT.P 5m: 3 candles
+2026-10-07 02:54:13 | INFO    | backfill AVAXUSDT.P 5m: 3 candles
+2026-10-07 02:54:13 | INFO    | backfill ATOMUSDT.P 5m: 3 candles
+2026-10-07 02:54:14 | INFO    | backfill DOGEUSDT.P 5m: 3 candles
+2026-10-07 02:54:14 | INFO    | backfill DOTUSDT.P 5m: 3 candles
+2026-10-07 02:54:14 | INFO    | backfill NEARUSDT.P 5m: 3 candles
+2026-10-07 02:54:15 | INFO    | backfill OPUSDT.P 5m: 3 candles
+2026-10-07 02:54:15 | INFO    | backfill ARBUSDT.P 5m: 3 candles
+2026-10-07 02:54:15 | INFO    | backfill WLDUSDT.P 5m: 3 candles
+2026-10-07 02:54:15 | INFO    | backfill CAKEUSDT.P 5m: 3 candles
+2026-10-07 02:54:16 | INFO    | backfill POLUSDT.P 5m: 3 candles
+2026-10-07 02:54:16 | INFO    | backfill BTCUSDT.P 1m: 17 candles
+2026-10-07 02:54:16 | INFO    | backfill ETHUSDT.P 1m: 17 candles
+2026-10-07 02:54:16 | INFO    | backfill SOLUSDT.P 1m: 17 candles
+2026-10-07 02:54:16 | INFO    | backfill SUIUSDT.P 1m: 17 candles
+2026-10-07 02:54:17 | INFO    | backfill TRXUSDT.P 1m: 17 candles
+2026-10-07 02:54:17 | INFO    | backfill AAVEUSDT.P 1m: 17 candles
+2026-10-07 02:54:17 | INFO    | backfill BNBUSDT.P 1m: 17 candles
+2026-10-07 02:54:17 | INFO    | backfill XRPUSDT.P 1m: 17 candles
+2026-10-07 02:54:17 | INFO    | backfill HYPEUSDT.P 1m: 17 candles
+2026-10-07 02:54:17 | INFO    | backfill LINKUSDT.P 1m: 17 candles
+2026-10-07 02:54:17 | INFO    | backfill ADAUSDT.P 1m: 17 candles
+2026-10-07 02:54:18 | INFO    | backfill UNIUSDT.P 1m: 17 candles
+2026-10-07 02:54:18 | INFO    | backfill LTCUSDT.P 1m: 17 candles
+2026-10-07 02:54:18 | INFO    | backfill AVAXUSDT.P 1m: 17 candles
+2026-10-07 02:54:18 | INFO    | backfill ATOMUSDT.P 1m: 17 candles
+2026-10-07 02:54:18 | INFO    | backfill DOGEUSDT.P 1m: 17 candles
+2026-10-07 02:54:19 | INFO    | backfill DOTUSDT.P 1m: 17 candles
+2026-10-07 02:54:19 | INFO    | backfill NEARUSDT.P 1m: 17 candles
+2026-10-07 02:54:19 | INFO    | backfill OPUSDT.P 1m: 17 candles
+2026-10-07 02:54:19 | INFO    | backfill ARBUSDT.P 1m: 17 candles
+2026-10-07 02:54:19 | INFO    | backfill WLDUSDT.P 1m: 17 candles
+2026-10-07 02:54:19 | INFO    | backfill CAKEUSDT.P 1m: 17 candles
+2026-10-07 02:54:20 | INFO    | backfill POLUSDT.P 1m: 17 candles
+2026-10-07 02:54:29 | INFO    | backfill BTCUSDT.P 1m: 1 candles
+2026-10-07 02:54:30 | INFO    | backfill ETHUSDT.P 1m: 1 candles
+2026-10-07 02:54:30 | INFO    | backfill SOLUSDT.P 1m: 1 candles
+2026-10-07 02:54:30 | INFO    | backfill SUIUSDT.P 1m: 1 candles
+2026-10-07 02:54:30 | INFO    | backfill TRXUSDT.P 1m: 1 candles
+2026-10-07 02:54:30 | INFO    | backfill AAVEUSDT.P 1m: 1 candles
+2026-10-07 02:54:30 | INFO    | backfill BNBUSDT.P 1m: 1 candles
+2026-10-07 02:54:31 | INFO    | backfill XRPUSDT.P 1m: 1 candles
+2026-10-07 02:54:31 | INFO    | backfill HYPEUSDT.P 1m: 1 candles
+2026-10-07 02:54:31 | INFO    | backfill LINKUSDT.P 1m: 1 candles
+2026-10-07 02:54:31 | INFO    | backfill ADAUSDT.P 1m: 1 candles
+2026-10-07 02:54:31 | INFO    | backfill UNIUSDT.P 1m: 1 candles
+2026-10-07 02:54:31 | INFO    | backfill LTCUSDT.P 1m: 1 candles
+2026-10-07 02:54:31 | INFO    | backfill AVAXUSDT.P 1m: 1 candles
+2026-10-07 02:54:32 | INFO    | backfill ATOMUSDT.P 1m: 1 candles
+2026-10-07 02:54:32 | INFO    | backfill DOGEUSDT.P 1m: 1 candles
+2026-10-07 02:54:32 | INFO    | backfill DOTUSDT.P 1m: 1 candles
+2026-10-07 02:54:32 | INFO    | backfill NEARUSDT.P 1m: 1 candles
+2026-10-07 02:54:32 | INFO    | backfill OPUSDT.P 1m: 1 candles
+2026-10-07 02:54:32 | INFO    | backfill ARBUSDT.P 1m: 1 candles
+2026-10-07 02:54:32 | INFO    | backfill WLDUSDT.P 1m: 1 candles
+2026-10-07 02:54:33 | INFO    | backfill CAKEUSDT.P 1m: 1 candles
+2026-10-07 02:54:33 | INFO    | backfill POLUSDT.P 1m: 1 candles
+2026-10-07 05:06:57 | WARNING | [book_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 05:06:59 | INFO    | [book_perp] connected
+2026-10-07 05:07:15 | WARNING | [klines_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 05:07:17 | INFO    | [klines_perp] connected
+2026-10-07 05:07:18 | WARNING | [flow_perp] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 05:07:19 | INFO    | [flow_perp] connected
+2026-10-07 05:07:32 | WARNING | [liquidations] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 05:23:18 | INFO    | [liquidations] connected
+2026-10-07 05:23:21 | WARNING | [klines_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 05:23:23 | INFO    | [klines_perp] connected
+2026-10-07 05:23:24 | WARNING | [flow_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 05:23:24 | WARNING | [book_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 05:23:25 | INFO    | [flow_perp] connected
+2026-10-07 05:23:26 | INFO    | [book_perp] connected
+2026-10-07 05:23:36 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 05:23:51 | INFO    | backfill BTCUSDT.P 15m: 1 candles
+2026-10-07 05:23:51 | INFO    | backfill ETHUSDT.P 15m: 1 candles
+2026-10-07 05:23:52 | INFO    | backfill SOLUSDT.P 15m: 1 candles
+2026-10-07 05:23:53 | INFO    | backfill SUIUSDT.P 15m: 1 candles
+2026-10-07 05:23:53 | INFO    | backfill TRXUSDT.P 15m: 1 candles
+2026-10-07 05:23:54 | INFO    | backfill AAVEUSDT.P 15m: 1 candles
+2026-10-07 05:23:55 | INFO    | backfill BNBUSDT.P 15m: 1 candles
+2026-10-07 05:23:56 | INFO    | backfill XRPUSDT.P 15m: 1 candles
+2026-10-07 05:23:57 | INFO    | backfill HYPEUSDT.P 15m: 1 candles
+2026-10-07 05:23:57 | INFO    | backfill LINKUSDT.P 15m: 1 candles
+2026-10-07 05:23:58 | INFO    | backfill ADAUSDT.P 15m: 1 candles
+2026-10-07 05:23:59 | INFO    | backfill UNIUSDT.P 15m: 1 candles
+2026-10-07 05:23:59 | INFO    | backfill LTCUSDT.P 15m: 1 candles
+2026-10-07 05:24:00 | INFO    | backfill AVAXUSDT.P 15m: 1 candles
+2026-10-07 05:24:01 | INFO    | backfill ATOMUSDT.P 15m: 1 candles
+2026-10-07 05:24:02 | INFO    | backfill DOGEUSDT.P 15m: 1 candles
+2026-10-07 05:24:03 | INFO    | backfill DOTUSDT.P 15m: 1 candles
+2026-10-07 05:24:03 | INFO    | backfill NEARUSDT.P 15m: 1 candles
+2026-10-07 05:39:33 | WARNING | [flow_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 05:39:34 | WARNING | [book_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 05:39:34 | INFO    | [flow_perp] connected
+2026-10-07 05:39:35 | INFO    | [book_perp] connected
+2026-10-07 06:07:50 | WARNING | [liquidations] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 06:07:51 | INFO    | [liquidations] connected
+2026-10-07 06:25:37 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 06:25:37 | WARNING | GET https://fapi.binance.com/fapi/v1/openInterest failed (), retry in 1s
+2026-10-07 06:25:37 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 06:25:37 | WARNING | [klines_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 06:25:39 | INFO    | [klines_perp] connected
+2026-10-07 06:25:39 | INFO    | backfill LTCUSDT.P 1h: 1 candles
+2026-10-07 06:25:39 | WARNING | [liquidations] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 06:25:39 | WARNING | [flow_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 06:25:39 | WARNING | [book_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 06:25:40 | INFO    | backfill OPUSDT.P 15m: 5 candles
+2026-10-07 06:25:40 | INFO    | backfill BTCUSDT.P 1d: 1 candles
+2026-10-07 06:25:40 | INFO    | backfill AVAXUSDT.P 1h: 1 candles
+2026-10-07 06:25:40 | INFO    | backfill ETHUSDT.P 1d: 1 candles
+2026-10-07 06:25:40 | INFO    | backfill ARBUSDT.P 15m: 5 candles
+2026-10-07 06:25:41 | INFO    | [book_perp] connected
+2026-10-07 06:25:41 | INFO    | [flow_perp] connected
+2026-10-07 06:25:41 | INFO    | [liquidations] connected
+2026-10-07 06:25:41 | INFO    | backfill ATOMUSDT.P 1h: 1 candles
+2026-10-07 06:25:41 | INFO    | backfill SOLUSDT.P 1d: 1 candles
+2026-10-07 06:25:41 | INFO    | backfill WLDUSDT.P 15m: 5 candles
+2026-10-07 06:30:23 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 06:30:24 | WARNING | [book_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 06:30:26 | INFO    | [book_perp] connected
+2026-10-07 06:30:26 | INFO    | backfill CAKEUSDT.P 15m: 6 candles
+2026-10-07 06:30:27 | INFO    | backfill POLUSDT.P 15m: 6 candles
+2026-10-07 06:30:27 | INFO    | backfill BTCUSDT.P 5m: 18 candles
+2026-10-07 06:30:27 | INFO    | backfill ETHUSDT.P 5m: 18 candles
+2026-10-07 06:30:28 | INFO    | backfill SOLUSDT.P 5m: 18 candles
+2026-10-07 06:30:29 | INFO    | backfill SUIUSDT.P 5m: 18 candles
+2026-10-07 06:30:30 | INFO    | backfill TRXUSDT.P 5m: 18 candles
+2026-10-07 06:30:31 | INFO    | backfill AAVEUSDT.P 5m: 18 candles
+2026-10-07 06:30:31 | INFO    | backfill BNBUSDT.P 5m: 18 candles
+2026-10-07 06:30:32 | INFO    | backfill XRPUSDT.P 5m: 18 candles
+2026-10-07 06:30:33 | INFO    | backfill HYPEUSDT.P 5m: 18 candles
+2026-10-07 06:30:33 | INFO    | backfill LINKUSDT.P 5m: 18 candles
+2026-10-07 06:30:34 | INFO    | backfill ADAUSDT.P 5m: 18 candles
+2026-10-07 06:30:35 | INFO    | backfill UNIUSDT.P 5m: 18 candles
+2026-10-07 06:30:35 | INFO    | backfill LTCUSDT.P 5m: 18 candles
+2026-10-07 06:30:36 | INFO    | backfill AVAXUSDT.P 5m: 18 candles
+2026-10-07 06:30:37 | INFO    | backfill ATOMUSDT.P 5m: 18 candles
+2026-10-07 06:30:37 | INFO    | backfill DOGEUSDT.P 5m: 18 candles
+2026-10-07 06:30:38 | INFO    | backfill DOTUSDT.P 5m: 18 candles
+2026-10-07 06:30:38 | WARNING | [klines_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 06:30:39 | INFO    | backfill NEARUSDT.P 5m: 18 candles
+2026-10-07 06:30:39 | INFO    | backfill OPUSDT.P 5m: 18 candles
+2026-10-07 06:30:40 | INFO    | backfill ARBUSDT.P 5m: 18 candles
+2026-10-07 06:30:40 | INFO    | [klines_perp] connected
+2026-10-07 06:30:41 | INFO    | backfill WLDUSDT.P 5m: 18 candles
+2026-10-07 06:30:41 | INFO    | backfill CAKEUSDT.P 5m: 18 candles
+2026-10-07 06:30:42 | INFO    | backfill POLUSDT.P 5m: 18 candles
+2026-10-07 06:30:42 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 06:30:42 | WARNING | [flow_perp] disconnected (ConnectionClosedError: no close frame received or sent), reconnecting in 1s
+2026-10-07 06:30:42 | WARNING | GET https://fapi.binance.com/fapi/v1/openInterest failed (), retry in 1s
+2026-10-07 06:30:42 | WARNING | GET https://fapi.binance.com/fapi/v1/klines failed (), retry in 1s
+2026-10-07 06:30:42 | INFO    | backfill BTCUSDT.P 1m: 89 candles
+2026-10-07 06:30:42 | INFO    | backfill TRXUSDT.P 1d: 1 candles
+2026-10-07 06:30:42 | INFO    | backfill ETHUSDT.P 1m: 89 candles
+2026-10-07 06:30:43 | INFO    | backfill SOLUSDT.P 1m: 89 candles
+2026-10-07 06:30:43 | INFO    | backfill AAVEUSDT.P 1d: 1 candles
+2026-10-07 06:30:43 | INFO    | backfill SUIUSDT.P 1m: 89 candles
+2026-10-07 06:30:43 | INFO    | [flow_perp] connected
+2026-10-07 06:30:43 | INFO    | backfill TRXUSDT.P 1m: 89 candles
+2026-10-07 06:30:44 | INFO    | backfill BNBUSDT.P 1d: 1 candles
+2026-10-07 06:30:44 | INFO    | backfill DOGEUSDT.P 1h: 2 candles
+2026-10-07 06:30:44 | INFO    | backfill AAVEUSDT.P 1m: 89 candles
+2026-10-07 06:30:44 | INFO    | backfill SUIUSDT.P 1d: 1 candles
+2026-10-07 06:30:44 | INFO    | backfill BNBUSDT.P 1m: 89 candles
+2026-10-07 06:30:44 | INFO    | backfill XRPUSDT.P 1d: 1 candles
+2026-10-07 06:30:44 | INFO    | backfill DOTUSDT.P 1h: 2 candles
+2026-10-07 06:30:44 | INFO    | backfill XRPUSDT.P 1m: 89 candles
+2026-10-07 06:30:45 | INFO    | backfill HYPEUSDT.P 1m: 89 candles
+2026-10-07 06:30:45 | INFO    | backfill HYPEUSDT.P 1d: 1 candles
+2026-10-07 06:30:45 | INFO    | backfill NEARUSDT.P 1h: 2 candles
+2026-10-07 06:30:45 | INFO    | backfill LINKUSDT.P 1m: 89 candles
+2026-10-07 06:30:46 | INFO    | backfill ADAUSDT.P 1m: 89 candles
+2026-10-07 06:30:46 | INFO    | backfill LINKUSDT.P 1d: 1 candles
+2026-10-07 06:30:46 | INFO    | backfill OPUSDT.P 1h: 2 candles
+2026-10-07 06:30:46 | INFO    | backfill UNIUSDT.P 1m: 89 candles
+2026-10-07 06:30:47 | INFO    | backfill ADAUSDT.P 1d: 1 candles
+2026-10-07 06:30:47 | INFO    | backfill ARBUSDT.P 1h: 2 candles
+2026-10-07 06:30:47 | INFO    | backfill LTCUSDT.P 1m: 89 candles
+2026-10-07 06:30:47 | INFO    | backfill AVAXUSDT.P 1m: 89 candles
+2026-10-07 06:30:47 | INFO    | backfill WLDUSDT.P 1h: 2 candles
+2026-10-07 06:30:48 | INFO    | backfill UNIUSDT.P 1d: 1 candles
+2026-10-07 06:30:48 | INFO    | backfill ATOMUSDT.P 1m: 89 candles
+2026-10-07 06:30:48 | INFO    | backfill DOGEUSDT.P 1m: 89 candles
+2026-10-07 06:30:48 | INFO    | backfill CAKEUSDT.P 1h: 2 candles
+2026-10-07 06:30:48 | INFO    | backfill LTCUSDT.P 1d: 1 candles
+2026-10-07 06:30:48 | INFO    | backfill DOTUSDT.P 1m: 89 candles
+2026-10-07 06:30:49 | INFO    | backfill POLUSDT.P 1h: 2 candles
+2026-10-07 06:30:49 | INFO    | backfill NEARUSDT.P 1m: 89 candles
+2026-10-07 06:30:49 | INFO    | backfill AVAXUSDT.P 1d: 1 candles
+2026-10-07 06:30:49 | INFO    | backfill BTCUSDT.P 15m: 5 candles
+2026-10-07 06:30:49 | INFO    | backfill OPUSDT.P 1m: 89 candles
+2026-10-07 06:30:49 | INFO    | backfill ETHUSDT.P 15m: 5 candles
+2026-10-07 06:30:49 | INFO    | backfill ARBUSDT.P 1m: 89 candles
+2026-10-07 06:30:49 | INFO    | backfill ATOMUSDT.P 1d: 1 candles
+2026-10-07 06:30:50 | INFO    | backfill WLDUSDT.P 1m: 89 candles
+2026-10-07 06:30:50 | INFO    | backfill SOLUSDT.P 15m: 5 candles
+2026-10-07 06:30:50 | INFO    | backfill CAKEUSDT.P 1m: 89 candles
+2026-10-07 06:30:50 | INFO    | backfill POLUSDT.P 1m: 89 candles
+2026-10-07 06:30:50 | INFO    | backfill DOGEUSDT.P 1d: 1 candles
+2026-10-07 06:30:51 | INFO    | backfill SUIUSDT.P 15m: 5 candles
+2026-10-07 06:30:51 | INFO    | backfill DOTUSDT.P 1d: 1 candles
+2026-10-07 06:30:51 | INFO    | backfill TRXUSDT.P 15m: 5 candles
+2026-10-07 06:30:52 | INFO    | backfill NEARUSDT.P 1d: 1 candles
+2026-10-07 06:30:52 | INFO    | backfill AAVEUSDT.P 15m: 5 candles
+2026-10-07 06:30:52 | INFO    | backfill OPUSDT.P 1d: 1 candles
+2026-10-07 06:30:53 | INFO    | backfill BNBUSDT.P 15m: 5 candles
+2026-10-07 06:30:53 | INFO    | backfill ARBUSDT.P 1d: 1 candles
+2026-10-07 06:30:53 | INFO    | backfill XRPUSDT.P 15m: 5 candles
+2026-10-07 06:30:54 | INFO    | backfill WLDUSDT.P 1d: 1 candles
+2026-10-07 06:30:54 | INFO    | backfill HYPEUSDT.P 15m: 5 candles
+2026-10-07 06:30:54 | INFO    | backfill CAKEUSDT.P 1d: 1 candles
+2026-10-07 06:30:55 | INFO    | backfill LINKUSDT.P 15m: 5 candles
+2026-10-07 06:30:55 | INFO    | backfill POLUSDT.P 1d: 1 candles
+2026-10-07 06:30:55 | INFO    | backfill BTCUSDT.P 4h: 1 candles
+2026-10-07 06:30:55 | INFO    | backfill ADAUSDT.P 15m: 5 candles
+2026-10-07 06:30:56 | INFO    | backfill ETHUSDT.P 4h: 1 candles
+2026-10-07 06:30:56 | INFO    | backfill UNIUSDT.P 15m: 5 candles
+2026-10-07 06:30:56 | INFO    | backfill SOLUSDT.P 4h: 1 candles
+2026-10-07 06:30:57 | INFO    | backfill LTCUSDT.P 15m: 5 candles
+2026-10-07 06:30:57 | INFO    | backfill SUIUSDT.P 4h: 1 candles
+2026-10-07 06:30:57 | INFO    | backfill AVAXUSDT.P 15m: 5 candles
+2026-10-07 06:30:58 | INFO    | backfill TRXUSDT.P 4h: 1 candles
+2026-10-07 06:30:58 | INFO    | backfill ATOMUSDT.P 15m: 5 candles
+2026-10-07 06:30:58 | INFO    | backfill AAVEUSDT.P 4h: 1 candles
+2026-10-07 06:30:59 | INFO    | backfill DOGEUSDT.P 15m: 5 candles
+2026-10-07 06:30:59 | INFO    | backfill BNBUSDT.P 4h: 1 candles
+2026-10-07 06:30:59 | INFO    | backfill DOTUSDT.P 15m: 5 candles
+2026-10-07 06:31:00 | INFO    | backfill XRPUSDT.P 4h: 1 candles
+2026-10-07 06:31:00 | INFO    | backfill NEARUSDT.P 15m: 5 candles
+2026-10-07 06:31:00 | INFO    | backfill HYPEUSDT.P 4h: 1 candles
+2026-10-07 06:31:01 | INFO    | backfill OPUSDT.P 15m: 5 candles
+2026-10-07 06:31:01 | INFO    | backfill LINKUSDT.P 4h: 1 candles
+2026-10-07 06:31:01 | INFO    | backfill ARBUSDT.P 15m: 5 candles
+2026-10-07 06:31:02 | INFO    | backfill ADAUSDT.P 4h: 1 candles
+2026-10-07 06:31:02 | INFO    | backfill UNIUSDT.P 4h: 1 candles
+2026-10-07 06:31:02 | INFO    | backfill WLDUSDT.P 15m: 5 candles
+2026-10-07 06:31:03 | INFO    | backfill CAKEUSDT.P 15m: 5 candles
+2026-10-07 06:31:03 | INFO    | backfill LTCUSDT.P 4h: 1 candles
+2026-10-07 06:31:04 | INFO    | backfill POLUSDT.P 15m: 5 candles
+2026-10-07 06:31:04 | INFO    | backfill AVAXUSDT.P 4h: 1 candles
+2026-10-07 06:31:04 | INFO    | backfill BTCUSDT.P 5m: 14 candles
+2026-10-07 06:31:04 | INFO    | backfill ATOMUSDT.P 4h: 1 candles
+2026-10-07 06:31:04 | INFO    | backfill ETHUSDT.P 5m: 14 candles
+2026-10-07 06:31:05 | INFO    | backfill DOGEUSDT.P 4h: 1 candles
+2026-10-07 06:31:05 | INFO    | backfill SOLUSDT.P 5m: 14 candles
+2026-10-07 06:31:06 | INFO    | backfill DOTUSDT.P 4h: 1 candles
+2026-10-07 06:31:06 | INFO    | backfill SUIUSDT.P 5m: 14 candles
+2026-10-07 06:31:07 | INFO    | backfill NEARUSDT.P 4h: 1 candles
+2026-10-07 06:31:07 | INFO    | backfill TRXUSDT.P 5m: 14 candles
+2026-10-07 06:31:08 | INFO    | backfill AAVEUSDT.P 5m: 14 candles
+2026-10-07 06:31:08 | INFO    | backfill OPUSDT.P 4h: 1 candles
+2026-10-07 06:31:08 | INFO    | backfill BNBUSDT.P 5m: 14 candles
+2026-10-07 06:31:08 | INFO    | backfill ARBUSDT.P 4h: 1 candles
+2026-10-07 06:31:09 | INFO    | backfill XRPUSDT.P 5m: 14 candles
+2026-10-07 06:31:09 | INFO    | backfill WLDUSDT.P 4h: 1 candles
+2026-10-07 06:31:10 | INFO    | backfill HYPEUSDT.P 5m: 14 candles
+2026-10-07 06:31:10 | INFO    | backfill CAKEUSDT.P 4h: 1 candles
+2026-10-07 06:31:11 | INFO    | backfill POLUSDT.P 4h: 1 candles
+2026-10-07 06:31:11 | INFO    | backfill LINKUSDT.P 5m: 14 candles
+2026-10-07 06:31:11 | INFO    | backfill BTCUSDT.P 1h: 2 candles
+2026-10-07 06:31:11 | INFO    | backfill ETHUSDT.P 1h: 2 candles
+2026-10-07 06:31:11 | INFO    | backfill ADAUSDT.P 5m: 14 candles
+2026-10-07 06:31:12 | WARNING | [liquidations] disconnected (ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting in 1s
+2026-10-07 06:31:12 | INFO    | backfill UNIUSDT.P 5m: 14 candles
+2026-10-07 06:31:12 | INFO    | backfill SOLUSDT.P 1h: 2 candles
+2026-10-07 06:31:12 | INFO    | backfill BTCUSDT.P 1h: 1 candles
+2026-10-07 06:31:13 | INFO    | backfill ETHUSDT.P 1h: 1 candles
+2026-10-07 06:31:14 | INFO    | backfill LTCUSDT.P 5m: 14 candles
+2026-10-07 06:31:14 | INFO    | backfill SUIUSDT.P 1h: 2 candles
+2026-10-07 06:31:14 | INFO    | [liquidations] connected
+2026-10-07 06:31:14 | INFO    | backfill SOLUSDT.P 1h: 1 candles
+2026-10-07 06:31:14 | INFO    | backfill TRXUSDT.P 1h: 2 candles
+2026-10-07 06:31:15 | INFO    | backfill AVAXUSDT.P 5m: 14 candles
+2026-10-07 06:31:15 | INFO    | backfill SUIUSDT.P 1h: 1 candles
+2026-10-07 06:31:15 | INFO    | backfill AAVEUSDT.P 1h: 2 candles
+2026-10-07 06:31:15 | INFO    | backfill ATOMUSDT.P 5m: 14 candles
+2026-10-07 06:31:16 | INFO    | backfill TRXUSDT.P 1h: 1 candles
+2026-10-07 06:31:16 | INFO    | backfill BNBUSDT.P 1h: 2 candles
+2026-10-07 06:31:16 | INFO    | backfill DOGEUSDT.P 5m: 14 candles
+2026-10-07 06:31:16 | INFO    | backfill AAVEUSDT.P 1h: 1 candles
+2026-10-07 06:31:17 | INFO    | backfill XRPUSDT.P 1h: 2 candles
+2026-10-07 06:31:17 | INFO    | backfill DOTUSDT.P 5m: 14 candles
+2026-10-07 06:31:17 | INFO    | backfill BNBUSDT.P 1h: 1 candles
+2026-10-07 06:31:17 | INFO    | backfill HYPEUSDT.P 1h: 2 candles
+2026-10-07 06:31:18 | INFO    | backfill NEARUSDT.P 5m: 14 candles
+2026-10-07 06:31:18 | INFO    | backfill XRPUSDT.P 1h: 1 candles
+2026-10-07 06:31:18 | INFO    | backfill LINKUSDT.P 1h: 2 candles
+2026-10-07 06:31:18 | INFO    | backfill HYPEUSDT.P 1h: 1 candles
+2026-10-07 06:31:18 | INFO    | backfill OPUSDT.P 5m: 14 candles
+2026-10-07 06:31:19 | INFO    | backfill ADAUSDT.P 1h: 2 candles
+2026-10-07 06:31:19 | INFO    | backfill LINKUSDT.P 1h: 1 candles
+2026-10-07 06:31:19 | INFO    | backfill ARBUSDT.P 5m: 14 candles
+2026-10-07 06:31:20 | INFO    | backfill UNIUSDT.P 1h: 2 candles
+2026-10-07 06:31:20 | INFO    | backfill ADAUSDT.P 1h: 1 candles
+2026-10-07 06:31:20 | INFO    | backfill WLDUSDT.P 5m: 14 candles
+2026-10-07 06:31:20 | INFO    | backfill LTCUSDT.P 1h: 1 candles
+2026-10-07 06:31:20 | INFO    | backfill UNIUSDT.P 1h: 1 candles
+2026-10-07 06:31:21 | INFO    | backfill CAKEUSDT.P 5m: 14 candles
+2026-10-07 06:31:21 | INFO    | backfill LTCUSDT.P 1h: 1 candles
+2026-10-07 06:31:21 | INFO    | backfill AVAXUSDT.P 1h: 1 candles
+2026-10-07 06:31:22 | INFO    | backfill POLUSDT.P 5m: 14 candles
+2026-10-07 06:31:22 | INFO    | backfill ATOMUSDT.P 1h: 1 candles
+2026-10-07 06:31:22 | INFO    | backfill BTCUSDT.P 1m: 68 candles
+2026-10-07 06:31:23 | INFO    | backfill ETHUSDT.P 1m: 68 candles
+2026-10-07 06:31:23 | INFO    | backfill DOTUSDT.P 1h: 1 candles
+2026-10-07 06:31:23 | INFO    | backfill SOLUSDT.P 1m: 68 candles
+2026-10-07 06:31:23 | INFO    | backfill OPUSDT.P 1h: 1 candles
+2026-10-07 06:31:23 | INFO    | backfill SUIUSDT.P 1m: 68 candles
+2026-10-07 06:31:24 | INFO    | backfill TRXUSDT.P 1m: 68 candles
+2026-10-07 06:31:24 | INFO    | backfill WLDUSDT.P 1h: 1 candles
+2026-10-07 06:31:24 | INFO    | backfill AAVEUSDT.P 1m: 68 candles
+2026-10-07 06:31:25 | INFO    | backfill POLUSDT.P 1h: 1 candles
+2026-10-07 06:31:25 | INFO    | backfill BNBUSDT.P 1m: 68 candles
+2026-10-07 06:31:25 | INFO    | backfill BTCUSDT.P 15m: 1 candles
+2026-10-07 06:31:25 | INFO    | backfill XRPUSDT.P 1m: 68 candles
+2026-10-07 06:31:26 | INFO    | backfill HYPEUSDT.P 1m: 68 candles
+2026-10-07 06:31:26 | INFO    | backfill SOLUSDT.P 15m: 1 candles
+2026-10-07 06:31:26 | INFO    | backfill LINKUSDT.P 1m: 68 candles
+2026-10-07 06:31:27 | INFO    | backfill ADAUSDT.P 1m: 68 candles
+2026-10-07 06:31:27 | INFO    | backfill TRXUSDT.P 15m: 1 candles
+2026-10-07 06:31:27 | INFO    | backfill UNIUSDT.P 1m: 68 candles
+2026-10-07 06:31:27 | INFO    | backfill AAVEUSDT.P 15m: 1 candles
+2026-10-07 06:31:27 | INFO    | backfill LTCUSDT.P 1m: 68 candles
+2026-10-07 06:31:28 | INFO    | backfill AVAXUSDT.P 1m: 68 candles
+2026-10-07 06:31:28 | INFO    | backfill BNBUSDT.P 15m: 1 candles
+2026-10-07 06:31:28 | INFO    | backfill ATOMUSDT.P 1m: 68 candles
+2026-10-07 06:31:29 | INFO    | backfill XRPUSDT.P 15m: 1 candles
+2026-10-07 06:31:29 | INFO    | backfill DOGEUSDT.P 1m: 68 candles
+2026-10-07 06:31:29 | INFO    | backfill DOTUSDT.P 1m: 68 candles
+2026-10-07 06:31:29 | INFO    | backfill HYPEUSDT.P 15m: 1 candles
+2026-10-07 06:31:29 | INFO    | backfill NEARUSDT.P 1m: 68 candles
+2026-10-07 06:31:30 | INFO    | backfill OPUSDT.P 1m: 68 candles
+2026-10-07 06:31:30 | INFO    | backfill LINKUSDT.P 15m: 1 candles
+2026-10-07 06:31:30 | INFO    | backfill ARBUSDT.P 1m: 68 candles
+2026-10-07 06:31:31 | INFO    | backfill ADAUSDT.P 15m: 1 candles
+2026-10-07 06:31:31 | INFO    | backfill WLDUSDT.P 1m: 68 candles
+2026-10-07 06:31:31 | INFO    | backfill CAKEUSDT.P 1m: 68 candles
+2026-10-07 06:31:32 | INFO    | backfill UNIUSDT.P 15m: 1 candles
+2026-10-07 06:31:32 | INFO    | backfill POLUSDT.P 1m: 68 candles
+2026-10-07 06:31:32 | INFO    | backfill LTCUSDT.P 15m: 1 candles
+2026-10-07 06:31:33 | INFO    | backfill AVAXUSDT.P 15m: 1 candles
+2026-10-07 06:31:34 | INFO    | backfill ATOMUSDT.P 15m: 1 candles
+2026-10-07 06:31:34 | INFO    | backfill DOGEUSDT.P 15m: 1 candles
+2026-10-07 06:31:35 | INFO    | backfill DOTUSDT.P 15m: 1 candles
+2026-10-07 06:31:36 | INFO    | backfill NEARUSDT.P 15m: 1 candles
+2026-10-07 06:31:36 | INFO    | backfill OPUSDT.P 15m: 1 candles
+2026-10-07 06:31:37 | INFO    | backfill ARBUSDT.P 15m: 1 candles
+2026-10-07 06:31:38 | INFO    | backfill WLDUSDT.P 15m: 1 candles
+2026-10-07 06:31:38 | INFO    | backfill CAKEUSDT.P 15m: 1 candles
+2026-10-07 06:31:39 | INFO    | backfill POLUSDT.P 15m: 1 candles
+2026-10-07 06:31:39 | INFO    | backfill BTCUSDT.P 5m: 1 candles
+2026-10-07 06:31:40 | INFO    | backfill ETHUSDT.P 5m: 1 candles
+2026-10-07 06:31:40 | INFO    | backfill SUIUSDT.P 5m: 1 candles
+2026-10-07 06:31:41 | INFO    | backfill AAVEUSDT.P 5m: 1 candles
+2026-10-07 06:31:42 | INFO    | backfill XRPUSDT.P 5m: 1 candles
+2026-10-07 06:31:42 | INFO    | backfill LINKUSDT.P 5m: 1 candles
+2026-10-07 06:31:43 | INFO    | backfill UNIUSDT.P 5m: 1 candles
+2026-10-07 06:31:44 | INFO    | backfill AVAXUSDT.P 5m: 1 candles
+2026-10-07 06:31:44 | INFO    | backfill DOGEUSDT.P 5m: 1 candles
+2026-10-07 06:31:45 | INFO    | backfill NEARUSDT.P 5m: 1 candles
+2026-10-07 06:31:46 | INFO    | backfill ARBUSDT.P 5m: 1 candles
+2026-10-07 06:31:46 | INFO    | backfill CAKEUSDT.P 5m: 1 candles
+2026-10-07 06:31:46 | INFO    | backfill BTCUSDT.P 1m: 6 candles
+2026-10-07 06:31:47 | INFO    | backfill ETHUSDT.P 1m: 1 candles
+2026-10-07 06:31:47 | INFO    | backfill SOLUSDT.P 1m: 6 candles
+2026-10-07 06:31:47 | INFO    | backfill SUIUSDT.P 1m: 1 candles
+2026-10-07 06:31:47 | INFO    | backfill TRXUSDT.P 1m: 6 candles
+2026-10-07 06:31:47 | INFO    | backfill AAVEUSDT.P 1m: 1 candles
+2026-10-07 06:31:47 | INFO    | backfill BNBUSDT.P 1m: 6 candles
+2026-10-07 06:31:48 | INFO    | backfill XRPUSDT.P 1m: 1 candles
+2026-10-07 06:31:48 | INFO    | backfill HYPEUSDT.P 1m: 6 candles
+2026-10-07 06:31:48 | INFO    | backfill ADAUSDT.P 1m: 6 candles
+2026-10-07 06:31:48 | INFO    | backfill LINKUSDT.P 1m: 1 candles
+2026-10-07 06:31:48 | INFO    | backfill UNIUSDT.P 1m: 6 candles
+2026-10-07 06:31:48 | INFO    | backfill ADAUSDT.P 1m: 1 candles
+2026-10-07 06:31:49 | INFO    | backfill LTCUSDT.P 1m: 6 candles
+2026-10-07 06:31:49 | INFO    | backfill UNIUSDT.P 1m: 1 candles
+2026-10-07 06:31:49 | INFO    | weight 1803 used this minute, pausing 15s
+2026-10-07 06:31:49 | INFO    | weight 1808 used this minute, pausing 15s
+2026-10-07 06:32:04 | INFO    | backfill AVAXUSDT.P 1m: 7 candles
+2026-10-07 06:32:04 | INFO    | backfill LTCUSDT.P 1m: 2 candles
+2026-10-07 06:32:05 | INFO    | backfill ATOMUSDT.P 1m: 7 candles
+2026-10-07 06:32:05 | INFO    | backfill AVAXUSDT.P 1m: 2 candles
+2026-10-07 06:32:05 | INFO    | backfill DOGEUSDT.P 1m: 7 candles
+2026-10-07 06:32:05 | INFO    | backfill ATOMUSDT.P 1m: 2 candles
+2026-10-07 06:32:05 | INFO    | backfill DOTUSDT.P 1m: 7 candles
+2026-10-07 06:32:05 | INFO    | backfill DOGEUSDT.P 1m: 2 candles
+2026-10-07 06:32:06 | INFO    | backfill NEARUSDT.P 1m: 7 candles
+2026-10-07 06:32:06 | INFO    | backfill DOTUSDT.P 1m: 2 candles
+2026-10-07 06:32:06 | INFO    | backfill OPUSDT.P 1m: 7 candles
+2026-10-07 06:32:06 | INFO    | backfill NEARUSDT.P 1m: 2 candles
+2026-10-07 06:32:06 | INFO    | backfill ARBUSDT.P 1m: 7 candles
+2026-10-07 06:32:06 | INFO    | backfill OPUSDT.P 1m: 2 candles
+2026-10-07 06:32:07 | INFO    | backfill WLDUSDT.P 1m: 7 candles
+2026-10-07 06:32:07 | INFO    | backfill ARBUSDT.P 1m: 2 candles
+2026-10-07 06:32:07 | INFO    | backfill WLDUSDT.P 1m: 2 candles
+2026-10-07 06:32:07 | INFO    | backfill CAKEUSDT.P 1m: 7 candles
+2026-10-07 06:32:07 | INFO    | backfill POLUSDT.P 1m: 2 candles

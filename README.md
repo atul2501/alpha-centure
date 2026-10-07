@@ -130,3 +130,27 @@ All configs are compared walk-forward on 2020 → Sep 2025 (quarterly folds); **
 
 Production uses `PRODUCTION_CONFIG=roll730_risk` (15m + 1h, breakeven exits). Rejected: maker entries (+29.8R after gating),
 recency half-life weighting (lower R), trailing exits (drawdown).
+
+## SOL 15m model tournament (`alpha.tournament`)
+
+A configuration-driven research arena that tests ~90 model types on SOLUSDT perp 15m bars under identical data,
+walk-forward folds, costs, signal policy and sizing, and ranks them on **net P&L after all costs**.
+"NO ROBUST PROFITABLE MODEL FOUND" is a valid outcome. Design and decisions: `src/alpha/tournament/` docstrings,
+gates pre-registered in `data/experiments/sol15_preregistration.json`.
+
+```bash
+uv sync --extra rl --extra foundation                                  # torch, statsmodels, arch, SB3, Chronos, TimesFM
+uv run python -m alpha.tournament data                                 # DEV dataset (guarded: never reads >= 2024-07-01)
+uv run python -m alpha.tournament run configs/tournament/stage_2.yaml  # baselines, rules, linear
+uv run python -m alpha.tournament run configs/tournament/stage_3.yaml  # classical, tree, regime, hybrids, ablation, order book
+uv run python -m alpha.tournament analyze                              # DSR / PBO / SPA, robustness, Monte Carlo, gates, G1
+uv run python -m alpha.tournament run configs/tournament/stage_4.yaml  # deep / transformer / SSM (spot-check unless G1 opens)
+uv run python -m alpha.tournament run configs/tournament/stage_5.yaml  # foundation models + RL
+uv run python -m alpha.tournament run configs/tournament/stage_6.yaml  # ensembles, stacking, meta-labeling
+uv run python -m alpha.tournament analyze && uv run python -m alpha.tournament report   # reports/MODEL_TOURNAMENT_REPORT.md
+uv run python -m alpha.tournament reproduce <experiment_id>            # re-run one experiment, compare stored metrics
+uv run pytest tests/tournament                                          # leakage + pipeline tests
+```
+
+Results live in the Postgres schema `tournament` (`sql/008_tournament.sql`); dashboard pages 10-13 read it.
+Adding a model = a class implementing `BaseTradingModel` (`models/base.py`) + one line in `models/registry.py`.

@@ -1,0 +1,80 @@
+# Stage 3: classical, tree, regime (mode 1), regime->tree hybrids (mode 2), feature-group ablation, order-book A/B.
+stage: stage_3
+dataset: real
+defaults:
+  feature_set: core
+  targets: [reg_1, reg_4, reg_16]
+  seed: 0
+entries:
+  # ---- classical (series) ----
+  - {entry: ar, model: ar, targets: [reg_1, reg_4, reg_16], params: [{order: [1, 0, 0]}, {order: [4, 0, 0]}]}
+  - {entry: ma, model: ma, params: [{order: [0, 0, 1]}, {order: [0, 0, 2]}]}
+  - {entry: arma, model: arma, params: [{order: [1, 0, 1]}, {order: [2, 0, 2]}]}
+  - {entry: arima, model: arima, params: [{order: [1, 1, 1]}]}
+  - {entry: var, model: var, params: [{lags: 1}, {lags: 4}]}
+  - {entry: garch, model: garch}
+  - {entry: egarch, model: egarch}
+  - {entry: gjr_garch, model: gjr_garch}
+  - {entry: kalman, model: kalman, targets: [reg_4, reg_16], params: [{q_slope: 0.00001}, {q_slope: 0.0001}, {q_slope: 0.001}]}
+  - {entry: state_space, model: state_space, targets: [reg_4, reg_16]}
+  # ---- tree (tabular, core features) ----
+  - {entry: decision_tree, model: decision_tree, targets: [reg_4, reg_16, cls_4_1, cls_16_1], params: [{max_depth: 3}, {max_depth: 5}]}
+  - {entry: random_forest, model: random_forest, targets: [reg_4, reg_16, cls_16_1]}
+  - {entry: extra_trees, model: extra_trees, targets: [reg_4, reg_16, cls_16_1]}
+  - {entry: gradient_boosting, model: gradient_boosting, targets: [reg_4, reg_16]}
+  - {entry: hist_gb, model: hist_gb, targets: [reg_1, reg_4, reg_16, cls_16_1]}
+  - entry: lightgbm
+    model: lightgbm
+    targets: [reg_1, reg_2, reg_4, reg_8, reg_16, cls_4_1, cls_16_1, cls_16_2]
+    params: [{num_leaves: 7}, {num_leaves: 31}]
+  - {entry: xgboost, model: xgboost, targets: [reg_1, reg_4, reg_16, cls_16_1], params: [{max_depth: 3}, {max_depth: 5}]}
+  - {entry: catboost, model: catboost, targets: [reg_4, reg_16, cls_16_1]}
+  # ---- regime models, mode 1 (direct) ----
+  - {entry: gaussian_hmm, model: gaussian_hmm, targets: [reg_4, reg_16], params: [{K: 2}, {K: 3}]}
+  - {entry: hmm, model: hmm, targets: [reg_4, reg_16], params: [{K: 3}, {K: 4}]}
+  - {entry: multivariate_hmm, model: multivariate_hmm, targets: [reg_4, reg_16], params: [{K: 4}]}
+  - {entry: markov_switching, model: markov_switching, targets: [reg_4, reg_16], params: [{K: 2}, {K: 3}]}
+  - {entry: hsmm, model: hsmm, targets: [reg_4, reg_16], params: [{K: 3}]}
+  - {entry: explicit_duration_hmm, model: explicit_duration_hmm, targets: [reg_4, reg_16], params: [{K: 4}]}
+  - {entry: slds, model: slds, targets: [reg_1, reg_4, reg_16]}
+  - {entry: switching_kalman, model: switching_kalman, targets: [reg_1, reg_4, reg_16]}
+  - {entry: switching_state_space, model: switching_state_space, targets: [reg_1, reg_4, reg_16]}
+  # ---- regime -> predictor hybrids (mode 2) ----
+  - {entry: hmm_lightgbm, model: hybrid, targets: [reg_4, reg_16], params: [{regime: hmm, predictor: lightgbm}]}
+  - {entry: hmm_xgboost, model: hybrid, targets: [reg_4, reg_16], params: [{regime: hmm, predictor: xgboost}]}
+  - {entry: hmm_catboost, model: hybrid, targets: [reg_4, reg_16], params: [{regime: hmm, predictor: catboost}]}
+  - {entry: hmm_random_forest, model: hybrid, targets: [reg_4, reg_16], params: [{regime: hmm, predictor: random_forest}]}
+  - {entry: hsmm_lightgbm, model: hybrid, targets: [reg_4, reg_16, cls_16_1], params: [{regime: hsmm, predictor: lightgbm}]}
+  - {entry: hsmm_xgboost, model: hybrid, targets: [reg_4, reg_16], params: [{regime: hsmm, predictor: xgboost}]}
+  - {entry: hsmm_catboost, model: hybrid, targets: [reg_4, reg_16], params: [{regime: hsmm, predictor: catboost}]}
+  - {entry: hsmm_random_forest, model: hybrid, targets: [reg_4, reg_16], params: [{regime: hsmm, predictor: random_forest}]}
+  - {entry: kalman_lightgbm, model: hybrid, targets: [reg_4, reg_16], params: [{regime: kalman, regime_params: {q_slope: 0.0001}, predictor: lightgbm}]}
+  - {entry: kalman_xgboost, model: hybrid, targets: [reg_4, reg_16], params: [{regime: kalman, regime_params: {q_slope: 0.0001}, predictor: xgboost}]}
+  - {entry: slds_lightgbm, model: hybrid, targets: [reg_4, reg_16], params: [{regime: slds, predictor: lightgbm}]}
+  - {entry: ms_lightgbm, model: hybrid, targets: [reg_4, reg_16], params: [{regime: markov_switching, predictor: lightgbm}]}
+  # ---- feature-group ablation (incremental), LightGBM and Ridge ----
+  - {entry: abl_lgb_price, model: lightgbm, feature_set: price, targets: [reg_4, reg_16]}
+  - {entry: abl_lgb_price_volume, model: lightgbm, feature_set: price_volume, targets: [reg_4, reg_16]}
+  - {entry: abl_lgb_price_volume_flow, model: lightgbm, feature_set: price_volume_flow, targets: [reg_4, reg_16]}
+  - {entry: abl_lgb_technical, model: lightgbm, feature_set: technical, targets: [reg_4, reg_16]}
+  - {entry: abl_lgb_core, model: lightgbm, feature_set: core, targets: [reg_4, reg_16]}
+  - {entry: abl_lgb_core_deriv, model: lightgbm, feature_set: core_deriv, targets: [reg_4, reg_16]}
+  - {entry: abl_ridge_price, model: ridge, feature_set: price, targets: [reg_4, reg_16], params: [{alpha: 1000}]}
+  - {entry: abl_ridge_price_volume, model: ridge, feature_set: price_volume, targets: [reg_4, reg_16], params: [{alpha: 1000}]}
+  - {entry: abl_ridge_price_volume_flow, model: ridge, feature_set: price_volume_flow, targets: [reg_4, reg_16], params: [{alpha: 1000}]}
+  - {entry: abl_ridge_technical, model: ridge, feature_set: technical, targets: [reg_4, reg_16], params: [{alpha: 1000}]}
+  - {entry: abl_ridge_core, model: ridge, feature_set: core, targets: [reg_4, reg_16], params: [{alpha: 1000}]}
+  - {entry: abl_ridge_core_deriv, model: ridge, feature_set: core_deriv, targets: [reg_4, reg_16], params: [{alpha: 1000}]}
+  # leave-one-group-out from core (LightGBM)
+  - {entry: loo_lgb_no_price, model: lightgbm, feature_set: [VOLUME, VOLATILITY, MOMENTUM, TREND, MARKET_STRUCTURE, ORDER_FLOW, FUNDING, BTC_CONTEXT, ETH_CONTEXT], targets: [reg_4, reg_16]}
+  - {entry: loo_lgb_no_flow, model: lightgbm, feature_set: [PRICE, VOLUME, VOLATILITY, MOMENTUM, TREND, MARKET_STRUCTURE, FUNDING, BTC_CONTEXT, ETH_CONTEXT], targets: [reg_4, reg_16]}
+  - {entry: loo_lgb_no_context, model: lightgbm, feature_set: [PRICE, VOLUME, VOLATILITY, MOMENTUM, TREND, MARKET_STRUCTURE, ORDER_FLOW, FUNDING], targets: [reg_4, reg_16]}
+  - {entry: loo_lgb_no_funding, model: lightgbm, feature_set: [PRICE, VOLUME, VOLATILITY, MOMENTUM, TREND, MARKET_STRUCTURE, ORDER_FLOW, BTC_CONTEXT, ETH_CONTEXT], targets: [reg_4, reg_16]}
+  - {entry: loo_lgb_no_trend_mom, model: lightgbm, feature_set: [PRICE, VOLUME, VOLATILITY, MARKET_STRUCTURE, ORDER_FLOW, FUNDING, BTC_CONTEXT, ETH_CONTEXT], targets: [reg_4, reg_16]}
+  # ---- order-book A/B on the window with book history (test folds 2023-10 -> 2024-07 (3 quarters); train from 2023-01 (>= 180 days of book history before val)) ----
+  - {entry: ob_without_lgb, model: lightgbm, feature_set: core, targets: [reg_1, reg_4, reg_16], eval_start: "2023-10-01"}
+  - {entry: ob_with_lgb, model: lightgbm, feature_set: [PRICE, VOLUME, VOLATILITY, MOMENTUM, TREND, MARKET_STRUCTURE, ORDER_FLOW, FUNDING, BTC_CONTEXT, ETH_CONTEXT, ORDER_BOOK], targets: [reg_1, reg_4, reg_16], eval_start: "2023-10-01"}
+  - {entry: ob_without_ridge, model: ridge, feature_set: core, targets: [reg_1, reg_4, reg_16], params: [{alpha: 1000}], eval_start: "2023-10-01"}
+  - {entry: ob_with_ridge, model: ridge, feature_set: [PRICE, VOLUME, VOLATILITY, MOMENTUM, TREND, MARKET_STRUCTURE, ORDER_FLOW, FUNDING, BTC_CONTEXT, ETH_CONTEXT, ORDER_BOOK], targets: [reg_1, reg_4, reg_16], params: [{alpha: 1000}], eval_start: "2023-10-01"}
+  - {entry: ob_only_lgb, model: lightgbm, feature_set: [ORDER_BOOK], targets: [reg_1, reg_4, reg_16], eval_start: "2023-10-01"}
+  - {entry: ob_only_ridge, model: ridge, feature_set: [ORDER_BOOK], targets: [reg_1, reg_4, reg_16], params: [{alpha: 1000}], eval_start: "2023-10-01"}

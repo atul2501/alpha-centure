@@ -62,7 +62,7 @@ def _ledger(path: Path) -> list[dict]:
 
 def open_lockbox(candidate: str, split: str, ledger: Path = LEDGER) -> None:
     """Record a look at held-out data, or refuse it. Call before evaluating `candidate` on VALID-A / VALID-B."""
-    if split not in ("VALID-A", "VALID-B", "UNSEEN-9", "UNSEEN-14"):
+    if split not in ("VALID-A", "VALID-B", "UNSEEN-9", "UNSEEN-14", "SOL15-FORWARD", "COMPARE-2025-10"):
         raise ValueError(f"lockbox only guards held-out splits, got {split!r}")
     rows = _ledger(ledger)
     if any(r["candidate"] == candidate and r["split"] == split for r in rows):

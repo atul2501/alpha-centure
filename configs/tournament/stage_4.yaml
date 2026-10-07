@@ -1,0 +1,48 @@
+# Stage 4: deep / transformer / state-space. Pre-declared BEFORE gate G1 was evaluated (2026-10-06 ~22:20 IST).
+# spot: true  -> the fixed spot-check config (always runs; same 2 targets, seq_len 64, 1000 steps, seed 0)
+# requires_g1 -> full-sweep entries; recorded as gated_out unless G1 opened (data/experiments/sol15_analysis.json)
+stage: stage_4
+dataset: real
+defaults:
+  targets: [reg_4, reg_16]
+  params: [{seq_len: 64, max_steps: 1000}]
+  seed: 0
+entries:
+  # ---- spot checks ----
+  - {entry: mlp, model: mlp, spot: true}
+  - {entry: lstm, model: lstm, spot: true}
+  - {entry: tcn, model: tcn, spot: true}
+  - {entry: patchtst, model: patchtst, spot: true}
+  - {entry: dlinear, model: dlinear, spot: true}
+  - {entry: mamba, model: mamba, spot: true}
+  # ---- full sweep (only if G1 opens): every architecture, sequence length chosen on validation ----
+  - {entry: dnn, model: dnn, requires_g1: true}
+  - {entry: cnn1d, model: cnn1d, requires_g1: true}
+  - {entry: rnn, model: rnn, requires_g1: true}
+  - {entry: gru, model: gru, requires_g1: true}
+  - {entry: bilstm, model: bilstm, requires_g1: true}
+  - {entry: bigru, model: bigru, requires_g1: true}
+  - {entry: lstm_sweep, model: lstm, requires_g1: true, params: [{seq_len: 16}, {seq_len: 32}, {seq_len: 64}, {seq_len: 96}, {seq_len: 192}]}
+  - {entry: tcn_sweep, model: tcn, requires_g1: true, params: [{seq_len: 16}, {seq_len: 32}, {seq_len: 64}, {seq_len: 96}, {seq_len: 192}]}
+  - {entry: transformer, model: transformer, requires_g1: true}
+  - {entry: temporal_transformer, model: temporal_transformer, requires_g1: true}
+  - {entry: nlinear, model: nlinear, requires_g1: true}
+  - {entry: itransformer, model: itransformer, requires_g1: true}
+  - {entry: tft, model: tft, requires_g1: true}
+  - {entry: informer, model: informer, requires_g1: true}
+  - {entry: autoformer, model: autoformer, requires_g1: true}
+  - {entry: fedformer, model: fedformer, requires_g1: true}
+  - {entry: timesnet, model: timesnet, requires_g1: true}
+  - {entry: crossformer, model: crossformer, requires_g1: true}
+  - {entry: patchtst_sweep, model: patchtst, requires_g1: true, params: [{seq_len: 32}, {seq_len: 96}, {seq_len: 192}]}
+  - {entry: s4, model: s4, requires_g1: true}
+  - {entry: s5, model: s5, requires_g1: true}
+  - {entry: mamba2, model: mamba2, requires_g1: true}
+  - {entry: mamba_attention, model: mamba_attention, requires_g1: true}
+  - {entry: mamba_cnn, model: mamba_cnn, requires_g1: true}
+  - {entry: mamba_transformer, model: mamba_transformer, requires_g1: true}
+  - {entry: mamba_sweep, model: mamba, requires_g1: true, params: [{seq_len: 32}, {seq_len: 96}, {seq_len: 192}]}
+  - {entry: hsmm_lstm, model: hybrid, requires_g1: true, params: [{regime: hsmm, predictor: lstm, feature_set: technical}]}
+  - {entry: hsmm_gru, model: hybrid, requires_g1: true, params: [{regime: hsmm, predictor: gru, feature_set: technical}]}
+  - {entry: hsmm_transformer, model: hybrid, requires_g1: true, params: [{regime: hsmm, predictor: transformer, feature_set: technical}]}
+  - {entry: hsmm_mamba, model: hybrid, requires_g1: true, params: [{regime: hsmm, predictor: mamba, feature_set: technical}]}

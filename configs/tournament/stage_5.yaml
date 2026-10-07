@@ -1,0 +1,22 @@
+# Stage 5: foundation models (zero-shot, experimental) and reinforcement learning. Pre-declared before G1.
+stage: stage_5
+dataset: real
+defaults: {targets: [reg_1, reg_4, reg_16], seed: 0}
+entries:
+  # ---- spot checks ----
+  - {entry: chronos_bolt, model: chronos_bolt, spot: true}
+  - {entry: ppo, model: ppo, targets: [reg_1], params: [{timesteps: 100000}], spot: true}
+  - {entry: dqn, model: dqn, targets: [reg_1], params: [{timesteps: 100000}], spot: true}
+  # ---- not runnable in this environment (recorded as not_run with the reason) ----
+  - {entry: moirai, model: moirai}
+  - {entry: lag_llama, model: lag_llama}
+  - {entry: moment, model: moment}
+  # ---- full sweep only if G1 opens ----
+  - {entry: chronos, model: chronos, requires_g1: true}
+  - {entry: timesfm, model: timesfm, requires_g1: true}
+  - {entry: double_dqn, model: double_dqn, targets: [reg_1], requires_g1: true}
+  - {entry: dueling_dqn, model: dueling_dqn, targets: [reg_1], requires_g1: true}
+  - {entry: a2c, model: a2c, targets: [reg_1], requires_g1: true}
+  - {entry: sac, model: sac, targets: [reg_1], requires_g1: true}
+  - {entry: td3, model: td3, targets: [reg_1], requires_g1: true}
+  - {entry: ddpg, model: ddpg, targets: [reg_1], requires_g1: true}
