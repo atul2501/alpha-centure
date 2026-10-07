@@ -6,7 +6,8 @@
 set -euo pipefail
 
 while true; do
-  missing=$(psql "$DATABASE_URL" -Atq -v syms="$SYMBOLS" <<'SQL'
+  # ON_ERROR_STOP: without it a SQL error (e.g. tables not created yet) exits 0 with empty output = "all ready"
+  missing=$(psql "$DATABASE_URL" -Atq -v ON_ERROR_STOP=1 -v syms="$SYMBOLS" <<'SQL'
 WITH s AS (SELECT unnest(string_to_array(:'syms', ',')) AS sym)
 SELECT sym FROM s WHERE NOT coalesce(
   (SELECT min(open_time) <= now() - interval '200 days' AND max(open_time) >= now() - interval '3 hours'
