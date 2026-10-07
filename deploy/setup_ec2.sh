@@ -59,6 +59,8 @@ sudo -u alpha bash -c "cd $APP_DIR && ~/.local/bin/uv sync --no-dev"
 echo "==> config"
 sudo mkdir -p /etc/alpha
 if [ ! -f /etc/alpha/.env ]; then
+  # the role may survive from an earlier, interrupted run with another password: make it match the new .env
+  sudo -u postgres psql -v ON_ERROR_STOP=1 -c "ALTER ROLE ${DB_USER} PASSWORD '${DB_PASS}';"
   sudo tee /etc/alpha/.env >/dev/null <<ENV
 DATABASE_URL=postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}
 # USD-M perpetuals only (spot off)
