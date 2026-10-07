@@ -82,17 +82,15 @@ def per_symbol_paper(eq: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def shadow(conn, symbols, start: pd.Timestamp, end: pd.Timestamp, costs: pd.DataFrame) -> pd.Series:
-    """Research path on the paper period: same models (by train_end), band, maker share, cost model."""
-    s = get_settings()
-    bundles = sorted(Path(s.models_dir).glob("p6_ridge_*.joblib"))
+def p6_scores(X: pd.DataFrame, end: pd.Timestamp, models_dir: str) -> pd.DataFrame | None:
+    """Ridge scores as the live engine had them: each bundle from its train_end until the next one. The first
+    bundle also scores the earlier rows (warm-up for the vol target only; score the window after its train_end)."""
+    bundles = sorted(Path(models_dir).glob("p6_ridge_*.joblib"))
     if not bundles:
-        return pd.Series(dtype=float)
+        return None
     import joblib
 
     bs = [joblib.load(b) for b in bundles]
-    panel = build_panel(conn, symbols, start=start - pd.Timedelta(days=p6.HISTORY_DAYS), end=end)
-    X, _ = feature_frame(panel, sig.compute(panel))
     times = X.index.get_level_values("time")
     parts = []
     for i, b in enumerate(bs):
@@ -100,15 +98,29 @@ def shadow(conn, symbols, start: pd.Timestamp, end: pd.Timestamp, costs: pd.Data
         m = (times >= (b.train_end if i else times.min())) & (times < nxt)
         if m.any():
             parts.append(p6.score(b, X[m]))
-    sc = pd.concat(parts).sort_index()
-    w = p6.target_weights(panel, sc)
+    return pd.concat(parts).sort_index()
+
+
+def shadow_from_weights(panel: pd.DataFrame, w: pd.DataFrame, costs: pd.DataFrame, start: pd.Timestamp,
+                        end: pd.Timestamp, band_fn=None) -> pd.DataFrame:
+    """Pre-band weights -> 1% band (or band_fn(w, ret, vol, h)) -> P6 cost model + funding -> daily
+    gross / funding / cost / turnover / net over [start, end)."""
     ret = wide(panel, "ret")
     vol = ret.rolling(sig.VOL_WINDOW, min_periods=48).std()
-    w = apply_band_and_stop(w, ret, vol, p6.BAND, None, p6.H)
+    w = band_fn(w, ret, vol, p6.H) if band_fn else apply_band_and_stop(w, ret, vol, p6.BAND, None, p6.H)
     t = w.index[(w.index >= start) & (w.index < end)]
     per_side = p6.MAKER_SHARE_ASSUMED * costs["maker_bps"] + (1 - p6.MAKER_SHARE_ASSUMED) * costs["taker_bps"]
-    res = simulate(w.loc[t], ret.loc[t], wide(panel, "funding_rate").loc[t], per_side)
-    return res.daily()["net"]
+    return simulate(w.loc[t], ret.loc[t], wide(panel, "funding_rate").loc[t], per_side).daily()
+
+
+def shadow(conn, symbols, start: pd.Timestamp, end: pd.Timestamp, costs: pd.DataFrame) -> pd.Series:
+    """Research path on the paper period: same models (by train_end), band, maker share, cost model."""
+    panel = build_panel(conn, symbols, start=start - pd.Timedelta(days=p6.HISTORY_DAYS), end=end)
+    X, _ = feature_frame(panel, sig.compute(panel))
+    sc = p6_scores(X, end, get_settings().models_dir)
+    if sc is None:
+        return pd.Series(dtype=float)
+    return shadow_from_weights(panel, p6.target_weights(panel, sc), costs, start, end)["net"]
 
 
 def main() -> None:

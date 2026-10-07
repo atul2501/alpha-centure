@@ -96,6 +96,11 @@ journalctl -u alpha-paper -f                     # live log
 sudo systemctl restart alpha-paper               # after a code change
 ssh -L 8501:localhost:8501 ubuntu@<ip>           # dashboard at http://localhost:8501
 ```
+Shadow league (`alpha-league.timer`, daily 00:20 UTC): P6 and four pre-registered challengers scored on live data
+with the research simulator; it never trades. Rules and candidates: `src/alpha/live/league.py`. Results:
+```bash
+sudo -u alpha bash -c 'cd /opt/alpha && set -a && . /etc/alpha/.env && ~/.local/bin/uv run python -m alpha.live.league --report'
+```
 Backups: set `S3_BACKUP_URI` in `/etc/alpha/.env` and give the instance an IAM role with `s3:PutObject`
 (`alpha-backup.timer`, daily 02:30 UTC). An existing `/etc/alpha/.env` is never overwritten.
 
