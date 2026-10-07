@@ -145,8 +145,11 @@ def stages(conn: psycopg.Connection, symbols: list[str]) -> list[Stage]:
     # 3. Database
     st = Stage("database", "3 · Database", "PostgreSQL: market history + live data + paper ledger")
     size = _one(conn, "SELECT pg_database_size(current_database())")[0]
-    rows = dict(conn.execute("""SELECT relname, reltuples::bigint FROM pg_class
-                                WHERE relname IN ('candles', 'book_tick', 'flow_1m', 'paper_fills')""").fetchall())
+    # Sum the table + its child tables: a TimescaleDB hypertable keeps its rows in chunks (parent reltuples = 0)
+    rows = dict(conn.execute("""SELECT p.relname, sum(greatest(c.reltuples, 0))::bigint FROM pg_class p
+                                JOIN pg_class c ON c.oid = p.oid
+                                  OR c.oid IN (SELECT inhrelid FROM pg_inherits WHERE inhparent = p.oid)
+                                WHERE p.relname IN ('candles', 'book_tick') GROUP BY 1""").fetchall())
     st.checks += [Check("Size", OK, f"{size / 1e9:.1f} GB"),
                   Check("Candles (approx.)", OK, f"{max(rows.get('candles', 0), 0):,}"),
                   Check("Book ticks (approx.)", OK, f"{max(rows.get('book_tick', 0), 0):,}")]
