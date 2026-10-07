@@ -15,6 +15,7 @@ import psycopg
 
 OK, WARN, FAIL, IDLE = "ok", "warn", "fail", "idle"
 RANK = {OK: 0, IDLE: 0, WARN: 1, FAIL: 2}
+MIN_FILLS_MAKER_SHARE = 100  # ~7 rebalances of P6 orders
 
 
 @dataclass
@@ -201,8 +202,11 @@ def stages(conn: psycopg.Connection, symbols: list[str]) -> list[Stage]:
     if f[0]:
         st.checks += [
             Check("Fills", OK, f"{f[0]:,}"),
-            Check("Maker share", OK if f[1] is not None and 0.48 <= float(f[1]) <= 0.72 else WARN,
-                  f"{float(f[1] or 0):.0%}", "model assumes 60%"),
+            # a single rebalance (~15 small orders) is often 100% maker: only judge the share on a real sample
+            Check("Maker share", OK if f[0] < MIN_FILLS_MAKER_SHARE or (f[1] is not None and 0.48 <= float(f[1]) <= 0.72)
+                  else WARN, f"{float(f[1] or 0):.0%}",
+                  f"model assumes 60% · judged after {MIN_FILLS_MAKER_SHARE} fills ({f[0]} so far)"
+                  if f[0] < MIN_FILLS_MAKER_SHARE else "model assumes 60%"),
             Check("Avg slippage vs mid", by_level(float(f[2] or 0), 3, 8), f"{float(f[2] or 0):.2f} bps"),
             Check("Taker latency used", OK, f"{float(f[3] or 0):.0f} ms"),
             Check("Beyond-book fills", OK if not f[4] else FAIL, str(f[4])),
