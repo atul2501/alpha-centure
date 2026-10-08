@@ -1,4 +1,4 @@
-"""Paper trading page: mainnet paper account (P6), decisions, orders, fills, execution quality."""
+"""Paper trading page: mainnet paper account (N1), decisions, orders, fills, execution quality."""
 
 import pandas as pd
 import plotly.graph_objects as go

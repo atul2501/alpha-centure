@@ -1,10 +1,14 @@
-"""P6: ridge forecast book (the finalist that passed VALID-A and failed VALID-B; run in PAPER mode only).
+"""N1: half ridge-forecast book, half momentum rules, scaled to the 20% vol target (PAPER mode only).
 
 One implementation for research replay and the live/paper engine, built from the research functions themselves:
     features   alpha.research.models.feature_frame (momentum, trend, carry, basis, OI, positioning, flow, vol)
     forecast   ridge (alpha=100) on standardized features -> 72h vol-normalized return, trained on every row whose
                target window closed before train_end (hours % 4 == 0 sample), refit monthly
-    weights    inverse-vol, gross 1 -> 20% vol target, 3x gross cap, 0.5x per coin (alpha.research.phase4)
+    ridge half inverse-vol on the forecast, gross 1 -> 20% vol target
+    rules half cross-sectional momentum (1/2/4-week rank, dollar-neutral) + time-series momentum (2/4-week trend,
+               20-day breakout), 50/50, inverse-vol -> 20% vol target. No trained model.
+    book       0.5 ridge + 0.5 rules (agreeing positions add up, disagreeing ones net out), then scaled back to the
+               20% vol target, 3x gross cap, 0.5x per coin (alpha.research.phase4)
     schedule   decision at the close of bars whose open hour (since epoch) % 72 == 0
 The 1% no-trade band is applied by the OMS against the account's ACTUAL positions.
 """
@@ -22,10 +26,10 @@ from sklearn.linear_model import Ridge
 from alpha.research import signals as sig
 from alpha.research.models import feature_frame, target
 from alpha.research.panel import build_panel, wide
-from alpha.research.phase4 import vol_target
+from alpha.research.phase4 import momentum_scores, vol_target
 from alpha.research.portfolio_sim import to_weights
 
-NAME = "P6_m1_band_maker"
+NAME = "N1"
 H = 72
 RIDGE_ALPHA = 100.0
 HISTORY_DAYS = 200      # live window: longest lookback (1320h) + 60-day vol estimate, with margin
@@ -80,6 +84,24 @@ def target_weights(panel: pd.DataFrame, s: pd.DataFrame) -> pd.DataFrame:
     return vol_target(w, ret)
 
 
+def rules_weights(panel: pd.DataFrame) -> pd.DataFrame:
+    """Momentum-rules half: xs + ts momentum, 50/50, inverse-vol, vol-targeted (time x symbol)."""
+    ret = wide(panel, "ret")
+    vol = ret.rolling(sig.VOL_WINDOW, min_periods=48).std()
+    el = wide(panel, "eligible").fillna(False).astype(bool)
+    xs, ts = momentum_scores(panel, 1.0)
+    w = (to_weights(xs.reindex(columns=ret.columns), vol, el, "xs", every=H) +
+         to_weights(ts.reindex(columns=ret.columns), vol, el, "ts", every=H)) / 2
+    return vol_target(w, ret)
+
+
+def book_weights(panel: pd.DataFrame, s: pd.DataFrame) -> pd.DataFrame:
+    """The traded book before the band: 0.5 ridge + 0.5 rules, re-scaled to the 20% vol target (the two halves
+    diversify, so the plain blend runs below it)."""
+    base = target_weights(panel, s)
+    return vol_target(0.5 * base + 0.5 * rules_weights(panel).reindex_like(base).fillna(0.0), wide(panel, "ret"))
+
+
 def is_rebalance(bar_open: pd.Timestamp) -> bool:
     hours = (bar_open - pd.Timestamp(0, tz="UTC")) // pd.Timedelta(hours=1)
     return hours % H == 0
@@ -97,6 +119,6 @@ def live_targets(conn: psycopg.Connection, symbols: list[str], b: RidgeBundle,
     start = (now - pd.Timedelta(days=HISTORY_DAYS)).floor("h")
     panel = build_panel(conn, symbols, start=start, end=now)
     X, _ = feature_frame(panel, sig.compute(panel))
-    w = target_weights(panel, score(b, X))
+    w = book_weights(panel, score(b, X))
     last = w.index[w.index + pd.Timedelta(hours=1) <= now][-1]
     return last, w.loc[last].fillna(0.0), panel

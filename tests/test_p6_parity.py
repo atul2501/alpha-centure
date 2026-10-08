@@ -1,4 +1,4 @@
-"""Live P6 targets (200-day window, as the paper engine computes them) == research targets on full history."""
+"""Live targets (200-day window, as the paper engine computes them) == research targets on full history."""
 
 import numpy as np
 import pandas as pd
@@ -33,9 +33,11 @@ def setup():
 
 def test_live_window_targets_equal_full_history(setup):
     conn, s, full, X, b = setup
-    w_full = p6.target_weights(full, p6.score(b, X))
+    w_full = p6.book_weights(full, p6.score(b, X))
     last, w_live, _ = p6.live_targets(conn, s.symbols, b, T + pd.Timedelta(hours=1, seconds=90))
     assert last == T
     a = w_full.loc[T].reindex(w_live.index).fillna(0.0)
-    np.testing.assert_allclose(w_live.to_numpy(), a.to_numpy(), atol=1e-9)
+    # 1e-5 of equity ($0.30 on $30k, far below the 1% band): the outer vol target's 60-day rolling std keeps ~1e-6
+    # of floating residue from where the window starts; each half alone matches to ~1e-13.
+    np.testing.assert_allclose(w_live.to_numpy(), a.to_numpy(), atol=1e-5)
     assert w_live.abs().sum() > 0.05  # not trivially zero

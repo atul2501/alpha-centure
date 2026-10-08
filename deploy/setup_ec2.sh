@@ -42,7 +42,7 @@ sudo -u postgres psql -d "$DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS timescale
 echo "==> app user, code, python env"
 id alpha &>/dev/null || sudo useradd --system --create-home --shell /usr/sbin/nologin alpha
 sudo mkdir -p "$APP_DIR"
-# The P6 model trained locally must come along: without it the paper engine would train a new one at start-up on a
+# The ridge model trained locally must come along: without it the paper engine would train a new one at start-up on a
 # database that is still nearly empty. models/p6_ridge_*.joblib is tracked in git, so a clone includes it.
 MODEL=$(ls models/p6_ridge_*.joblib 2>/dev/null | sort | tail -n 1 || true)
 if [ -z "$MODEL" ]; then
@@ -85,11 +85,11 @@ fi
 echo "==> systemd"
 sudo cp deploy/systemd/*.service deploy/systemd/*.timer /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable --now alpha-collector.service alpha-dashboard.service alpha-backup.timer alpha-league.timer
-# History P6 needs from data.binance.vision (5m-1d candles, premium, OI metrics, book depth; no 1m history).
+sudo systemctl enable --now alpha-collector.service alpha-dashboard.service alpha-backup.timer
+# History the strategy needs from data.binance.vision (5m-1d candles, premium, OI metrics, book depth; no 1m history).
 # One-shot and resumable: re-run with `sudo systemctl start alpha-vision` if it is interrupted.
 sudo systemctl start --no-block alpha-vision.service
-# Mainnet PAPER trading of P6 (simulated fills; there is no real order path in the code). It is NOT started here:
+# Mainnet PAPER trading of N1 (simulated fills; there is no real order path in the code). It is NOT started here:
 # alpha-paper-gate starts it once every coin has 200 days of 1h candles, funding, premium and OI history
 # (a few hours on a fresh server). Follow it with: journalctl -u alpha-paper-gate -f
 sudo systemctl enable --now --no-block alpha-paper-gate.service
