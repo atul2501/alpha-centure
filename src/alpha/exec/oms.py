@@ -12,7 +12,7 @@ from dataclasses import dataclass
 
 MAX_GROSS = 3.0
 MAX_COIN = 0.5
-KILL_DRAWDOWN = 0.30  # catastrophe stop (manual reset). N1's drawdowns reached 16% (DEV) and 26% (VALID-A) in the 2021-26 replay:
+KILL_DRAWDOWN = 0.30  # catastrophe stop (manual reset). V4_carry's drawdowns reached 14% (DEV) and 18% (VALID-A) in the 2021-26 replay:
                       # a 10% stop would have halted it for good in May 2021. Normal losses are the monitor's job.
 DAILY_LOSS_STOP = 0.03
 MAINT_MARGIN_RATE = 0.015   # conservative across brackets for these sizes (Binance first brackets are 0.4-1%)

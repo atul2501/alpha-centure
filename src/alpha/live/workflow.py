@@ -1,6 +1,6 @@
 """Live A-to-Z workflow health for the dashboard: one status per pipeline stage plus a unified activity feed.
 
-    Binance -> Collector -> Database -> Strategy (N1) -> Risk -> Execution (paper broker) -> Ledger
+    Binance -> Collector -> Database -> Strategy (V4_carry) -> Risk -> Execution (paper broker) -> Ledger
 
 Every check is a cheap query (indexed recent rows or per-feed index lookups) so the page can refresh every few
 seconds. Status rules are pure functions (unit tested): OK (green), WARN (amber), FAIL (red), IDLE (grey: nothing
@@ -164,7 +164,7 @@ def stages(conn: psycopg.Connection, symbols: list[str]) -> list[Stage]:
     nxt = eng.get("next_rebalance_decision")
     to_next = (pd.Timestamp(nxt) - pd.Timestamp.now(tz="UTC")).total_seconds() if nxt else None
     model_age = (pd.Timestamp.now(tz="UTC") - pd.Timestamp(eng["model_train_end"], tz="UTC")).days if eng.get("model_train_end") else None
-    st = Stage("strategy", "4 · Strategy N1", "Every hour: check schedule. Every 72h: ridge forecast + momentum rules → targets")
+    st = Stage("strategy", "4 · Strategy V4_carry", "Every hour: check schedule. Every 72h: ridge forecast + momentum rules + carry → targets")
     st.checks += [
         Check("Engine heartbeat", by_age(hb, 150, 600), fmt_age(hb), "alpha.live.engine"),
         Check("Last decision", by_age(dec[2], 3900, 7500) if dec[0] else IDLE,

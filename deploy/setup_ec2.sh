@@ -89,7 +89,7 @@ sudo systemctl enable --now alpha-collector.service alpha-dashboard.service alph
 # History the strategy needs from data.binance.vision (5m-1d candles, premium, OI metrics, book depth; no 1m history).
 # One-shot and resumable: re-run with `sudo systemctl start alpha-vision` if it is interrupted.
 sudo systemctl start --no-block alpha-vision.service
-# Mainnet PAPER trading of N1 (simulated fills; there is no real order path in the code). It is NOT started here:
+# Mainnet PAPER trading of V4_carry (simulated fills; there is no real order path in the code). It is NOT started here:
 # alpha-paper-gate starts it once every coin has 200 days of 1h candles, funding, premium and OI history
 # (a few hours on a fresh server). Follow it with: journalctl -u alpha-paper-gate -f
 sudo systemctl enable --now --no-block alpha-paper-gate.service
