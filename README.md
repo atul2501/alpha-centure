@@ -4,6 +4,24 @@ A cost-aware crypto perpetual-futures research and paper-trading system. It coll
 **BTC, ETH, SOL, SUI, TRX, AAVE, BNB, XRP, HYPE, LINK, ADA, UNI, LTC, AVAX** (all `…USDT`, spot is off) into
 PostgreSQL/TimescaleDB, with an audit dashboard on top.
 
+## Models and branches
+
+Seven strategies run on this engine, one per branch (`main_v2` trades P6; `v4-carry`, `n1-profit`, `r1-balance`,
+`v1-rules-heavy` each trade one other model). Replay Jan 2021 → Oct 2026, $30,000 start, after costs:
+
+| Model | Branch | $30k → | Sharpe | Worst drop |
+|---|---|---|---|---|
+| V4 (ridge + rules + funding carry) | `v4-carry` | $228,509 | 1.64 | 17.9% |
+| N1 (ridge + rules, full risk) | `n1-profit` | $210,035 | 1.54 | 26.1% |
+| V1 (30% ridge + 70% rules) | `v1-rules-heavy` | $200,508 | 1.52 | 24.1% |
+| R1 (ridge + rules, calmer) | `r1-balance` | $131,192 | 1.44 | 18.5% |
+| P6 (ridge only, live) | `main_v2` | $123,379 | 1.22 | 19.1% |
+
+Not proven yet (replay with modelled costs; the top gaps are within luck). Full details:
+- [`docs/MODELS.md`](docs/MODELS.md): every model and branch, results by period and year, research history,
+  small-account ($300 / $500 / $1,000) findings, caveats and switching commands.
+- [`docs/models_overview.html`](docs/models_overview.html): the same as one visual page (open in a browser).
+
 ## What gets collected
 
 | Table | Content | Cadence |
