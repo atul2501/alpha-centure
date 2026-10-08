@@ -1,4 +1,4 @@
-"""N1: half ridge-forecast book, half momentum rules, scaled to the 20% vol target (PAPER mode only).
+"""V1_rules_heavy: 30% ridge-forecast book + 70% momentum rules, scaled to the 20% vol target (PAPER mode only).
 
 One implementation for research replay and the live/paper engine, built from the research functions themselves:
     features   alpha.research.models.feature_frame (momentum, trend, carry, basis, OI, positioning, flow, vol)
@@ -7,8 +7,8 @@ One implementation for research replay and the live/paper engine, built from the
     ridge half inverse-vol on the forecast, gross 1 -> 20% vol target
     rules half cross-sectional momentum (1/2/4-week rank, dollar-neutral) + time-series momentum (2/4-week trend,
                20-day breakout), 50/50, inverse-vol -> 20% vol target. No trained model.
-    book       0.5 ridge + 0.5 rules (agreeing positions add up, disagreeing ones net out), then scaled back to the
-               20% vol target, 3x gross cap, 0.5x per coin (alpha.research.phase4)
+    book       0.3 ridge + 0.7 rules, then scaled back to the 20% vol target, 3x gross cap, 0.5x per coin
+               (alpha.research.phase4)
     schedule   decision at the close of bars whose open hour (since epoch) % 72 == 0
 The 1% no-trade band is applied by the OMS against the account's ACTUAL positions.
 """
@@ -29,7 +29,7 @@ from alpha.research.panel import build_panel, wide
 from alpha.research.phase4 import momentum_scores, vol_target
 from alpha.research.portfolio_sim import to_weights
 
-NAME = "N1"
+NAME = "V1_rules_heavy"
 H = 72
 RIDGE_ALPHA = 100.0
 HISTORY_DAYS = 200      # live window: longest lookback (1320h) + 60-day vol estimate, with margin
@@ -96,10 +96,9 @@ def rules_weights(panel: pd.DataFrame) -> pd.DataFrame:
 
 
 def book_weights(panel: pd.DataFrame, s: pd.DataFrame) -> pd.DataFrame:
-    """The traded book before the band: 0.5 ridge + 0.5 rules, re-scaled to the 20% vol target (the two halves
-    diversify, so the plain blend runs below it)."""
+    """The traded book before the band: 0.3 ridge + 0.7 rules, re-scaled to the 20% vol target."""
     base = target_weights(panel, s)
-    return vol_target(0.5 * base + 0.5 * rules_weights(panel).reindex_like(base).fillna(0.0), wide(panel, "ret"))
+    return vol_target(0.3 * base + 0.7 * rules_weights(panel).reindex_like(base).fillna(0.0), wide(panel, "ret"))
 
 
 def is_rebalance(bar_open: pd.Timestamp) -> bool:

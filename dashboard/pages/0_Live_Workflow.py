@@ -72,7 +72,7 @@ def card(s) -> str:
 
 
 st.title("Live workflow · A to Z")
-st.caption("Binance → Collector → Database → Strategy N1 → Risk → Execution (paper) → Ledger. "
+st.caption("Binance → Collector → Database → Strategy V1_rules_heavy → Risk → Execution (paper) → Ledger. "
            "Every light is computed from live data; the page refreshes every 5 seconds. No real orders are ever sent.")
 
 
@@ -134,10 +134,9 @@ with st.expander("How the workflow works, step by step", expanded=False):
    every second, open interest every minute, funding/premium/long-short every 5 minutes; repairs gaps after any
    disconnect.
 3. **Database** (PostgreSQL) — history since 2020 plus everything live, and the paper ledger.
-4. **Strategy N1** (`alpha.live.engine`) — every hour at HH:01:30 UTC it checks the schedule. Every **72 hours** it
-   builds signals (momentum, trend, funding, basis, open interest, positioning, flow), runs the **ridge forecast** (retrained monthly) and the **momentum rules**, averages the two books
-   and scales the result back to the 20% volatility target: max 3x gross, max 0.5x per coin,
-   1% no-trade band.
+4. **Strategy V1_rules_heavy** (`alpha.live.engine`) — every hour at HH:01:30 UTC it checks the schedule. Every **72 hours** it
+   builds signals (momentum, trend, funding, basis, open interest, positioning, flow), runs the **ridge forecast** (retrained monthly) and the **momentum rules**, combines them 30/70
+   and scales the result to the 20% volatility target: max 3x gross, max 0.5x per coin, 1% no-trade band.
 5. **Risk** — before any order: caps, a **−3% day** turns the engine reduce-only, a **−30% drawdown** flattens
    everything and halts until a manual restart.
 6. **Execution (paper)** — each coin gets a maker limit order at the best price for 20 minutes; it fills only when

@@ -4,26 +4,25 @@ A cost-aware crypto perpetual-futures research and paper-trading system. It coll
 **BTC, ETH, SOL, SUI, TRX, AAVE, BNB, XRP, HYPE, LINK, ADA, UNI, LTC, AVAX** (all `…USDT`, spot is off) into
 PostgreSQL/TimescaleDB, with an audit dashboard on top.
 
-## Strategy on this branch: N1 (profit focus)
+## Strategy on this branch: V1_rules_heavy (research)
 
-N1 combines two views of the same edge (slow crypto momentum) and trades the blend at full risk:
+V1_rules_heavy leans on the untrained momentum rules and trades the mix at full risk:
 
-- **Ridge half:** a ridge regression turns 19 measurements per coin (1/2/4-week momentum, trend breakouts, funding,
+- **Ridge part:** a ridge regression turns 19 measurements per coin (1/2/4-week momentum, trend breakouts, funding,
   basis, open interest, long/short positioning, order flow, Bitcoin's trend) into a 72-hour forecast; retrained
   monthly. Positions are inverse-volatility weighted and scaled to a 20% yearly volatility target.
-- **Rules half:** no trained model. Cross-sectional momentum (rank the coins by 1/2/4-week trend, long the strongest,
+- **Rules part:** no trained model. Cross-sectional momentum (rank the coins by 1/2/4-week trend, long the strongest,
   short the weakest, dollar-neutral) plus time-series momentum (each coin with its own 2/4-week trend and 20-day
   breakout), 50/50, scaled to the same 20% target.
-- **Blend:** 0.5 × ridge + 0.5 × rules. Where both agree the position is large, where they disagree it nets out:
+- **Mix:** 0.3 × ridge + 0.7 × rules. Where both agree the position is large, where they disagree the rules mostly win.
+  The two books diversify, so the mix is scaled back up to the 20% volatility target
+  (max 3x gross, max 0.5x per coin, 1% no-trade band, 72h rebalance).
 
-  | Coin (example) | Ridge half | Rules half | Blend | N1 holds |
-  |---|---|---|---|---|
-  | SOL | +$4,000 | +$6,000 | +$5,000 | ≈ +$6,500 |
-  | DOGE | +$3,000 | −$3,000 | $0 | $0 |
-  | LINK | −$2,000 | $0 | −$1,000 | ≈ −$1,300 |
-
-- **Scale back to full risk:** the two halves diversify, so the blend swings less than 20% a year; N1 scales the
-  whole book back up to the 20% target (same limits: max 3x gross, max 0.5x per coin, 1% no-trade band, 72h rebalance).
+  | Coin (example) | Ridge | Rules | Mix before scaling |
+  |---|---|---|---|
+  | SOL | +$4,000 | +$6,000 | +$5,400 |
+  | DOGE | +$3,000 | −$3,000 | −$1,200 |
+  | LINK | −$2,000 | $0 | −$600 |
 
 Code: `book_weights` in `src/alpha/strategy/p6.py` (the module name is historical; it holds the ridge forecast).
 
@@ -31,26 +30,25 @@ Code: `book_weights` in `src/alpha/strategy/p6.py` (the module name is historica
 
 | Period | $30k → | Sharpe | Yearly swing | Worst drop | Worst month |
 |---|---|---|---|---|---|
-| Full 2021 → Oct 2026 | $210,035 | 1.54 | 23.7% | 26.1% | −8.1% |
-| Jan 2021 – Jun 2024 | $112,736 | 1.78 | 22.7% | 16.4% | −8.1% |
-| Jul 2024 – Sep 2025 | $37,180 | 0.82 | 24.4% | 26.1% | −8.0% |
-| Oct 2025 – Oct 2026 | $45,098 | 1.67 | 26.0% | 12.0% | −3.7% |
+| Full 2021 → Oct 2026 | $200,508 | 1.52 | 23.4% | 24.1% | −7.6% |
+| Jan 2021 – Jun 2024 | $109,099 | 1.74 | 22.7% | 15.5% | −7.6% |
+| Jul 2024 – Sep 2025 | $33,543 | 0.49 | 23.8% | 24.1% | −6.5% |
+| Oct 2025 – Oct 2026 | $49,312 | 2.05 | 25.4% | 9.1% | −3.1% |
 
-By year: 2021 +64.3%, 2022 −0.7%, 2023 +63.3%, 2024 +54.1%, 2025 +16.9%, 2026 (to 7 Oct) +45.9%.
-
+By year: 2021 +72.0%, 2022 −0.9%, 2023 +44.8%, 2024 +57.9%, 2025 +12.8%, 2026 (to 7 Oct) +52.1%.
 Same engine code as live, ridge retrained quarterly, frozen per-coin cost table (60% maker / 40% taker).
 
 ### Risks
-- **Deep drawdowns:** 26% at worst (Jul 2024 – Sep 2025). The kill switch flattens at −30%, so a slightly worse
-  stretch would halt the engine.
-- **Flat in a crash year:** −0.7% in 2022.
-- **Not proven on unseen data:** the blend was designed after the Oct 2025 → Oct 2026 results were known; the fair
-  check is Jan 2021 – Jun 2024 (Sharpe 1.78). Treat paper results as the real test before any real money.
+- **Research branch:** it did not pass the pre-registered selection rule on Jan 2021 – Jun 2024; its strong last
+  12 months (Sharpe 2.05) came after a weak Jul 2024 – Sep 2025 (+11.8%, Sharpe 0.49). A strong recent stretch
+  after a weak one is what overfitting often looks like.
+- **Deep drawdowns:** 24.1% at worst (Jul 2024 – Sep 2025). The kill switch flattens at −30%.
+- **Not proven on unseen data:** treat paper results as the real test before any real money.
 
 ### Deploy / revert
 ```bash
-# on the server: switch the paper engine to N1 (the paper account carries over; the next 72h rebalance moves it)
-cd ~/alpha-centure && git fetch && git checkout n1-profit && git pull
+# on the server: switch the paper engine to V1_rules_heavy (the paper account carries over; the next 72h rebalance moves it)
+cd ~/alpha-centure && git fetch && git checkout v1-rules-heavy && git pull
 bash deploy/setup_ec2.sh
 sudo systemctl disable --now alpha-league.timer 2>/dev/null; sudo rm -f /etc/systemd/system/alpha-league.*
 sudo systemctl daemon-reload && sudo systemctl restart alpha-paper alpha-dashboard
@@ -174,7 +172,7 @@ src/alpha/binance/        REST client, websocket runner, payload parsers, data.b
 src/alpha/collectors/     klines, orderflow (aggTrade + depth), futures (poll + liquidations)
 src/alpha/backfill.py     history load + gap repair
 src/alpha/main.py         collector entrypoint
-src/alpha/strategy/p6.py  N1 strategy: ridge forecast + momentum rules -> target weights (+ monthly retrain)
+src/alpha/strategy/p6.py  V1_rules_heavy strategy: ridge forecast (30%) + momentum rules (70%) -> target weights (+ monthly retrain)
 src/alpha/live/           paper engine (engine.py), paper vs backtest report (report.py), dashboard checks
 src/alpha/exec/           simulated orders, fills, costs, account ledger
 src/alpha/research/       panel, signals, models, portfolio simulator, validation (VALID-A/B reproduction)

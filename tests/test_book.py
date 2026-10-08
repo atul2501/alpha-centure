@@ -1,4 +1,4 @@
-"""N1 book: ridge half + momentum-rules half, re-scaled to the vol target; caps hold and ineligible coins get nothing."""
+"""V1_rules_heavy book: 0.3 ridge + 0.7 rules, re-scaled to the vol target; caps hold and ineligible coins get nothing."""
 
 import numpy as np
 import pandas as pd
@@ -35,9 +35,9 @@ def test_ineligible_coin_gets_nothing(book):
     assert (book[2]["XRPUSDT"] == 0).all()
 
 
-def test_is_half_ridge_half_rules_rescaled(book):
+def test_is_the_mix_rescaled(book):
     panel, sc, w = book
     base = p6.target_weights(panel, sc)
-    blend = 0.5 * base + 0.5 * p6.rules_weights(panel).reindex_like(base).fillna(0.0)
+    blend = 0.3 * base + 0.7 * p6.rules_weights(panel).reindex_like(base).fillna(0.0)
     np.testing.assert_allclose(w.to_numpy(), vol_target(blend, wide(panel, "ret")).to_numpy(), atol=1e-12)
     assert w.abs().sum(axis=1).iloc[-1000:].mean() > blend.abs().sum(axis=1).iloc[-1000:].mean()  # scaled up

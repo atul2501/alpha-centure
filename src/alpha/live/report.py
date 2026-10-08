@@ -31,8 +31,8 @@ from alpha.research.portfolio_sim import simulate
 from alpha.research.screen import symbol_costs
 from alpha.strategy import p6
 
-VALID_A_EXPECTED = {"sharpe": 0.82, "daily_mean": 0.239 / 457}  # N1 replay, Jul 2024 -> Sep 2025
-LAST12_REPLAY = {"sharpe": 1.67, "daily_mean": 0.503 / 372}  # N1 replay, Oct 2025 -> Oct 2026
+VALID_A_EXPECTED = {"sharpe": 0.49, "daily_mean": 0.118 / 457}  # V1_rules_heavy replay, Jul 2024 -> Sep 2025
+LAST12_REPLAY = {"sharpe": 2.05, "daily_mean": 0.644 / 372}  # V1_rules_heavy replay, Oct 2025 -> Oct 2026
 
 
 def q(conn, sql, params=None) -> pd.DataFrame:
