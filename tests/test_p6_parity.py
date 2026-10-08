@@ -1,4 +1,4 @@
-"""Live P6 targets (200-day window, as the paper engine computes them) == research targets on full history."""
+"""Live targets (200-day window, as the paper engine computes them) == research targets on full history."""
 
 import numpy as np
 import pandas as pd
@@ -33,7 +33,7 @@ def setup():
 
 def test_live_window_targets_equal_full_history(setup):
     conn, s, full, X, b = setup
-    w_full = p6.target_weights(full, p6.score(b, X))
+    w_full = p6.book_weights(full, p6.score(b, X))
     last, w_live, _ = p6.live_targets(conn, s.symbols, b, T + pd.Timedelta(hours=1, seconds=90))
     assert last == T
     a = w_full.loc[T].reindex(w_live.index).fillna(0.0)

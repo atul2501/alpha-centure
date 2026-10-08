@@ -4,6 +4,60 @@ A cost-aware crypto perpetual-futures research and paper-trading system. It coll
 **BTC, ETH, SOL, SUI, TRX, AAVE, BNB, XRP, HYPE, LINK, ADA, UNI, LTC, AVAX** (all `…USDT`, spot is off) into
 PostgreSQL/TimescaleDB, with an audit dashboard on top.
 
+## Strategy on this branch: R1 (balance of profit and low risk)
+
+R1 combines two views of the same edge (slow crypto momentum) and holds their average:
+
+- **Ridge half:** a ridge regression turns 19 measurements per coin (1/2/4-week momentum, trend breakouts, funding,
+  basis, open interest, long/short positioning, order flow, Bitcoin's trend) into a 72-hour forecast; retrained
+  monthly. Positions are inverse-volatility weighted and scaled to a 20% yearly volatility target.
+- **Rules half:** no trained model. Cross-sectional momentum (rank the coins by 1/2/4-week trend, long the strongest,
+  short the weakest, dollar-neutral) plus time-series momentum (each coin with its own 2/4-week trend and 20-day
+  breakout), 50/50, scaled to the same 20% target.
+- **Average:** 0.5 × ridge + 0.5 × rules. Where both agree the position is large, where they disagree it nets out,
+  so the book avoids many bets the two halves would make alone:
+
+  | Coin (example) | Ridge half | Rules half | R1 holds |
+  |---|---|---|---|
+  | SOL | +$4,000 | +$6,000 | +$5,000 (both agree) |
+  | DOGE | +$3,000 | −$3,000 | $0 (they disagree) |
+  | LINK | −$2,000 | $0 | −$1,000 (one view only) |
+
+  Because the halves diversify, the book swings less than either half (about 19% a year) and trades less.
+  Same limits: max 3x gross, max 0.5x per coin, 1% no-trade band, 72h rebalance.
+
+Code: `book_weights` in `src/alpha/strategy/p6.py` (the module name is historical; it holds the ridge forecast).
+
+### Replay, Jan 2021 → 7 Oct 2026 ($30,000 start, 23 coins, after fees, slippage and funding)
+
+| Period | $30k → | Sharpe | Yearly swing | Worst drop | Worst month |
+|---|---|---|---|---|---|
+| Full 2021 → Oct 2026 | $131,192 | 1.45 | 18.9% | 18.5% | −5.0% |
+| Jan 2021 – Jun 2024 | $87,106 | 1.72 | 18.7% | 12.3% | −5.0% |
+| Jul 2024 – Sep 2025 | $35,126 | 0.76 | 18.9% | 18.5% | −4.4% |
+| Oct 2025 – Oct 2026 | $38,590 | 1.34 | 19.9% | 9.8% | −4.3% |
+
+By year: 2021 +56.5%, 2022 +4.5%, 2023 +39.0%, 2024 +40.0%, 2025 +7.0%, 2026 (to 7 Oct) +28.6%.
+Turnover about 31× equity a year. Same engine code as live, ridge retrained quarterly, frozen per-coin cost table
+(60% maker / 40% taker).
+
+### Risks
+- **Weak stretch:** Jul 2024 – Sep 2025 returned +17% with Sharpe 0.76 and an 18.5% drawdown.
+- **Smaller positions:** the averaging keeps the book below the 20% target, so strong trends earn less than a
+  full-size book would.
+- **Not proven on unseen data:** the blend was designed after the Oct 2025 → Oct 2026 results were known; the fair
+  check is Jan 2021 – Jun 2024 (Sharpe 1.72). Treat paper results as the real test before any real money.
+
+### Deploy / revert
+```bash
+# on the server: switch the paper engine to R1 (the paper account carries over; the next 72h rebalance moves it)
+cd ~/alpha-centure && git fetch && git checkout r1-balance && git pull
+bash deploy/setup_ec2.sh
+sudo systemctl disable --now alpha-league.timer 2>/dev/null; sudo rm -f /etc/systemd/system/alpha-league.*
+sudo systemctl daemon-reload && sudo systemctl restart alpha-paper alpha-dashboard
+# revert: git checkout main_v2, then the same setup + restart
+```
+
 ## What gets collected
 
 | Table | Content | Cadence |
@@ -59,7 +113,7 @@ on `/market`; the collector opens one connection to each.
 
 ## Deploy on EC2 (paper trading)
 
-The server builds its own database from Binance; only the code and the P6 model file are copied.
+The server builds its own database from Binance; only the code and the ridge model file are copied.
 
 Quick start on the new server (details below):
 
@@ -74,7 +128,7 @@ Then stop the paper engine on your own machine.
 1. **Launch** Ubuntu 24.04 in **Tokyo (ap-northeast-1)** or **Mumbai (ap-south-1)**. Binance blocks US regions
    (HTTP 451). Instance `t4g.medium`, **100 GB** gp3 disk (database ~13 GB at start; 1s top-of-book adds ~150 MB/day; 1m candles are kept for 30 days only). Security group: SSH (22) from your IP only; Postgres and the
    dashboard stay on localhost.
-2. **Copy the repo** to the server (`git clone`, or copy the folder). The P6 model `models/p6_ridge_*.joblib` is in
+2. **Copy the repo** to the server (`git clone`, or copy the folder). The ridge model `models/p6_ridge_*.joblib` is in
    git, so it comes along; the rest of `models/` stays ignored.
 3. **Run the setup** on the server, from the repo folder:
    ```bash
@@ -95,11 +149,6 @@ systemctl status alpha-collector alpha-paper     # running?
 journalctl -u alpha-paper -f                     # live log
 sudo systemctl restart alpha-paper               # after a code change
 ssh -L 8501:localhost:8501 ubuntu@<ip>           # dashboard at http://localhost:8501
-```
-Shadow league (`alpha-league.timer`, daily 00:20 UTC): P6 and four pre-registered challengers scored on live data
-with the research simulator; it never trades. Rules and candidates: `src/alpha/live/league.py`. Results:
-```bash
-sudo -u alpha bash -c 'cd /opt/alpha && set -a && . /etc/alpha/.env && ~/.local/bin/uv run python -m alpha.live.league --report'
 ```
 Backups: set `S3_BACKUP_URI` in `/etc/alpha/.env` and give the instance an IAM role with `s3:PutObject`
 (`alpha-backup.timer`, daily 02:30 UTC). An existing `/etc/alpha/.env` is never overwritten.
@@ -126,7 +175,7 @@ src/alpha/binance/        REST client, websocket runner, payload parsers, data.b
 src/alpha/collectors/     klines, orderflow (aggTrade + depth), futures (poll + liquidations)
 src/alpha/backfill.py     history load + gap repair
 src/alpha/main.py         collector entrypoint
-src/alpha/strategy/p6.py  P6 strategy: momentum signals -> ridge forecast -> target weights (+ monthly retrain)
+src/alpha/strategy/p6.py  R1 strategy: ridge forecast + momentum rules -> target weights (+ monthly retrain)
 src/alpha/live/           paper engine (engine.py), paper vs backtest report (report.py), dashboard checks
 src/alpha/exec/           simulated orders, fills, costs, account ledger
 src/alpha/research/       panel, signals, models, portfolio simulator, validation (VALID-A/B reproduction)

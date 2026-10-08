@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Starts the P6 paper engine only once every coin has the history P6 reads (p6.HISTORY_DAYS = 200 days of 1h
+# Starts the paper engine only once every coin has the history the strategy reads (p6.HISTORY_DAYS = 200 days of 1h
 # candles, funding, premium index and open-interest metrics) and that data is current. On a fresh server the
 # collector and alpha-vision fill these in a few hours; trading before that would decide on missing data.
 # Run by alpha-paper-gate.service (root); checks every 5 minutes.

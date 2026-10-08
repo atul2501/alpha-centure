@@ -31,8 +31,8 @@ from alpha.research.portfolio_sim import simulate
 from alpha.research.screen import symbol_costs
 from alpha.strategy import p6
 
-VALID_A_EXPECTED = {"sharpe": 1.52, "daily_mean": 0.445 / 457}  # P6 on VALID-A (pre-registered finalist)
-VALID_B_OBSERVED = {"sharpe": -0.15, "daily_mean": -0.034 / 370}
+VALID_A_EXPECTED = {"sharpe": 0.76, "daily_mean": 0.171 / 457}  # R1 replay, Jul 2024 -> Sep 2025
+LAST12_REPLAY = {"sharpe": 1.34, "daily_mean": 0.286 / 372}  # R1 replay, Oct 2025 -> Oct 2026
 
 
 def q(conn, sql, params=None) -> pd.DataFrame:
@@ -102,12 +102,12 @@ def p6_scores(X: pd.DataFrame, end: pd.Timestamp, models_dir: str) -> pd.DataFra
 
 
 def shadow_from_weights(panel: pd.DataFrame, w: pd.DataFrame, costs: pd.DataFrame, start: pd.Timestamp,
-                        end: pd.Timestamp, band_fn=None) -> pd.DataFrame:
-    """Pre-band weights -> 1% band (or band_fn(w, ret, vol, h)) -> P6 cost model + funding -> daily
+                        end: pd.Timestamp) -> pd.DataFrame:
+    """Pre-band weights -> 1% band -> cost model + funding -> daily
     gross / funding / cost / turnover / net over [start, end)."""
     ret = wide(panel, "ret")
     vol = ret.rolling(sig.VOL_WINDOW, min_periods=48).std()
-    w = band_fn(w, ret, vol, p6.H) if band_fn else apply_band_and_stop(w, ret, vol, p6.BAND, None, p6.H)
+    w = apply_band_and_stop(w, ret, vol, p6.BAND, None, p6.H)
     t = w.index[(w.index >= start) & (w.index < end)]
     per_side = p6.MAKER_SHARE_ASSUMED * costs["maker_bps"] + (1 - p6.MAKER_SHARE_ASSUMED) * costs["taker_bps"]
     return simulate(w.loc[t], ret.loc[t], wide(panel, "funding_rate").loc[t], per_side).daily()
@@ -120,7 +120,7 @@ def shadow(conn, symbols, start: pd.Timestamp, end: pd.Timestamp, costs: pd.Data
     sc = p6_scores(X, end, get_settings().models_dir)
     if sc is None:
         return pd.Series(dtype=float)
-    return shadow_from_weights(panel, p6.target_weights(panel, sc), costs, start, end)["net"]
+    return shadow_from_weights(panel, p6.book_weights(panel, sc), costs, start, end)["net"]
 
 
 def main() -> None:
@@ -179,11 +179,11 @@ def main() -> None:
     print(f"execution: realized cost {realized_cost_bps:.2f} bps/unit traded vs model {model_bps:.2f}; maker share "
           f"{maker_share:.0%}; avg slippage vs mid {fills['slippage_bps'].mean() if not fills.empty else float('nan'):.2f} bps; "
           f"taker latency used {fills['latency_ms'].dropna().mean() if not fills.empty else float('nan'):.0f} ms")
-    print("\n             paper            shadow backtest   VALID-A expected   VALID-B observed")
+    print("\n             paper            shadow backtest   VALID-A replay    last-12m replay")
     sp, ss = stats(paper_daily), stats(sh[sh.index >= start.floor('D')] if not sh.empty else sh)
     for k in ("days", "net", "pf", "hit_days", "max_dd", "sharpe", "sortino"):
         exp = VALID_A_EXPECTED.get(k, "")
-        vb = VALID_B_OBSERVED.get(k, "")
+        vb = LAST12_REPLAY.get(k, "")
         print(f"{k:>10}  {sp.get(k, float('nan')):>14.4f}  {ss.get(k, float('nan')):>16.4f}  {exp!s:>17}  {vb!s:>16}")
     if sp.get("days"):
         print(f"(Sharpe standard error at {sp['days']} days ~ +-{sp['sharpe_se']:.1f}: profit is not decidable yet)")
