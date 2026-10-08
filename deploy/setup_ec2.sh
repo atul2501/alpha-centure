@@ -3,6 +3,7 @@
 #   bash deploy/setup_ec2.sh
 # Region must NOT be in the US (Binance returns HTTP 451). Use ap-northeast-1 (Tokyo) or ap-south-1 (Mumbai).
 set -euo pipefail
+# Ubuntu's automatic security updates can hold the package lock for minutes: apt-get install waits up to 15 min for it.
 
 APP_DIR=/opt/alpha
 DB_NAME=alpha
@@ -12,7 +13,7 @@ DB_PASS=${DB_PASS:-$(openssl rand -hex 16)}
 echo "==> PostgreSQL 16 + TimescaleDB"
 sudo apt-get update
 # libgomp1: OpenMP runtime that lightgbm/xgboost load at import (missing on minimal Ubuntu images)
-sudo apt-get install -y gnupg curl lsb-release ca-certificates awscli chrony libgomp1
+sudo apt-get -o DPkg::Lock::Timeout=900 install -y gnupg curl lsb-release ca-certificates awscli chrony libgomp1
 # websocket latency (ws_latency) = receive time - exchange time: the clock must be NTP-synced
 sudo systemctl enable --now chrony
 sudo install -d /usr/share/postgresql-common/pgdg
@@ -23,7 +24,7 @@ curl -fsSL https://packagecloud.io/timescale/timescaledb/gpgkey | sudo gpg --dea
 echo "deb https://packagecloud.io/timescale/timescaledb/ubuntu/ $(lsb_release -cs) main" \
   | sudo tee /etc/apt/sources.list.d/timescaledb.list
 sudo apt-get update
-sudo apt-get install -y postgresql-16 timescaledb-2-postgresql-16
+sudo apt-get -o DPkg::Lock::Timeout=900 install -y postgresql-16 timescaledb-2-postgresql-16
 sudo timescaledb-tune --quiet --yes
 sudo systemctl restart postgresql
 
