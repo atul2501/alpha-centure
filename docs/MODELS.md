@@ -4,6 +4,8 @@ Status on 9 Oct 2026. This document is the one place that describes all models s
 describes only its own model. All results are **paper/replay results with modelled costs, not real trades**, and
 none of the differences between the top models is statistically proven (see [How much to trust this](#how-much-to-trust-this)).
 
+Visual one-page version: open [`docs/models_overview.html`](models_overview.html) in a browser.
+
 ## Contents
 1. [Branches](#branches)
 2. [The shared pipeline](#the-shared-pipeline)
