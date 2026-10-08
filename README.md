@@ -47,6 +47,13 @@ Same engine code as live, ridge retrained quarterly, frozen per-coin cost table 
 - **Not proven on unseen data:** the blend was designed after the Oct 2025 → Oct 2026 results were known; the fair
   check is Jan 2021 – Jun 2024 (Sharpe 1.78). Treat paper results as the real test before any real money.
 
+### Improvement test (branch `n1-improve`)
+Six pre-registered N1 variants (blend weights, cost band, carry sleeve, wider band, 15% risk), selected on
+Jan 2021 – Jun 2024 only and checked with deflated Sharpe and PBO. Rules in the module docstring:
+```bash
+uv run python -m alpha.research.n1_variants      # results in data/research/n1_variants/
+```
+
 ### Deploy / revert
 ```bash
 # on the server: switch the paper engine to N1 (the paper account carries over; the next 72h rebalance moves it)
