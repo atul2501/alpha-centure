@@ -19,13 +19,17 @@ def _df(conn: psycopg.Connection, sql: str, params: tuple | dict | None = None) 
 
 
 def last_candles(conn, n: int = 10, symbol: str | None = None, interval: str | None = None) -> pd.DataFrame:
-    """The n most recently fetched candles (by ingest time): what the collector wrote last."""
+    """The n most recently fetched candles (by ingest time): what the collector wrote last.
+
+    candles is partitioned (and compressed) by open_time, not ingested_at: without the open_time bound the sort reads
+    and decompresses every chunk since 2020, which got Postgres OOM-killed on the 4 GB EC2 box."""
     return _df(conn, """
         SELECT ingested_at, symbol, interval, open_time, close_time, open, high, low, close, volume,
                quote_volume, trades, taker_buy_base, source,
                round(extract(epoch FROM ingested_at - close_time)::numeric, 2) AS latency_s
         FROM candles
-        WHERE (%(s)s::text IS NULL OR symbol = %(s)s) AND (%(i)s::text IS NULL OR interval = %(i)s)
+        WHERE open_time > now() - interval '3 days'
+          AND (%(s)s::text IS NULL OR symbol = %(s)s) AND (%(i)s::text IS NULL OR interval = %(i)s)
         ORDER BY ingested_at DESC, open_time DESC
         LIMIT %(n)s
     """, {"s": symbol, "i": interval, "n": n})

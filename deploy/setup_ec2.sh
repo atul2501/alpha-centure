@@ -26,6 +26,16 @@ echo "deb https://packagecloud.io/timescale/timescaledb/ubuntu/ $(lsb_release -c
 sudo apt-get update
 sudo apt-get -o DPkg::Lock::Timeout=900 install -y postgresql-16 timescaledb-2-postgresql-16
 sudo timescaledb-tune --quiet --yes
+# 4 GB RAM, no swap by default: add 2 GB so a memory spike slows down instead of invoking the OOM killer
+if [ ! -f /swapfile ]; then
+  sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile
+  echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab >/dev/null
+fi
+# If the OOM killer still takes one backend, the postmaster recovers by itself in under a second; systemd's default
+# OOMPolicy=stop would instead shut the whole cluster down and leave it down.
+sudo install -d /etc/systemd/system/postgresql@.service.d
+printf '[Service]\nOOMPolicy=continue\n' | sudo tee /etc/systemd/system/postgresql@.service.d/oom.conf >/dev/null
+sudo systemctl daemon-reload
 sudo systemctl restart postgresql
 
 echo "==> database + user (Postgres listens on localhost only by default)"
