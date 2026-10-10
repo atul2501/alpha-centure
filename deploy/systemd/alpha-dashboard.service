@@ -1,13 +1,15 @@
 [Unit]
-Description=Alpha Centure audit dashboard (Streamlit)
+Description=Alpha Centure dashboard (read-only web UI)
 After=network-online.target postgresql.service
 
 [Service]
 User=alpha
 WorkingDirectory=/opt/alpha
 EnvironmentFile=/etc/alpha/.env
-# Bound to localhost: reach it through an SSH tunnel. To expose it, use 0.0.0.0 and allow only your IP in the security group.
-ExecStart=/home/alpha/.local/bin/uv run --no-dev streamlit run dashboard/app.py --server.address 127.0.0.1 --server.port 8501 --server.headless true
+# Binds DASHBOARD_HOST (default 127.0.0.1: reach it through an SSH tunnel). To expose it, set DASHBOARD_HOST=0.0.0.0
+# and DASHBOARD_PASSWORD in /etc/alpha/.env and allow only your IP in the security group; it refuses to start
+# on a public address without a password.
+ExecStart=/home/alpha/.local/bin/uv run --no-dev python -m dashboard.server
 Restart=always
 RestartSec=5
 

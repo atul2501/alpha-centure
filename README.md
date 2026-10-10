@@ -84,7 +84,7 @@ createdb alpha
 cp .env.example .env                   # set DATABASE_URL=postgresql://localhost:5432/alpha
 uv sync
 uv run python -m alpha.main            # collector (backfills history first, then streams)
-uv run streamlit run dashboard/app.py  # dashboard on http://localhost:8501
+uv run python -m dashboard.server      # dashboard on http://localhost:8501 (workflow · ledger & P&L · market data)
 uv run python -m alpha.audit           # text audit report
 uv run pytest                          # TEST_DATABASE_URL=postgresql://localhost/alpha_test for DB tests
 ```
@@ -149,6 +149,7 @@ systemctl status alpha-collector alpha-paper     # running?
 journalctl -u alpha-paper -f                     # live log
 sudo systemctl restart alpha-paper               # after a code change
 ssh -L 8501:localhost:8501 ubuntu@<ip>           # dashboard at http://localhost:8501
+# public instead: DASHBOARD_HOST=0.0.0.0 + DASHBOARD_PASSWORD=... in /etc/alpha/.env, your IP only in the security group
 ```
 Backups: set `S3_BACKUP_URI` in `/etc/alpha/.env` and give the instance an IAM role with `s3:PutObject`
 (`alpha-backup.timer`, daily 02:30 UTC). An existing `/etc/alpha/.env` is never overwritten.
@@ -180,6 +181,6 @@ src/alpha/live/           paper engine (engine.py), paper vs backtest report (re
 src/alpha/exec/           simulated orders, fills, costs, account ledger
 src/alpha/research/       panel, signals, models, portfolio simulator, validation (VALID-A/B reproduction)
 src/alpha/audit.py        data quality queries (dashboard)
-dashboard/                Streamlit: live workflow + paper pages
+dashboard/                web dashboard: JSON API (server.py, data.py) + one static page (static/); read-only
 deploy/                   EC2 setup script, systemd units, S3 backup, paper start gate
 ```

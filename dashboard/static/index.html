@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alpha Centure</title>
+<link rel="stylesheet" href="/static/app.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314b8a6'/%3E%3Cpath d='M8 22l6-8 4 5 6-9' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo" aria-hidden="true"></span><span>Alpha Centure</span><span class="mode">PAPER</span></div>
+  <nav class="tabs" aria-label="Pages">
+    <a href="#workflow" data-page="workflow">Workflow</a>
+    <a href="#ledger" data-page="ledger">Ledger &amp; P&amp;L</a>
+    <a href="#market" data-page="market">Market data</a>
+  </nav>
+  <div class="right">
+    <span class="live" id="live"><i></i><span id="live-text">connecting…</span></span>
+    <button class="icon-btn" id="theme" type="button" aria-label="Switch light / dark theme" title="Switch theme">◐</button>
+  </div>
+</header>
+
+<main>
+  <!-- WORKFLOW -->
+  <section class="page" id="page-workflow" aria-labelledby="wf-h">
+    <h1 class="sr-only" id="wf-h">Live workflow</h1>
+    <div class="banner" id="banner"><span class="skeleton w40"></span></div>
+    <div class="engine" id="engine">
+      <div class="metric"><span class="label">Engine heartbeat</span><span class="value" id="hb">–</span><span class="sub" id="hb-sub">written every minute</span></div>
+      <div class="metric"><span class="label">Next rebalance</span><span class="value" id="nr">–</span><span class="sub" id="nr-sub">every 72 hours</span></div>
+      <div class="metric"><span class="label">Last decision</span><span class="value" id="ld">–</span><span class="sub" id="ld-sub"></span></div>
+      <div class="metric"><span class="label">Strategy</span><span class="value" id="model">–</span><span class="sub" id="model-sub"></span></div>
+      <div class="metric"><span class="label">Order latency</span><span class="value" id="lat">–</span><span class="sub">p95 of the book stream + ack</span></div>
+    </div>
+    <div class="pipeline" id="pipeline"></div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head"><h2 id="detail-title">Stage details</h2><span class="hint">Click a stage above</span></div>
+        <div id="detail"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2>Live activity</h2><div class="chips" id="kinds"></div></div>
+        <div class="feed" id="feed"></div>
+      </div>
+    </div>
+    <details class="card how">
+      <summary><h2>How it works</h2><span class="hint">pipeline · rebalance · heartbeat · lights</span></summary>
+      <div class="how-grid">
+        <div>
+          <h3>The pipeline</h3>
+          <ol>
+            <li><b>Binance</b>: two websocket connections. The order book for every coin (every 100 ms) on <code>/public</code>; trades, mark price and funding on <code>/market</code>. Latency is measured on every message.</li>
+            <li><b>Collector</b> (always on): closed candles 1m–1d, 1-minute buy/sell flow, the book every second, open interest every minute, funding / premium / long-short every 5 minutes. Gaps are re-fetched after any disconnect.</li>
+            <li><b>Database</b>: PostgreSQL with history since 2020, everything live, and the paper ledger.</li>
+            <li><b>Strategy</b>: the paper engine (see rebalance).</li>
+            <li><b>Risk</b>: caps of 3× gross and 0.5× per coin. A −3% day turns the engine reduce-only; a −30% drawdown flattens everything and halts until a manual restart.</li>
+            <li><b>Execution (paper)</b>: a maker limit order, then taker. Simulated against the real order book; no real orders.</li>
+            <li><b>Ledger</b>: every decision, order, fill, fee and funding payment, plus an equity mark every minute. The account is rebuilt from these on restart.</li>
+          </ol>
+        </div>
+        <div>
+          <h3>How a rebalance works</h3>
+          <ol>
+            <li>Every hour at <b>HH:01:30 UTC</b> the engine wakes up and checks the schedule. Only every <b>72nd hour</b> (counted from 1970) is a rebalance; otherwise it logs <code>HOLD</code>.</li>
+            <li>Safety first. Halted → <code>NO_TRADE</code>. More than half the order books older than 10 s → <code>NO_TRADE</code>. Last candle missing → <code>NO_TRADE</code>.</li>
+            <li>Targets: the ridge forecast (retrained monthly), momentum rules and funding carry, mixed 50/25/25 and scaled to a 20% yearly swing, max 3× gross and 0.5× per coin.</li>
+            <li>Orders: coins whose target moved less than <b>1% of equity</b> are skipped. Sizes are rounded to Binance lot steps and minimum order values.</li>
+            <li>Execution: a <b>maker</b> limit at the best price for <b>20 minutes</b>, filled only by real trades through that price. The remainder goes <b>taker</b> after the measured latency.</li>
+            <li>Costs: fees of 0.02% maker / 0.05% taker on each fill. Funding is paid or received at each settlement while a position is held.</li>
+          </ol>
+        </div>
+        <div>
+          <h3>What the heartbeat is</h3>
+          <p>The engine writes a timestamp into the database <b>once a minute</b> (at second :01, after valuing the account) and after every hourly check. The dashboard shows its age.</p>
+          <ul>
+            <li><span class="dot ok"></span>under 2.5 min: the engine is alive</li>
+            <li><span class="dot warn"></span>2.5–10 min: late (busy or briefly stuck)</li>
+            <li><span class="dot fail"></span>over 10 min: stopped or crashed (check <code>journalctl -u alpha-paper</code>)</li>
+          </ul>
+          <p>It pauses on its own if no mark prices arrive from Binance, so a stale heartbeat can also mean a dead price feed.</p>
+          <h3>Reading the lights</h3>
+          <ul>
+            <li><span class="dot ok"></span><b>OK</b>: normal</li>
+            <li><span class="dot warn"></span><b>CHECK</b>: slower or weaker than normal</li>
+            <li><span class="dot fail"></span><b>PROBLEM</b>: broken or stopped</li>
+            <li><span class="dot idle"></span><b>WAITING</b>: nothing expected yet</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- LEDGER -->
+  <section class="page" id="page-ledger" hidden aria-labelledby="lg-h">
+    <h1 class="sr-only" id="lg-h">Ledger and P&amp;L</h1>
+    <div class="kpis" id="kpis"></div>
+    <div class="grid-2 wide-left">
+      <div class="card">
+        <div class="card-head"><h2>Equity</h2><span class="hint" id="eq-hint"></span></div>
+        <div class="chart" id="equity-chart"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2>Where the P&amp;L comes from</h2><span class="hint">since the start</span></div>
+        <div class="chart" id="waterfall"></div>
+        <div class="split" id="costs"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h2>Open positions</h2><span class="hint" id="pos-hint"></span></div>
+      <div class="table-wrap" id="positions"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h2>P&amp;L by coin</h2><span class="hint">realized + unrealized − fees − funding</span></div>
+      <div class="table-wrap" id="bycoin"></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div class="seg" role="tablist" id="ledger-tabs">
+          <button type="button" data-t="decisions" aria-selected="true">Decisions</button>
+          <button type="button" data-t="orders" aria-selected="false">Orders</button>
+          <button type="button" data-t="fills" aria-selected="false">Fills</button>
+          <button type="button" data-t="funding" aria-selected="false">Funding</button>
+        </div>
+        <span class="hint" id="tab-hint"></span>
+      </div>
+      <div class="table-wrap tall" id="ledger-table"></div>
+    </div>
+  </section>
+
+  <!-- MARKET -->
+  <section class="page" id="page-market" hidden aria-labelledby="mk-h">
+    <h1 class="sr-only" id="mk-h">Market data</h1>
+    <div class="kpis" id="mkpis"></div>
+    <div class="card">
+      <div class="card-head">
+        <h2>Chart</h2>
+        <div class="controls">
+          <label>Symbol <select id="c-symbol"></select></label>
+          <label>Interval <select id="c-interval"></select></label>
+          <label>Bars <select id="c-bars"><option>100</option><option selected>200</option><option>500</option><option>1000</option></select></label>
+        </div>
+      </div>
+      <div class="chart" id="candles"></div>
+      <div class="grid-2 mini">
+        <div><div class="mini-h">Open interest ($)</div><div class="chart" id="oi"></div></div>
+        <div><div class="mini-h">Funding rate</div><div class="chart" id="fr"></div></div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head"><h2>Candle streams</h2><span class="hint" id="streams-hint"></span></div>
+        <div class="table-wrap tall" id="streams"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2>Other feeds</h2><span class="hint" id="feeds-hint"></span></div>
+        <div class="table-wrap tall" id="feeds"></div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card"><div class="card-head"><h2>Websocket events · 24h</h2></div><div class="table-wrap" id="wsev"></div></div>
+      <div class="card"><div class="card-head"><h2>Last fetch events</h2></div><div class="table-wrap" id="fetches"></div></div>
+    </div>
+  </section>
+</main>
+<div class="tooltip" id="tip" hidden></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
