@@ -7,8 +7,7 @@ User=alpha
 WorkingDirectory=/opt/alpha
 EnvironmentFile=/etc/alpha/.env
 # Binds DASHBOARD_HOST (default 127.0.0.1: reach it through an SSH tunnel). To expose it, set DASHBOARD_HOST=0.0.0.0
-# and DASHBOARD_PASSWORD in /etc/alpha/.env and allow only your IP in the security group; it refuses to start
-# on a public address without a password.
+# in /etc/alpha/.env and allow only your IP in the security group; DASHBOARD_PASSWORD optionally adds a login.
 ExecStart=/home/alpha/.local/bin/uv run --no-dev python -m dashboard.server
 Restart=always
 RestartSec=5

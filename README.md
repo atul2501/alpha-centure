@@ -149,7 +149,7 @@ systemctl status alpha-collector alpha-paper     # running?
 journalctl -u alpha-paper -f                     # live log
 sudo systemctl restart alpha-paper               # after a code change
 ssh -L 8501:localhost:8501 ubuntu@<ip>           # dashboard at http://localhost:8501
-# public instead: DASHBOARD_HOST=0.0.0.0 + DASHBOARD_PASSWORD=... in /etc/alpha/.env, your IP only in the security group
+# public instead: DASHBOARD_HOST=0.0.0.0 in /etc/alpha/.env (optional DASHBOARD_PASSWORD=...), your IP only in the security group
 ```
 Backups: set `S3_BACKUP_URI` in `/etc/alpha/.env` and give the instance an IAM role with `s3:PutObject`
 (`alpha-backup.timer`, daily 02:30 UTC). An existing `/etc/alpha/.env` is never overwritten.

@@ -3,9 +3,10 @@
     uv run python -m dashboard.server            # http://127.0.0.1:8501
 
 Environment:
-    DASHBOARD_HOST      bind address (default 127.0.0.1; use 0.0.0.0 only together with a password)
+    DASHBOARD_HOST      bind address (default 127.0.0.1; 0.0.0.0 to open it to the network)
     DASHBOARD_PORT      default 8501
-    DASHBOARD_PASSWORD  when set, every request needs HTTP basic auth (any user name, this password)
+    DASHBOARD_PASSWORD  optional: when set, every request needs HTTP basic auth (any user name, this password).
+                        Without it a public dashboard is protected only by the security group (allow your IP only).
 
 Results are cached on the server so any number of open browsers share one query: workflow 1 s, ledger 5 s,
 market 10 s, and the expensive data-audit scans 5 minutes.
@@ -20,6 +21,7 @@ from pathlib import Path
 
 import psycopg
 import uvicorn
+from loguru import logger
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -74,8 +76,8 @@ def cached(key: tuple, fn):
 
 def check_bind(host: str, password: str | None) -> None:
     if host not in ("127.0.0.1", "localhost", "::1") and not password:
-        raise SystemExit(f"refusing to serve the dashboard on {host} without DASHBOARD_PASSWORD "
-                         "(set it in /etc/alpha/.env, or use 127.0.0.1 with an SSH tunnel)")
+        logger.warning("dashboard on {} without a password: anyone who can reach the port can see it; "
+                       "limit port access to your IP in the security group", host)
 
 
 class BasicAuth(BaseHTTPMiddleware):

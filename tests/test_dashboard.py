@@ -45,11 +45,14 @@ def test_pnl_by_coin_sums_to_total():
     assert sum(r["realized"] for r in rows) == pytest.approx(acct.realized)
 
 
-def test_public_bind_needs_a_password():
-    with pytest.raises(SystemExit):
-        check_bind("0.0.0.0", None)
+def test_public_bind_without_password_is_allowed():
+    check_bind("0.0.0.0", None)
     check_bind("0.0.0.0", "secret")
     check_bind("127.0.0.1", None)
+
+
+def test_no_password_means_no_login():
+    assert TestClient(create_app(None)).get("/").status_code == 200
 
 
 def test_basic_auth_and_parameter_whitelist():
