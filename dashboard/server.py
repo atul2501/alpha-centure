@@ -2,7 +2,7 @@
 
     uv run python -m dashboard.server            # http://127.0.0.1:8501
 
-Environment:
+Settings (environment or .env):
     DASHBOARD_HOST      bind address (default 127.0.0.1; 0.0.0.0 to open it to the network)
     DASHBOARD_PORT      default 8501
     DASHBOARD_PASSWORD  optional: when set, every request needs HTTP basic auth (any user name, this password).
@@ -13,7 +13,6 @@ market 10 s, and the expensive data-audit scans 5 minutes.
 """
 
 import base64
-import os
 import secrets
 import threading
 import time
@@ -142,10 +141,9 @@ def create_app(password: str | None = None) -> Starlette:
 
 
 def main() -> None:
-    host = os.environ.get("DASHBOARD_HOST", "127.0.0.1")
-    password = os.environ.get("DASHBOARD_PASSWORD") or None
+    host, password = _settings.dashboard_host, _settings.dashboard_password or None
     check_bind(host, password)
-    uvicorn.run(create_app(password), host=host, port=int(os.environ.get("DASHBOARD_PORT", "8501")), log_level="warning")
+    uvicorn.run(create_app(password), host=host, port=_settings.dashboard_port, log_level="warning")
 
 
 if __name__ == "__main__":

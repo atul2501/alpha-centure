@@ -49,6 +49,10 @@ class Settings(BaseSettings):
     # Strategy monitor (pause at 20% shadow drawdown, auto-resume). Off: neutral on DEV (never triggered) and it cost
     # -$3,500 on $30k over Oct 2025 -> Oct 2026 (paused near lows, resumed after rebounds). See alpha.strategy.monitor.
     monitor_enabled: bool = False
+    # Dashboard (python -m dashboard.server): bind address / port, optional basic-auth password
+    dashboard_host: str = "127.0.0.1"
+    dashboard_port: int = 8501
+    dashboard_password: str = ""
 
     spot_rest: str = "https://api.binance.com"
     futures_rest: str = "https://fapi.binance.com"
