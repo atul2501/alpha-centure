@@ -4,9 +4,9 @@ A cost-aware crypto perpetual-futures research and paper-trading system. It coll
 **BTC, ETH, SOL, SUI, TRX, AAVE, BNB, XRP, HYPE, LINK, ADA, UNI, LTC, AVAX** (all `…USDT`, spot is off) into
 PostgreSQL/TimescaleDB, with an audit dashboard on top.
 
-## Strategy on this branch: V4_carry (profit with lower drawdowns)
+## Strategy on this branch: V4_C (V4_carry with slower carry: lower drawdowns and costs)
 
-V4_carry combines three books and trades the mix at full risk:
+V4_C combines three books and trades the mix at full risk:
 
 - **Ridge part:** a ridge regression turns 19 measurements per coin (1/2/4-week momentum, trend breakouts, funding,
   basis, open interest, long/short positioning, order flow, Bitcoin's trend) into a 72-hour forecast; retrained
@@ -16,6 +16,7 @@ V4_carry combines three books and trades the mix at full risk:
   breakout), 50/50, scaled to the same 20% target.
 - **Carry part:** short the coins whose long holders pay the highest funding (24-hour average), long the coins with
   the lowest funding, dollar-neutral, scaled to the same 20% target. It earns funding and does not move with momentum.
+  **Re-traded every 144h** (every second rebalance): funding moves slowly, so trading it every 72h mostly paid fees.
 - **Mix:** 0.5 × ridge + 0.25 × rules + 0.25 × carry. Where the books agree the position is large, where they disagree
   it nets out. The three books diversify, so the mix is scaled back up to the 20% volatility target
   (max 3x gross, max 0.5x per coin, 1% no-trade band, 72h rebalance).
@@ -32,30 +33,31 @@ Code: `book_weights` in `src/alpha/strategy/p6.py` (the module name is historica
 
 | Period | $30k → | Sharpe | Yearly swing | Worst drop | Worst month |
 |---|---|---|---|---|---|
-| Full 2021 → Oct 2026 | $228,509 | 1.64 | 23.1% | 17.9% | −7.9% |
-| Jan 2021 – Jun 2024 | $121,372 | 1.88 | 22.6% | 14.0% | −7.9% |
-| Jul 2024 – Sep 2025 | $42,281 | 1.26 | 24.0% | 17.9% | −7.6% |
-| Oct 2025 – Oct 2026 | $40,076 | 1.30 | 24.0% | 14.7% | −6.4% |
+| Full 2021 → Oct 2026 | $223,314 | 1.59 | 23.6% | 17.4% | −9.2% |
+| Jan 2021 – Jun 2024 | $97,095 | 1.58 | 22.9% | 17.4% | −9.2% |
+| Jul 2024 – Sep 2025 | $44,513 | 1.42 | 24.3% | 12.5% | −5.7% |
+| Oct 2025 – Oct 2026 | $46,502 | 1.84 | 25.0% | 11.3% | −4.4% |
 
-By year: 2021 +60.9%, 2022 +3.4%, 2023 +75.3%, 2024 +72.0%, 2025 +17.8%, 2026 (to 7 Oct) +29.0%.
+By year: 2021 +44.0%, 2022 +0.4%, 2023 +63.9%, 2024 +73.1%, 2025 +18.9%, 2026 (to 7 Oct) +52.6%.
+A $2,000 account with Binance's step sizes and minimum orders, 2022 → Oct 2026: $2,000 → $10,579, Sharpe 1.59,
+worst drop 13.8% (V4_carry: $9,710, 1.55, 17.6%).
 Same engine code as live, ridge retrained quarterly, frozen per-coin cost table (60% maker / 40% taker).
 
 ### Risks
-- **Trades a lot:** about 70× equity a year; the carry part rebalances often. If real costs are 2× the model, the
-  full-period result falls from $228.5k to about $194k. Check real paper fill costs early.
-- **Weaker recently:** Oct 2025 – Oct 2026 returned +33.6% (Sharpe 1.30), well below its Jan 2021 – Jun 2024
-  level (Sharpe 1.88).
-- **Not proven on unseen data:** chosen on Jan 2021 – Jun 2024 with a rule fixed in advance; later periods are
-  information only and were already seen. Treat paper results as the real test before any real money.
+- **Trades a lot:** about 56× equity a year (V4_carry about 70×). Check real paper fill costs early.
+- **Weaker in older years:** Jan 2021 – Jun 2024 Sharpe 1.58 vs V4_carry's 1.88; its lead comes from mid-2024 on.
+  Over 2021 → Oct 2026 the two are close (V4_carry $228.5k, Sharpe 1.64) and the gap is not statistically clear.
+- **Not proven on unseen data:** chosen after looking at 2024–26. Treat paper results as the real test before any
+  real money; V4_carry is the fallback (`git checkout v4-carry`).
 
 ### Deploy / revert
 ```bash
-# on the server: switch the paper engine to V4_carry (the paper account carries over; the next 72h rebalance moves it)
-cd ~/alpha-centure && git fetch && git checkout v4-carry && git pull
+# on the server: switch the paper engine to V4_C (the paper account carries over; the next 72h rebalance moves it)
+cd ~/alpha-centure && git fetch && git checkout v4-c && git pull
 bash deploy/setup_ec2.sh
 sudo systemctl disable --now alpha-league.timer 2>/dev/null; sudo rm -f /etc/systemd/system/alpha-league.*
 sudo systemctl daemon-reload && sudo systemctl restart alpha-paper alpha-dashboard
-# revert: git checkout main_v2, then the same setup + restart
+# revert: git checkout v4-carry, then the same setup + restart
 ```
 
 ## What gets collected
@@ -176,7 +178,7 @@ src/alpha/binance/        REST client, websocket runner, payload parsers, data.b
 src/alpha/collectors/     klines, orderflow (aggTrade + depth), futures (poll + liquidations)
 src/alpha/backfill.py     history load + gap repair
 src/alpha/main.py         collector entrypoint
-src/alpha/strategy/p6.py  V4_carry strategy: ridge forecast + momentum rules + funding carry -> target weights (+ monthly retrain)
+src/alpha/strategy/p6.py  V4_C strategy: ridge forecast + momentum rules + funding carry (144h) -> target weights (+ monthly retrain)
 src/alpha/live/           paper engine (engine.py), paper vs backtest report (report.py), dashboard checks
 src/alpha/exec/           simulated orders, fills, costs, account ledger
 src/alpha/research/       panel, signals, models, portfolio simulator, validation (VALID-A/B reproduction)

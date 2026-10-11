@@ -1,4 +1,4 @@
-"""V4_carry book: 0.5 ridge + 0.25 rules + 0.25 carry, re-scaled to the vol target; caps hold and ineligible coins get nothing."""
+"""V4_C book: 0.5 ridge + 0.25 rules + 0.25 carry, re-scaled to the vol target; caps hold and ineligible coins get nothing."""
 
 import numpy as np
 import pandas as pd

@@ -1,4 +1,4 @@
-"""V4_carry: ridge-forecast book + momentum rules + funding carry, scaled to the 20% vol target (PAPER mode only).
+"""V4_C: ridge-forecast book + momentum rules + funding carry re-traded every 144h, scaled to the 20% vol target (PAPER mode only).
 
 One implementation for research replay and the live/paper engine, built from the research functions themselves:
     features   alpha.research.models.feature_frame (momentum, trend, carry, basis, OI, positioning, flow, vol)
@@ -8,7 +8,7 @@ One implementation for research replay and the live/paper engine, built from the
     rules half cross-sectional momentum (1/2/4-week rank, dollar-neutral) + time-series momentum (2/4-week trend,
                20-day breakout), 50/50, inverse-vol -> 20% vol target. No trained model.
     carry part cross-sectional funding carry (short coins whose 24h-average funding is high, long low), dollar-neutral,
-               inverse-vol -> 20% vol target
+               inverse-vol -> 20% vol target; re-traded every 2nd rebalance (144h): funding moves slowly
     book       0.5 ridge + 0.25 rules + 0.25 carry, then scaled back to the 20% vol target, 3x gross cap, 0.5x per
                coin (alpha.research.phase4)
     schedule   decision at the close of bars whose open hour (since epoch) % 72 == 0
@@ -31,7 +31,7 @@ from alpha.research.panel import build_panel, wide
 from alpha.research.phase4 import momentum_scores, vol_target
 from alpha.research.portfolio_sim import to_weights
 
-NAME = "V4_carry"
+NAME = "V4_C"
 H = 72
 RIDGE_ALPHA = 100.0
 HISTORY_DAYS = 200      # live window: longest lookback (1320h) + 60-day vol estimate, with margin
@@ -98,12 +98,13 @@ def rules_weights(panel: pd.DataFrame) -> pd.DataFrame:
 
 
 def carry_weights(panel: pd.DataFrame) -> pd.DataFrame:
-    """Funding-carry part: short coins whose longs pay high funding, long coins with low funding (time x symbol)."""
+    """Funding-carry part: short coins whose longs pay high funding, long coins with low funding, re-traded every
+    144h (time x symbol)."""
     ret = wide(panel, "ret")
     vol = ret.rolling(sig.VOL_WINDOW, min_periods=48).std()
     el = wide(panel, "eligible").fillna(False).astype(bool)
     carry = sig.compute(panel)["xscarry"].reindex(columns=ret.columns)
-    return vol_target(to_weights(carry, vol, el, "xs", every=H), ret)
+    return vol_target(to_weights(carry, vol, el, "xs", every=2 * H), ret)
 
 
 def book_weights(panel: pd.DataFrame, s: pd.DataFrame) -> pd.DataFrame:
