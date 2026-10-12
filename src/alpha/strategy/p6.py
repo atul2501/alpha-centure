@@ -28,8 +28,9 @@ from sklearn.linear_model import Ridge
 from alpha.research import signals as sig
 from alpha.research.models import feature_frame, target
 from alpha.research.panel import build_panel, wide
-from alpha.research.phase4 import momentum_scores, vol_target
+from alpha.research.phase4 import MAX_COIN, MAX_GROSS, TARGET_VOL, momentum_scores, vol_target
 from alpha.research.portfolio_sim import to_weights
+from alpha.strategy.trace import BLEND, BOOK, FINAL, SIGNAL, Layer, StrategyTrace
 
 NAME = "V4_carry"
 H = 72
@@ -106,12 +107,23 @@ def carry_weights(panel: pd.DataFrame) -> pd.DataFrame:
     return vol_target(to_weights(carry, vol, el, "xs", every=H), ret)
 
 
+MIX = {"ridge": 0.5, "rules": 0.25, "carry": 0.25}
+
+
+def book_parts(panel: pd.DataFrame, s: pd.DataFrame) -> dict[str, pd.DataFrame]:
+    """Every step of the book (time x symbol): the three sub-books, their blend and the final re-scaled book."""
+    base = target_weights(panel, s)
+    parts = {"ridge": base,
+             "rules": rules_weights(panel).reindex_like(base).fillna(0.0),
+             "carry": carry_weights(panel).reindex_like(base).fillna(0.0)}
+    parts["blend"] = sum(MIX[k] * parts[k] for k in MIX)
+    parts["final"] = vol_target(parts["blend"], wide(panel, "ret"))
+    return parts
+
+
 def book_weights(panel: pd.DataFrame, s: pd.DataFrame) -> pd.DataFrame:
     """The traded book before the band: 0.5 ridge + 0.25 rules + 0.25 carry, re-scaled to the 20% vol target."""
-    base = target_weights(panel, s)
-    rules = rules_weights(panel).reindex_like(base).fillna(0.0)
-    carry = carry_weights(panel).reindex_like(base).fillna(0.0)
-    return vol_target(0.5 * base + 0.25 * rules + 0.25 * carry, wide(panel, "ret"))
+    return book_parts(panel, s)["final"]
 
 
 def is_rebalance(bar_open: pd.Timestamp) -> bool:
@@ -125,12 +137,60 @@ def train(conn: psycopg.Connection, symbols: list[str], train_end: pd.Timestamp)
     return fit(X, target(panel, vol, H), train_end)
 
 
+def _row(df: pd.DataFrame, t: pd.Timestamp, nd: int = 5) -> dict[str, float]:
+    r = df.loc[t] if t in df.index else pd.Series(dtype=float)
+    return {str(k): round(float(v), nd) for k, v in r.items() if pd.notna(v)}
+
+
+def explain(panel: pd.DataFrame, scores: dict[str, pd.DataFrame], X: pd.DataFrame, s: pd.DataFrame,
+            parts: dict[str, pd.DataFrame], b: RidgeBundle, last: pd.Timestamp) -> StrategyTrace:
+    """The decision at bar `last`, step by step, in the strategy-agnostic trace format."""
+    xs, ts = momentum_scores(panel, 1.0)
+    vol = wide(panel, "ret").rolling(sig.VOL_WINDOW, min_periods=48).std() * np.sqrt(24 * 365)
+    feats = None
+    if last in X.index.get_level_values("time"):
+        z = (X.xs(last, level="time")[b.cols].fillna(0.0) - b.mu) / b.sd
+        contrib = z.mul(pd.Series(b.model.coef_, index=b.cols), axis=1)
+        feats = {str(sym): {k: round(float(v), 4) for k, v in row.items()} for sym, row in contrib.iterrows()}
+    layers = [
+        Layer("forecast", "Ridge forecast", SIGNAL, "expected 72h return / vol, from 19 features", _row(s, last, 4),
+              features=feats),
+        Layer("xsmom", "Momentum vs other coins", SIGNAL, "1/2/4-week return rank across coins", _row(xs, last, 4)),
+        Layer("tsmom", "Own trend", SIGNAL, "2/4-week trend + 20-day breakout", _row(ts, last, 4)),
+        Layer("funding", "Funding carry", SIGNAL, "low 24h funding = long, high = short",
+              _row(scores["xscarry"], last, 4)),
+        Layer("vol", "Volatility (annual)", SIGNAL, "7-day realized; bigger = smaller position", _row(vol, last, 3)),
+        Layer("ridge", "Ridge book", BOOK, "inverse-vol on the forecast, 20% vol", _row(parts["ridge"], last),
+              blend_weight=MIX["ridge"], inputs=["forecast", "vol"]),
+        Layer("rules", "Momentum rules book", BOOK, "cross-sectional + time-series momentum, 20% vol",
+              _row(parts["rules"], last), blend_weight=MIX["rules"], inputs=["xsmom", "tsmom", "vol"]),
+        Layer("carry", "Funding carry book", BOOK, "short high funding, long low funding, 20% vol",
+              _row(parts["carry"], last), blend_weight=MIX["carry"], inputs=["funding", "vol"]),
+        Layer("blend", "Blend 50/25/25", BLEND, "0.5 ridge + 0.25 rules + 0.25 carry", _row(parts["blend"], last)),
+        Layer("final", "Vol target + caps", FINAL, f"scaled to {TARGET_VOL:.0%} vol, max {MAX_GROSS:g}x gross, "
+              f"{MAX_COIN:g}x per coin", _row(parts["final"], last)),
+    ]
+    return StrategyTrace(NAME, last.isoformat(), f"every {H}h", {
+        "vol target": TARGET_VOL, "max gross": MAX_GROSS, "max per coin": MAX_COIN, "no-trade band": BAND,
+        "model trained up to": str(b.train_end.date())}, layers, _row(parts["final"], last))
+
+
+def live_targets_explained(conn: psycopg.Connection, symbols: list[str], b: RidgeBundle, now: pd.Timestamp
+                           ) -> tuple[pd.Timestamp, pd.Series, pd.DataFrame, StrategyTrace]:
+    """live_targets plus the step-by-step trace of how the targets were built (same panel, no extra queries)."""
+    start = (now - pd.Timedelta(days=HISTORY_DAYS)).floor("h")
+    panel = build_panel(conn, symbols, start=start, end=now)
+    scores = sig.compute(panel)
+    X, _ = feature_frame(panel, scores)
+    s = score(b, X)
+    parts = book_parts(panel, s)
+    w = parts["final"]
+    last = w.index[w.index + pd.Timedelta(hours=1) <= now][-1]
+    return last, w.loc[last].fillna(0.0), panel, explain(panel, scores, X, s, parts, b, last)
+
+
 def live_targets(conn: psycopg.Connection, symbols: list[str], b: RidgeBundle,
                  now: pd.Timestamp) -> tuple[pd.Timestamp, pd.Series, pd.DataFrame]:
     """(last closed bar open time, target weights for it, recent panel) using data known at `now`."""
-    start = (now - pd.Timedelta(days=HISTORY_DAYS)).floor("h")
-    panel = build_panel(conn, symbols, start=start, end=now)
-    X, _ = feature_frame(panel, sig.compute(panel))
-    w = book_weights(panel, score(b, X))
-    last = w.index[w.index + pd.Timedelta(hours=1) <= now][-1]
-    return last, w.loc[last].fillna(0.0), panel
+    last, w, panel, _ = live_targets_explained(conn, symbols, b, now)
+    return last, w, panel

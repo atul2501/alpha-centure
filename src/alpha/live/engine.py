@@ -160,11 +160,13 @@ class PaperEngine:
     async def _close_order(self, oid: int, status: str, filled: float) -> None:
         await self.db.pool.execute("UPDATE paper_orders SET status = $2, closed_at = now() WHERE id = $1", oid, status)
 
-    async def _decision(self, bar_time, action: str, reason: str, targets: dict | None, current: dict | None) -> int:
+    async def _decision(self, bar_time, action: str, reason: str, targets: dict | None, current: dict | None,
+                        trace: dict | None = None) -> int:
         eq = self.account.equity(self.marks)
         return await self.db.pool.fetchval(
-            "INSERT INTO paper_decisions (bar_time, model, action, reason, equity, targets, current) "
-            "VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id", bar_time, p6.NAME, action, reason, eq, targets, current)
+            "INSERT INTO paper_decisions (bar_time, model, action, reason, equity, targets, current, trace) "
+            "VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING id", bar_time, p6.NAME, action, reason, eq, targets, current,
+            trace)
 
     # ---------------- execution ----------------
 
@@ -234,7 +236,7 @@ class PaperEngine:
             await self._decision(bar, "NO_TRADE", f"stale books: {stale}", None, current)
             return
         try:
-            last, w, _ = await asyncio.to_thread(self._targets, now)
+            last, w, _, trace = await asyncio.to_thread(self._targets, now)
         except Exception as e:
             logger.exception("target computation failed")
             await self._decision(bar, "NO_TRADE", f"strategy error: {e}", None, current)
@@ -247,13 +249,13 @@ class PaperEngine:
         orders = plan_orders(targets, self._positions(), self.marks, eq, self.filters, p6.BAND,
                              reduce_only=self.risk.daily_stop)
         reason = f"{len(orders)} orders" + (" (daily loss stop: reduce only)" if self.risk.daily_stop else "")
-        did = await self._decision(bar, "REBALANCE", reason, targets, current)
+        did = await self._decision(bar, "REBALANCE", reason, targets, current, trace.to_json())
         logger.info("rebalance {}: {} orders, targets {}", bar, len(orders), targets)
         asyncio.create_task(self.execute(did, orders))
 
     def _targets(self, now: pd.Timestamp):
         with psycopg.connect(self.s.database_url) as conn:
-            return p6.live_targets(conn, self.symbols, self.bundle, now)
+            return p6.live_targets_explained(conn, self.symbols, self.bundle, now)
 
     async def ensure_model(self) -> None:
         b = p6.RidgeBundle.latest(self.s.models_dir)
