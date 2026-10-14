@@ -179,7 +179,7 @@ src/alpha/collectors/     klines, orderflow (aggTrade + depth), futures (poll + 
 src/alpha/backfill.py     history load + gap repair
 src/alpha/main.py         collector entrypoint
 src/alpha/strategy/p6.py  V4_C strategy: ridge forecast + momentum rules + funding carry (144h) -> target weights (+ monthly retrain)
-src/alpha/live/           paper engine (engine.py), paper vs backtest report (report.py), dashboard checks
+src/alpha/live/           paper engine (engine.py), paper vs backtest report (report.py), loss diagnosis (diagnose.py), dashboard checks
 src/alpha/exec/           simulated orders, fills, costs, account ledger
 src/alpha/research/       panel, signals, models, portfolio simulator, validation (VALID-A/B reproduction)
 src/alpha/audit.py        data quality queries (dashboard)
