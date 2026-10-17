@@ -1,13 +1,15 @@
 "use strict";
 /* Alpha Centure dashboard. Polls the JSON API and patches only the parts that changed (no page reloads):
-   workflow every 2 s, ledger and market every 10 s, the candle chart every 30 s. Clocks tick every second. */
+   workflow every 2 s, ledger and market every 10 s, the candle chart every 30 s. Clocks tick every second.
+   On the ledger page the engine's live snapshot is also pushed (Server-Sent Events, about once a second): equity,
+   P&L and positions move with the market; the 10 s poll still brings fills, orders and the minute equity curve. */
 
 const $ = id => document.getElementById(id);
 const POLL = { workflow: 2000, ledger: 10000, market: 10000, coins: 5000 };
 const LABEL = { ok: "OK", warn: "CHECK", fail: "PROBLEM", idle: "WAITING" };
 const KINDS = ["decision", "order", "fill", "funding", "connection", "error"];
 const S = { page: null, wf: null, lg: null, mk: null, okAt: 0, err: null, busy: false, kinds: new Set(KINDS),
-  stage: null, tab: "decisions", candleKey: "", candleAt: 0 };
+  stage: null, tab: "decisions", candleKey: "", candleAt: 0, live: null, liveAt: 0 };
 
 /* ---------- helpers ---------- */
 function setHTML(el, html) { if (el && el._h !== html) { el.innerHTML = html; el._h = html; } }
@@ -222,7 +224,8 @@ function renderLedger(d) {
     kpi("Unrealized", `<span class="${cls(k.unrealized)}">${sUsd(k.unrealized)}</span>`, `cash ${usd(k.cash)}`),
     kpi("Costs so far", usd(w.fees + Math.max(0, w.funding)), `fees ${usd(w.fees)} · funding ${w.funding >= 0 ? "paid " + usd(w.funding) : "received " + usd(-w.funding)}`),
   ].join(""));
-  $("eq-hint").textContent = `marked every minute · as of ${utc(d.as_of)} UTC`;
+  $("eq-hint").textContent = Date.now() - S.liveAt < 5000 ? `live · ${utc(d.as_of)} UTC · chart marked every minute`
+    : `marked every minute · as of ${utc(d.as_of)} UTC`;
   const key = JSON.stringify([d.curve.length, d.curve.at(-1)]);
   if ($("equity-chart")._k !== key) { $("equity-chart")._k = key;
     lineChart($("equity-chart"), d.curve.map(p => ({ t: p.t, v: p.equity })), { base: k.start, fmt: v => "$" + num(v, 0), label: "Equity curve" }); }
@@ -323,6 +326,26 @@ async function loadCandles(force) {
 }
 ["c-symbol", "c-interval", "c-bars"].forEach(id => $(id).addEventListener("change", () => loadCandles(true)));
 
+/* live snapshot (pushed by the engine through the dashboard server) */
+function applyLive(L) {
+  S.live = L; S.liveAt = Date.now();
+  const d = S.lg; if (!d || d.empty || S.page !== "ledger") return;
+  const k = d.kpi, w = d.waterfall, P = L.positions || {};
+  Object.assign(k, { equity: L.equity, cash: L.cash, unrealized: L.unrealized, gross_lev: L.gross_lev, net_lev: L.net_lev });
+  k.peak = Math.max(k.peak, L.equity); k.drawdown = k.peak ? 1 - L.equity / k.peak : 0;
+  Object.assign(w, { equity: L.equity, total: L.equity - w.start, trading: L.equity - w.start + w.fees + w.funding });
+  d.positions = Object.entries(P).map(([s, [q, e, m]]) => ({ symbol: s, qty: q, entry: e, mark: m, notional: q * (m || 0),
+    unrealized: q * ((m || 0) - e), weight: L.equity ? q * (m || 0) / L.equity : 0 })).sort((a, b) => Math.abs(b.notional) - Math.abs(a.notional));
+  d.by_coin.forEach(r => { const p = P[r.symbol]; r.unrealized = p ? p[0] * ((p[2] || 0) - p[1]) : 0; r.net = r.realized + r.unrealized - r.fees - r.funding; });
+  d.by_coin.sort((a, b) => a.net - b.net);
+  d.as_of = L.ts; renderLedger(d);
+}
+let es = null;
+function liveStream(on) {
+  if (on && !es) { es = new EventSource("/api/live"); es.onmessage = e => { try { applyLive(JSON.parse(e.data)); } catch (err) { /* bad frame: wait for the next */ } }; }
+  else if (!on && es) { es.close(); es = null; }
+}
+
 /* ---------- coins ---------- */
 const STAGE = { queued: ["idle", "QUEUED"], checking: ["warn", "CHECKING…"], checked: ["ok", "CHECKED"], shadow: ["warn", "SHADOW TEST"],
   live: ["ok", "LIVE"], rejected: ["fail", "REJECTED"] };
@@ -374,7 +397,7 @@ $("coins").addEventListener("click", e => { const b = e.target.closest("button[d
 async function get(url) { const r = await fetch(url, { cache: "no-store" }); if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`); return r.json(); }
 const LOAD = {
   workflow: async () => { S.wf = await get("/api/workflow"); renderWorkflow(S.wf); },
-  ledger: async () => { S.lg = await get("/api/ledger"); renderLedger(S.lg); },
+  ledger: async () => { S.lg = await get("/api/ledger"); if (S.live && Date.now() - S.liveAt < 5000) applyLive(S.live); else renderLedger(S.lg); },
   market: async () => { S.mk = await get("/api/market"); renderMarket(S.mk); loadCandles(false); },
   coins: async () => { renderCoins(await get("/api/coins")); },
 };
@@ -391,10 +414,12 @@ function route() {
   document.querySelectorAll(".page").forEach(p => p.hidden = p.id !== "page-" + S.page);
   document.querySelectorAll(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.page === S.page));
   clearInterval(timer); tick(); timer = setInterval(tick, POLL[S.page]);
+  liveStream(S.page === "ledger");
 }
 function clock() {
   const live = $("live");
   if (S.err) { live.className = "live off"; $("live-text").textContent = "offline · retrying"; live.title = S.err; }
+  else if (S.page === "ledger" && Date.now() - S.liveAt < 3000) { live.className = "live on"; $("live-text").textContent = "live · streaming every second"; live.title = ""; }
   else if (S.okAt) { live.className = "live on"; $("live-text").textContent = `live · ${ago((Date.now() - S.okAt) / 1000)} ago · every ${POLL[S.page] / 1000}s`; live.title = ""; }
   const e = S.wf?.engine; if (!e) return;
   const hb = since(e.heartbeat), hm = $("hb").closest(".metric");

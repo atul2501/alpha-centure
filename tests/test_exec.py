@@ -82,3 +82,17 @@ def test_kill_switch_resumes_then_locks():
     assert r.halted and r.manual                   # 2nd kill within 30 days: manual reset
     r.observe(5_000, "d99", now=99 * d)
     assert r.halted
+
+
+def test_live_snapshot_matches_account():
+    from alpha.exec.account import Account
+    from alpha.live.engine import PaperEngine
+    e = PaperEngine.__new__(PaperEngine)                 # no DB / streams needed for the snapshot
+    e.account, e.marks = Account(1000.0), {"BTCUSDT": 61000.0, "ETHUSDT": 2900.0}
+    e.account.apply_fill("BTCUSDT", 1, 0.01, 60000.0, "maker")
+    e.account.apply_fill("ETHUSDT", -1, 0.1, 3000.0, "maker")
+    s = e.live_snapshot()
+    assert s["equity"] == pytest.approx(e.account.equity(e.marks))
+    assert s["unrealized"] == pytest.approx(0.01 * 1000 + 0.1 * 100)
+    assert s["positions"]["ETHUSDT"] == [-0.1, 3000.0, 2900.0]
+    assert len(__import__("json").dumps(s)) < 8000   # NOTIFY payload limit

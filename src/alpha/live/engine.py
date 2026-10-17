@@ -14,6 +14,7 @@ There are no API keys and no order endpoints anywhere in this process. TRADING_M
 """
 
 import asyncio
+import json
 import sys
 import time
 from datetime import datetime, timezone
@@ -25,6 +26,7 @@ from loguru import logger
 
 from alpha.binance.parse import ms_to_dt, now_ms
 from alpha.binance.ws import combined_url, run_stream
+from alpha.coins import trading_symbols_async, watch_symbols
 from alpha.config import Settings, get_settings
 from alpha.db import DB
 from alpha.exec.account import Account
@@ -32,7 +34,6 @@ from alpha.exec.fillsim import Book, MakerOrder, taker_fill
 from alpha.exec.oms import (DAILY_LOSS_STOP, KILL_DRAWDOWN, LotFilter, RiskState, margin_ratio, plan_orders,
                             round_step)
 from alpha.strategy import p6
-from alpha.coins import trading_symbols_async, watch_symbols
 from alpha.strategy.monitor import MonitorState, evaluate, shadow_daily
 
 MAKER_TIMEOUT_S = 20 * 60
@@ -365,6 +366,7 @@ class PaperEngine:
             asyncio.create_task(run_stream("paper_market", combined_url(self.s.futures_ws, mkt_streams), self.on_market)),
             asyncio.create_task(self._every_minute()),
             asyncio.create_task(self._every_hour()),
+            asyncio.create_task(self._every_second()),
         ]
         if self.s.monitor_enabled:
             tasks.append(asyncio.create_task(self._every_day()))
@@ -372,6 +374,26 @@ class PaperEngine:
             await self._state("monitor", {"active": True, "reason": "disabled (MONITOR_ENABLED=false): always on, "
                                           "-30% kill switch only", "checked": None})
         await asyncio.gather(*tasks)
+
+    def live_snapshot(self) -> dict:
+        """Account at the latest marks, for the dashboard's live view (not stored: paper_equity keeps the minutes)."""
+        m = self.marks
+        return {"ts": datetime.now(timezone.utc).isoformat(), "equity": self.account.equity(m), "cash": self.account.cash,
+                "unrealized": self.account.unrealized(m), "gross_lev": self.account.gross_leverage(m),
+                "net_lev": sum(self.account.notional(m).values()) / max(self.account.equity(m), 1e-9),
+                "positions": {s: [p.qty, p.entry, m.get(s)] for s, p in self.account.positions.items() if p.qty}}
+
+    async def _every_second(self) -> None:
+        """Publish the live snapshot once a second (PostgreSQL NOTIFY 'paper_live'; whoever listens gets it)."""
+        while True:
+            await asyncio.sleep(1 - time.time() % 1)
+            if not self.marks:
+                continue
+            try:
+                await self.db.pool.execute("SELECT pg_notify('paper_live', $1)", json.dumps(self.live_snapshot()))
+            except Exception:
+                logger.exception("live snapshot failed")
+                await asyncio.sleep(10)
 
     async def _every_minute(self) -> None:
         while True:

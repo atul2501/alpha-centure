@@ -13,6 +13,7 @@ Results are cached on the server so any number of open browsers share one query:
 market 10 s, and the expensive data-audit scans 5 minutes.
 """
 
+import asyncio
 import base64
 import secrets
 import threading
@@ -26,7 +27,7 @@ from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-from starlette.responses import FileResponse, JSONResponse, Response
+from starlette.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 
@@ -73,6 +74,52 @@ def cached(key: tuple, fn):
             value = fn(_db())
         _cache[key] = (time.monotonic(), value, time.monotonic() - t0)
         return value
+
+
+# Live view: one LISTEN connection for the whole server; every open browser gets the latest engine snapshot pushed
+# (Server-Sent Events) as soon as it arrives, about once a second.
+_live: dict = {"v": 0, "data": None}
+_listener: threading.Thread | None = None
+
+
+def _listen() -> None:
+    while True:
+        try:
+            with psycopg.connect(_settings.database_url, autocommit=True) as c:
+                c.execute("LISTEN paper_live")
+                for n in c.notifies():
+                    _live["data"], _live["v"] = n.payload, _live["v"] + 1
+        except Exception as e:
+            logger.warning("live listener: {}; reconnecting", e)
+            time.sleep(5)
+
+
+def _ensure_listener() -> None:
+    global _listener
+    with _lock:
+        if _listener is None or not _listener.is_alive():
+            _listener = threading.Thread(target=_listen, name="live-listen", daemon=True)
+            _listener.start()
+
+
+async def api_live(request: Request):
+    _ensure_listener()
+
+    async def stream():
+        seen, quiet = -1, 0.0
+        yield "retry: 3000\n\n"
+        while not await request.is_disconnected():
+            if _live["v"] != seen and _live["data"]:
+                seen, quiet = _live["v"], 0.0
+                yield f"data: {_live['data']}\n\n"
+            elif quiet > 15:  # keep proxies from closing an idle stream
+                quiet = 0.0
+                yield ": ping\n\n"
+            await asyncio.sleep(0.2)
+            quiet += 0.2
+
+    return StreamingResponse(stream(), media_type="text/event-stream",
+                             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
 
 def check_bind(host: str, password: str | None) -> None:
@@ -166,6 +213,7 @@ def create_app(password: str | None = None) -> Starlette:
         Route("/api/market", api_market),
         Route("/api/candles", api_candles),
         Route("/api/coins", api_coins),
+        Route("/api/live", api_live),
         Route("/api/coins/action", api_coins_action, methods=["POST"]),
         Mount("/static", StaticFiles(directory=STATIC), name="static"),
     ], middleware=[Middleware(BasicAuth, password=password)])
