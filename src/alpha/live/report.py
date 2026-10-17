@@ -44,7 +44,7 @@ def q(conn, sql, params=None) -> pd.DataFrame:
 def paper_frames(conn):
     eq = q(conn, "SELECT ts, equity, fees, funding, gross_lev, positions FROM paper_equity ORDER BY ts")
     fills = q(conn, "SELECT f.*, o.kind FROM paper_fills f JOIN paper_orders o ON o.id = f.order_id ORDER BY f.id")
-    dec = q(conn, "SELECT * FROM paper_decisions ORDER BY id")
+    dec = q(conn, "SELECT * FROM paper_decisions WHERE action <> 'SNAPSHOT' ORDER BY id")
     fund = q(conn, "SELECT * FROM paper_funding ORDER BY id")
     st = conn.execute("SELECT value FROM paper_state WHERE key = 'account'").fetchone()
     mon = conn.execute("SELECT value FROM paper_state WHERE key = 'monitor'").fetchone()

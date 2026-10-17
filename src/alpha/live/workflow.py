@@ -160,7 +160,7 @@ def stages(conn: psycopg.Connection, symbols: list[str]) -> list[Stage]:
     hb = None
     if eng.get("heartbeat"):
         hb = (datetime.now(timezone.utc) - datetime.fromisoformat(eng["heartbeat"])).total_seconds()
-    dec = _one(conn, "SELECT action, reason, extract(epoch FROM now() - ts), bar_time FROM paper_decisions ORDER BY id DESC LIMIT 1")
+    dec = _one(conn, "SELECT action, reason, extract(epoch FROM now() - ts), bar_time FROM paper_decisions WHERE action <> 'SNAPSHOT' ORDER BY id DESC LIMIT 1")
     nxt = eng.get("next_rebalance_decision")
     to_next = (pd.Timestamp(nxt) - pd.Timestamp.now(tz="UTC")).total_seconds() if nxt else None
     model_age = (pd.Timestamp.now(tz="UTC") - pd.Timestamp(eng["model_train_end"], tz="UTC")).days if eng.get("model_train_end") else None
@@ -234,6 +234,31 @@ def stages(conn: psycopg.Connection, symbols: list[str]) -> list[Stage]:
         ]
     out.append(st)
     return out
+
+
+def rates(conn: psycopg.Connection) -> dict:
+    """Live flow rates for the animated pipeline. Every query is bounded to recent time so chunk exclusion keeps it
+    cheap (an unbounded sort over candles got Postgres OOM-killed on 2026-10-09)."""
+    ws = dict(conn.execute("""SELECT stream, n FROM ws_latency
+                              WHERE minute = (SELECT max(minute) FROM ws_latency WHERE minute > now() - interval '3 minutes')
+                           """).fetchall())
+    rows = _one(conn, """SELECT (SELECT count(*) FROM book_tick WHERE ts > now() - interval '1 minute')
+                              + (SELECT count(*) FROM flow_1m WHERE minute > now() - interval '1 minute')
+                              + (SELECT count(*) FROM candles WHERE open_time > now() - interval '2 days'
+                                 AND ingested_at > now() - interval '1 minute')""")[0]
+    orders = _one(conn, """SELECT count(*) FILTER (WHERE ts > now() - interval '30 minutes'),
+                                  count(*) FILTER (WHERE status = 'open')
+                           FROM paper_orders WHERE ts > now() - interval '1 day' OR status = 'open'""")
+    fills = _one(conn, "SELECT count(*) FROM paper_fills WHERE ts > now() - interval '30 minutes'")[0]
+    dec = _one(conn, """SELECT action, extract(epoch FROM now() - ts) FROM paper_decisions
+                        WHERE action <> 'SNAPSHOT' ORDER BY id DESC LIMIT 1""")
+    eng = _state(conn, "engine")
+    return {"msgs_min": float(sum(ws.values())) if ws else None, "book_min": float(ws["depth20"]) if "depth20" in ws else None,
+            "rows_min": float(rows or 0), "orders_30m": int(orders[0] or 0), "open_orders": int(orders[1] or 0) if len(orders) > 1 else 0,
+            "fills_30m": int(fills or 0), "last_action": dec[0],
+            "decision_age_s": float(dec[1]) if len(dec) > 1 and dec[1] is not None else None,
+            "next_decision": eng.get("next_rebalance_decision"), "rebalance_hours": eng.get("rebalance_hours"),
+            "model": eng.get("model")}
 
 
 def activity(conn: psycopg.Connection, limit: int = 60) -> pd.DataFrame:

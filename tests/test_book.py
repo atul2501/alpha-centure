@@ -45,3 +45,11 @@ def test_is_the_mix_rescaled(book):
              + 0.25 * p6.carry_weights(panel).reindex_like(base).fillna(0.0))
     np.testing.assert_allclose(w.to_numpy(), vol_target(blend, wide(panel, "ret")).to_numpy(), atol=1e-12)
     assert w.abs().sum(axis=1).iloc[-1000:].mean() > blend.abs().sum(axis=1).iloc[-1000:].mean()  # scaled up
+
+
+def test_parts_are_the_book(book):
+    panel, sc, w = book
+    parts = p6.book_parts(panel, sc)
+    np.testing.assert_allclose(parts["final"].to_numpy(), w.to_numpy(), atol=0)
+    mix = 0.5 * parts["ridge"] + 0.25 * parts["rules"] + 0.25 * parts["carry"]
+    np.testing.assert_allclose(parts["blend"].to_numpy(), mix.to_numpy(), atol=1e-15)
