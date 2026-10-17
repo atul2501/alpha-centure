@@ -45,7 +45,7 @@ class Settings(BaseSettings):
     models_dir: str = "models"
     # Paper trading (alpha.live.engine). There is no live order path; 'paper' is the only accepted mode.
     trading_mode: str = "paper"
-    paper_equity: float = 30_000.0
+    paper_equity: float = 1_000.0
     # Strategy monitor (pause at 20% shadow drawdown, auto-resume). Off: neutral on DEV (never triggered) and it cost
     # -$3,500 on $30k over Oct 2025 -> Oct 2026 (paused near lows, resumed after rebounds). See alpha.strategy.monitor.
     monitor_enabled: bool = False
