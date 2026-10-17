@@ -67,3 +67,18 @@ def test_caps_and_risk_state():
     r.observe(6_990, "d3")
     assert r.halted                                # -30%: catastrophe stop
     assert margin_ratio({"A": 30_000}, 10_000) == pytest.approx(0.045)
+
+
+def test_kill_switch_resumes_then_locks():
+    d = 86_400
+    r = RiskState(peak_equity=10_000)
+    r.observe(6_990, "d1", now=0)
+    assert r.halted and not r.manual               # 1st kill: flatten, pause
+    r.observe(7_000, "d1", now=d - 1)
+    assert r.halted                                # still within the 1-day pause
+    r.observe(7_000, "d2", now=d)
+    assert not r.halted and r.peak_equity == 7_000  # resumed; drawdown measured from here
+    r.observe(4_890, "d9", now=8 * d)
+    assert r.halted and r.manual                   # 2nd kill within 30 days: manual reset
+    r.observe(5_000, "d99", now=99 * d)
+    assert r.halted

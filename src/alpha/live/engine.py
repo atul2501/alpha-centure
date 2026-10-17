@@ -91,7 +91,8 @@ class PaperEngine:
             "SELECT value FROM paper_state WHERE key = 'monitor'"))
         rs = await self.db.pool.fetchval("SELECT value FROM paper_state WHERE key = 'risk'")
         if rs:
-            self.risk = RiskState(peak_equity=rs["peak_equity"], halted=rs["halted"], reason=rs.get("reason", ""))
+            self.risk = RiskState(peak_equity=rs["peak_equity"], halted=rs["halted"], reason=rs.get("reason", ""),
+                                  kills=rs.get("kills") or ([] if not rs["halted"] else [0.0, 0.0]))
         await self.db.pool.execute("UPDATE paper_orders SET status = 'cancelled', closed_at = now() WHERE status = 'open'")
         logger.info("restored: cash {:.2f}, positions {}, halted {}", self.account.cash,
                     {k: round(v.qty, 6) for k, v in self.account.positions.items() if v.qty}, self.risk.halted)
@@ -298,7 +299,7 @@ class PaperEngine:
             sum(notional.values()) / eq if eq > 0 else 0.0, mr, self.account.fees, self.account.funding,
             {s: {"qty": p.qty, "entry": p.entry, "mark": self.marks.get(s)} for s, p in self.account.positions.items() if p.qty})
         await self._state("risk", {"peak_equity": self.risk.peak_equity, "halted": self.risk.halted,
-                                   "reason": self.risk.reason, "day_start_equity": self.risk.day_start_equity,
+                                   "reason": self.risk.reason, "kills": self.risk.kills, "day_start_equity": self.risk.day_start_equity,
                                    "daily_stop": self.risk.daily_stop})
         await self.heartbeat()
         if self.risk.halted and self._positions() and not self.busy.locked():

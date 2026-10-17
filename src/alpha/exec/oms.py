@@ -8,12 +8,15 @@ Risk:        hard caps (gross <= 3x, coin <= 0.5x), kill switches (drawdown from
 """
 
 import math
-from dataclasses import dataclass
+import time
+from dataclasses import dataclass, field
 
 MAX_GROSS = 3.0
 MAX_COIN = 0.5
-KILL_DRAWDOWN = 0.30  # catastrophe stop (manual reset). V4_C's drawdowns reached 17% (DEV) and 13% (VALID-A) in the 2021-26 replay:
+KILL_DRAWDOWN = 0.30  # catastrophe stop: flatten, resume after KILL_PAUSE (peak resets), manual reset on a 2nd kill in KILL_WINDOW. V4_C's drawdowns reached 17% (DEV) and 13% (VALID-A) in the 2021-26 replay:
                       # a 10% stop would have halted it for good in May 2021. Normal losses are the monitor's job.
+KILL_PAUSE = 86_400        # s; 2021-26 replay at vol 0.36: 1-day pause $731k vs 7-day $617k vs halt-for-good $49k
+KILL_WINDOW = 30 * 86_400  # 2 kills within this -> stay halted (likely a bug or bad data, not the market)
 DAILY_LOSS_STOP = 0.03
 MAINT_MARGIN_RATE = 0.015   # conservative across brackets for these sizes (Binance first brackets are 0.4-1%)
 MARGIN_RATIO_ALERT = 0.5
@@ -84,13 +87,24 @@ class RiskState:
     day_start_equity: float = 0.0
     halted: bool = False
     reason: str = ""
+    kills: list[float] = field(default_factory=list)  # epoch s of recent kill-switch trips
 
-    def update(self, equity: float, day: str) -> None:
+    @property
+    def manual(self) -> bool:
+        return self.halted and len(self.kills) >= 2
+
+    def update(self, equity: float, day: str, now: float | None = None) -> None:
+        now = time.time() if now is None else now
         if day != self.day:
             self.day, self.day_start_equity = day, equity
+        if self.halted and self.kills and not self.manual and now - self.kills[-1] >= KILL_PAUSE:
+            self.halted, self.reason, self.peak_equity = False, "", equity
         self.peak_equity = max(self.peak_equity, equity)
         if not self.halted and equity <= self.peak_equity * (1 - KILL_DRAWDOWN):
-            self.halted, self.reason = True, f"drawdown {1 - equity / self.peak_equity:.1%} from peak"
+            self.kills = [t for t in self.kills if now - t < KILL_WINDOW] + [now]
+            self.halted = True
+            self.reason = f"drawdown {1 - equity / self.peak_equity:.1%} from peak" + (
+                " (2nd kill in 30 days: manual reset)" if self.manual else ", resuming in 1 day")
 
     @property
     def daily_stop(self) -> bool:
@@ -102,9 +116,9 @@ class RiskState:
 
     _eq: float = 0.0
 
-    def observe(self, equity: float, day: str) -> None:
+    def observe(self, equity: float, day: str, now: float | None = None) -> None:
         self._eq = equity
-        self.update(equity, day)
+        self.update(equity, day, now)
 
 
 def margin_ratio(notional: dict[str, float], equity: float) -> float:
