@@ -35,7 +35,7 @@ from alpha.research.screen import symbol_costs
 from alpha.research.splits import DEV_END
 
 OUT = Path("data/experiments")
-TARGET_VOL = 0.20
+TARGET_VOL = 0.44  # +120% size (was 0.20); 2y backtest Oct 2024-Oct 2026: V4-C max DD 26.2%
 MAX_GROSS = 3.0
 MAX_COIN = 0.5
 MAKER_FILL = 0.6
