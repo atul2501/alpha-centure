@@ -168,6 +168,10 @@
   <section class="page" id="page-coins" hidden aria-labelledby="cn-h">
     <h1 class="sr-only" id="cn-h">Coins</h1>
     <div class="card">
+      <div class="card-head"><h2>Trading list</h2><span class="hint" id="list-hint"></span></div>
+      <div class="chips" id="base-list"></div>
+    </div>
+    <div class="card">
       <div class="card-head"><h2>Check a new coin</h2><span class="hint">Check → Shadow (paper, 90 days) → Live. Every step needs your click.</span></div>
       <form class="coin-form" id="coin-form">
         <label for="coin-sym">Binance USD-M symbol</label>
@@ -180,10 +184,6 @@
     <div class="card">
       <div class="card-head"><h2>Candidates</h2><span class="hint" id="coins-hint"></span></div>
       <div id="coins"></div>
-    </div>
-    <div class="card">
-      <div class="card-head"><h2>Trading list</h2><span class="hint" id="list-hint"></span></div>
-      <div class="chips" id="base-list"></div>
     </div>
   </section>
 </main>
