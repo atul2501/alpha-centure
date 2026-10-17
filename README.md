@@ -56,9 +56,19 @@ Same engine code as live, ridge retrained quarterly, frozen per-coin cost table 
 cd ~/alpha-centure && git fetch && git checkout v4-c && git pull
 bash deploy/setup_ec2.sh
 sudo systemctl disable --now alpha-league.timer 2>/dev/null; sudo rm -f /etc/systemd/system/alpha-league.*
-sudo systemctl daemon-reload && sudo systemctl restart alpha-paper alpha-dashboard
+sudo systemctl daemon-reload && sudo systemctl restart alpha-paper alpha-dashboard alpha-collector
+sudo systemctl enable --now alpha-coins    # Coins tab worker (checks + shadow tests)
 # revert: git checkout v4-carry, then the same setup + restart
 ```
+
+### Adding coins (dashboard → Coins tab)
+Type a Binance USD-M symbol and press **Check**. The `alpha-coins` worker tests the basic rules (USDT perpetual,
+crypto, trading, 90+ days listed, 30-day median volume ≥ $20M), downloads the coin's history and backtests today's list
+vs today's list + the coin from 2022 (10–30 min). The verdict is ✅ good / ⚠️ weak / ❌ don't add. **Confirm** on a good or
+weak coin starts a shadow test on new data only (updated daily). After 90 days a second **Confirm** adds it to the
+live list: the engine and collector notice within ~10 minutes and restart themselves with it. A coin is never added on
+a backtest alone. Changes need `DASHBOARD_PASSWORD` set; every step is logged in `coin_events`.
+Removing an added live coin is not on the page yet (see `alpha.coins`).
 
 ## What gets collected
 

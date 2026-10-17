@@ -1,0 +1,18 @@
+[Unit]
+Description=Alpha Centure coin checker: runs the dashboard's coin checks and daily shadow tests (no orders)
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+User=alpha
+WorkingDirectory=/opt/alpha
+EnvironmentFile=/etc/alpha/.env
+ExecStart=/home/alpha/.local/bin/uv run --no-dev python -m alpha.coins
+Restart=always
+RestartSec=30
+# Backtests are memory-hungry and the box has 4 GB: if one runs away, only this service is killed.
+MemoryMax=1500M
+Nice=15
+
+[Install]
+WantedBy=multi-user.target

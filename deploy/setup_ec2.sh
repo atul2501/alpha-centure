@@ -95,7 +95,7 @@ fi
 echo "==> systemd"
 sudo cp deploy/systemd/*.service deploy/systemd/*.timer /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable --now alpha-collector.service alpha-dashboard.service alpha-backup.timer
+sudo systemctl enable --now alpha-collector.service alpha-dashboard.service alpha-coins.service alpha-backup.timer
 # History the strategy needs from data.binance.vision (5m-1d candles, premium, OI metrics, book depth; no 1m history).
 # One-shot and resumable: re-run with `sudo systemctl start alpha-vision` if it is interrupted.
 sudo systemctl start --no-block alpha-vision.service

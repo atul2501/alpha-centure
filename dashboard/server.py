@@ -1,4 +1,5 @@
-"""Alpha Centure dashboard: a small JSON API + one static page. Read-only.
+"""Alpha Centure dashboard: a small JSON API + one static page. Read-only, except the Coins tab's requests (check a
+coin, start its shadow test, promote it), which need DASHBOARD_PASSWORD set.
 
     uv run python -m dashboard.server            # http://127.0.0.1:8501
 
@@ -29,11 +30,12 @@ from starlette.responses import FileResponse, JSONResponse, Response
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 
+from alpha import coins
 from alpha.config import get_settings
 from dashboard import data
 
 STATIC = Path(__file__).parent / "static"
-TTL = {"workflow": 1.0, "ledger": 5.0, "market": 10.0, "market_heavy": 300.0, "candles": 10.0}
+TTL = {"coins": 5.0, "workflow": 1.0, "ledger": 5.0, "market": 10.0, "market_heavy": 300.0, "candles": 10.0}
 BARS = (100, 200, 500, 1000)
 
 _settings = get_settings()
@@ -125,6 +127,33 @@ def api_candles(request: Request):
     return JSONResponse(cached(("candles", symbol, interval, bars), lambda c: data.candles(c, symbol, interval, bars)))
 
 
+def api_coins(request: Request):
+    return JSONResponse(cached(("coins",), lambda c: {"coins": coins.listing(c), "base": _settings.symbols,
+                                                       "shadow_min_days": coins.SHADOW_MIN_DAYS,
+                                                       "writable": bool(_settings.dashboard_password)}))
+
+
+async def api_coins_action(request: Request):
+    """POST {"action": "check" | "shadow" | "live" | "rejected", "symbol": "INJUSDT"}."""
+    if not _settings.dashboard_password:
+        return JSONResponse({"error": "set DASHBOARD_PASSWORD to allow changes from the dashboard"}, 403)
+    if request.headers.get("content-type", "").split(";")[0] != "application/json":  # no cross-site form posts
+        return JSONResponse({"error": "JSON only"}, 415)
+    try:
+        body = await request.json()
+        action, symbol = str(body.get("action", "")), str(body.get("symbol", "")).strip().upper()
+        with _lock:
+            if action == "check":
+                symbol = coins.request_check(_db(), symbol, coins.trading_symbols(_db(), _settings.symbols))
+            else:
+                coins.move(_db(), symbol, action)
+            _cache.pop(("coins",), None)
+    except (ValueError, AttributeError) as e:
+        return JSONResponse({"error": str(e)}, 400)
+    logger.info("coins: {} {}", action, symbol)
+    return JSONResponse({"ok": True, "symbol": symbol})
+
+
 def index(request: Request):
     return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-cache"})
 
@@ -136,6 +165,8 @@ def create_app(password: str | None = None) -> Starlette:
         Route("/api/ledger", api_ledger),
         Route("/api/market", api_market),
         Route("/api/candles", api_candles),
+        Route("/api/coins", api_coins),
+        Route("/api/coins/action", api_coins_action, methods=["POST"]),
         Mount("/static", StaticFiles(directory=STATIC), name="static"),
     ], middleware=[Middleware(BasicAuth, password=password)])
 

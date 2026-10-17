@@ -33,8 +33,16 @@ def _symbol_frame(conn, sym: str, start, end) -> pd.DataFrame:
     f["quote_volume"] = c["quote_volume"]
     f["taker_buy_ratio"] = (c["taker_buy_base"] / c["volume"].replace(0, np.nan)).astype(float)
     bar_close = f.index + pd.Timedelta(hours=1)
+    # Side tables only around the candle window (as-of joins look back <= 8h): full history per symbol was the
+    # slowest part of every short panel build. No window -> everything, as before.
+    lo = pd.Timestamp(start) - pd.Timedelta(days=2) if start is not None else None
+    hi = pd.Timestamp(end) + pd.Timedelta(days=1) if end is not None else None
 
-    fund = _df(conn, "SELECT funding_time, funding_rate FROM funding_rate WHERE symbol = %s ORDER BY 1", (sym,))
+    def win(col: str) -> str:
+        return f" AND (%s::timestamptz IS NULL OR {col} >= %s) AND (%s::timestamptz IS NULL OR {col} < %s)"
+
+    fund = _df(conn, "SELECT funding_time, funding_rate FROM funding_rate WHERE symbol = %s" + win("funding_time")
+               + " ORDER BY 1", (sym, lo, lo, hi, hi))
     f["funding_rate"] = 0.0
     if not fund.empty:
         # a settlement at time T is paid by positions open over the bar that closes at T (bar open = T - 1h)
@@ -46,15 +54,16 @@ def _symbol_frame(conn, sym: str, start, end) -> pd.DataFrame:
                               on="t", direction="backward")
         f["funding_last"] = known["funding_rate"].to_numpy()
 
-    prem = _df(conn, """SELECT close_time, close FROM premium_kline WHERE symbol = %s AND interval = '1h'
-                        ORDER BY 1""", (sym,))
+    prem = _df(conn, "SELECT close_time, close FROM premium_kline WHERE symbol = %s AND interval = '1h'"
+               + win("close_time") + " ORDER BY 1", (sym, lo, lo, hi, hi))
     if not prem.empty:
         p = pd.merge_asof(pd.DataFrame({"t": bar_close}), prem.rename(columns={"close_time": "t", "close": "premium"})
                           .assign(t=lambda d: d["t"] + pd.Timedelta(milliseconds=1)), on="t", direction="backward")
         f["premium"] = p["premium"].to_numpy()
 
     m = _df(conn, """SELECT ts, sum_open_interest_value AS oi_value, ls_ratio, toptrader_ls_position AS toptrader_ls,
-                            taker_ls_vol_ratio AS taker_ls FROM futures_metrics WHERE symbol = %s ORDER BY ts""", (sym,))
+                            taker_ls_vol_ratio AS taker_ls FROM futures_metrics WHERE symbol = %s""" + win("ts") + " ORDER BY ts",
+           (sym, lo, lo, hi, hi))
     cols = ["oi_value", "ls_ratio", "toptrader_ls", "taker_ls"]
     if not m.empty:
         m["avail"] = m["ts"] + pd.Timedelta(minutes=5)
@@ -66,8 +75,8 @@ def _symbol_frame(conn, sym: str, start, end) -> pd.DataFrame:
         for col in cols:
             f[col] = np.nan
 
-    d = _df(conn, """SELECT snap_time, least(bid_1, ask_1) AS depth_1pct FROM book_depth_5m WHERE symbol = %s
-                     ORDER BY snap_time""", (perp_symbol(sym),))
+    d = _df(conn, "SELECT snap_time, least(bid_1, ask_1) AS depth_1pct FROM book_depth_5m WHERE symbol = %s"
+            + win("ts") + " ORDER BY snap_time", (perp_symbol(sym), lo, lo, hi, hi))
     if not d.empty:
         j = pd.merge_asof(pd.DataFrame({"t": bar_close}), d, left_on="t", right_on="snap_time",
                           direction="backward", tolerance=pd.Timedelta(hours=1))

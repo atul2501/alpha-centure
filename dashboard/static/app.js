@@ -3,7 +3,7 @@
    workflow every 2 s, ledger and market every 10 s, the candle chart every 30 s. Clocks tick every second. */
 
 const $ = id => document.getElementById(id);
-const POLL = { workflow: 2000, ledger: 10000, market: 10000 };
+const POLL = { workflow: 2000, ledger: 10000, market: 10000, coins: 5000 };
 const LABEL = { ok: "OK", warn: "CHECK", fail: "PROBLEM", idle: "WAITING" };
 const KINDS = ["decision", "order", "fill", "funding", "connection", "error"];
 const S = { page: null, wf: null, lg: null, mk: null, okAt: 0, err: null, busy: false, kinds: new Set(KINDS),
@@ -323,12 +323,60 @@ async function loadCandles(force) {
 }
 ["c-symbol", "c-interval", "c-bars"].forEach(id => $(id).addEventListener("change", () => loadCandles(true)));
 
+/* ---------- coins ---------- */
+const STAGE = { queued: ["idle", "QUEUED"], checking: ["warn", "CHECKING…"], checked: ["ok", "CHECKED"], shadow: ["warn", "SHADOW TEST"],
+  live: ["ok", "LIVE"], rejected: ["fail", "REJECTED"] };
+const VERDICT = { good: ["ok", "✅ good to test"], weak: ["warn", "⚠️ weak"], reject: ["fail", "❌ don't add"] };
+function coinCard(c, d) {
+  const [sc, sl] = STAGE[c.status] || ["idle", c.status], r = c.report || {}, ru = r.rules || {}, bt = r.backtest, sh = c.shadow;
+  const v = c.verdict && VERDICT[c.verdict];
+  const lines = [];
+  if (ru.checks) lines.push("Rules: " + Object.entries(ru.checks).map(([k, ok]) => `${ok ? "✔" : "✘"} ${esc(k)}`).join(" · "));
+  if (ru.median_volume != null) lines.push(`30-day median volume ${usd(ru.median_volume, 0)} · listed ${esc(ru.listed)} (${ru.age_days} days)`);
+  if (r.cost_bps) lines.push(`Cost per side: taker ${num(r.cost_bps.taker, 1)} bps, maker ${num(r.cost_bps.maker, 1)} bps${r.cost_bps.estimated ? " (estimated: no 2023–24 depth data)" : ""}`);
+  if (bt && bt.ann_diff != null) lines.push(`Backtest ${esc(bt.start)} → ${esc(bt.end)} (${bt.days} days): today's list ${sPct(bt.base_total, 0)}, with ${esc(c.symbol)} ${sPct(bt.test_total, 0)} · <b class="${cls(bt.ann_diff)}">${sPct(bt.ann_diff, 1)} a year</b>, t = ${num(bt.t, 1)} · halves ${sPct(bt.first_half, 1)} / ${sPct(bt.second_half, 1)}`);
+  if (sh && sh.days != null) lines.push(`Shadow since ${utc(c.shadow_start, true).slice(0, 5)} (${sh.days} days, new data only): <b class="${cls(sh.ann_diff)}">${sPct(sh.ann_diff, 1)} a year</b> vs today's list, t = ${num(sh.t, 1)}${sh.ready ? " · ready to decide" : ""}`);
+  else if (c.status === "shadow") lines.push(`Shadow test started ${utc(c.shadow_start, true).slice(0, 5)}: first result after the next daily update`);
+  if (c.error) lines.push(`<span class="neg">Check failed: ${esc(c.error)}</span>`);
+  const days = c.shadow_start ? Math.floor((Date.now() - tsMs(c.shadow_start)) / 864e5) : 0, w = d.writable ? "" : " disabled";
+  const acts = [];
+  if (c.status === "checked" && (c.verdict === "good" || c.verdict === "weak")) acts.push(`<button class="btn" data-a="shadow" data-s="${esc(c.symbol)}"${w}>Confirm: start shadow test</button>`);
+  if (c.status === "shadow") acts.push(`<button class="btn" data-a="live" data-s="${esc(c.symbol)}"${days < d.shadow_min_days ? " disabled" : w} title="${days < d.shadow_min_days ? `after ${d.shadow_min_days} days (${Math.max(days, 0)} so far)` : ""}">Confirm: add to live list</button>`);
+  if (["checked", "shadow"].includes(c.status)) acts.push(`<button class="btn ghost" data-a="rejected" data-s="${esc(c.symbol)}"${w}>Reject</button>`);
+  if (c.status === "rejected" || (c.status === "checked" && !c.verdict)) acts.push(`<button class="btn ghost" data-a="check" data-s="${esc(c.symbol)}"${w}>Check again</button>`);
+  return `<div class="coin"><div class="coin-top"><b>${esc(c.symbol)}</b><span class="pill ${sc}">${sl}</span>${v ? `<span class="pill ${v[0]}">${v[1]}</span>` : ""}
+    <span class="hint">requested ${utc(c.requested_at, true)} UTC</span></div>${r.why ? `<div class="why">${esc(r.why)}</div>` : ""}
+    ${lines.length ? `<ul>${lines.map(x => `<li>${x}</li>`).join("")}</ul>` : ""}${acts.length ? `<div class="acts">${acts.join("")}</div>` : ""}</div>`;
+}
+function renderCoins(d) {
+  setHTML($("coins"), d.coins.length ? d.coins.map(c => coinCard(c, d)).join("") : `<div class="empty">No coins checked yet</div>`);
+  const live = d.coins.filter(c => c.status === "live").map(c => c.symbol);
+  setHTML($("base-list"), [...d.base, ...live].map(s => `<span class="pill ${live.includes(s) ? "ok" : "idle"}">${esc(s.replace("USDT", ""))}</span>`).join(" "));
+  $("list-hint").textContent = `${d.base.length + live.length} coins${live.length ? ` · ${live.length} added here` : ""}`;
+  $("coins-hint").textContent = d.writable ? "" : "read-only: set DASHBOARD_PASSWORD on the server to allow changes";
+}
+async function coinAction(action, symbol) {
+  const msg = $("coin-msg");
+  if (action === "live" && !confirm(`Add ${symbol} to the LIVE trading list? The bot restarts with it within the hour.`)) return;
+  msg.textContent = "…";
+  try {
+    const r = await fetch("/api/coins/action", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action, symbol }) });
+    const j = await r.json();
+    msg.textContent = r.ok ? (action === "check" ? `${j.symbol} queued: the report appears below in 10–30 minutes` : `${j.symbol}: done`) : j.error;
+    msg.className = "hint " + (r.ok ? "pos" : "neg");
+  } catch (e) { msg.textContent = e.message; msg.className = "hint neg"; }
+  tick();
+}
+$("coin-form").addEventListener("submit", e => { e.preventDefault(); const v = $("coin-sym").value.trim().toUpperCase(); if (v) coinAction("check", v); });
+$("coins").addEventListener("click", e => { const b = e.target.closest("button[data-a]"); if (b && !b.disabled) coinAction(b.dataset.a, b.dataset.s); });
+
 /* ---------- polling, routing, clocks ---------- */
 async function get(url) { const r = await fetch(url, { cache: "no-store" }); if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`); return r.json(); }
 const LOAD = {
   workflow: async () => { S.wf = await get("/api/workflow"); renderWorkflow(S.wf); },
   ledger: async () => { S.lg = await get("/api/ledger"); renderLedger(S.lg); },
   market: async () => { S.mk = await get("/api/market"); renderMarket(S.mk); loadCandles(false); },
+  coins: async () => { renderCoins(await get("/api/coins")); },
 };
 async function tick() {
   if (document.hidden || S.busy) return;

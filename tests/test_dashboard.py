@@ -81,3 +81,13 @@ def test_endpoints_against_the_database():
     sym = next(f.db_symbol for f in get_settings().candle_feeds())
     c = client.get(f"/api/candles?symbol={sym}&interval=1h&bars=100").json()
     assert c["symbol"] == sym and len(c["bars"]) > 0
+
+
+def test_coin_actions_need_password_and_json(monkeypatch):
+    from dashboard import server
+    c = TestClient(create_app(None))
+    monkeypatch.setattr(server._settings, "dashboard_password", "")
+    assert c.post("/api/coins/action", json={"action": "check", "symbol": "INJUSDT"}).status_code == 403
+    monkeypatch.setattr(server._settings, "dashboard_password", "pw")
+    form = c.post("/api/coins/action", data={"action": "check", "symbol": "INJUSDT"})  # cross-site form shape
+    assert form.status_code == 415

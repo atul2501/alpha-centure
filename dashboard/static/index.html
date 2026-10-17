@@ -14,6 +14,7 @@
     <a href="#workflow" data-page="workflow">Workflow</a>
     <a href="#ledger" data-page="ledger">Ledger &amp; P&amp;L</a>
     <a href="#market" data-page="market">Market data</a>
+    <a href="#coins" data-page="coins">Coins</a>
   </nav>
   <div class="right">
     <span class="live" id="live"><i></i><span id="live-text">connecting…</span></span>
@@ -160,6 +161,29 @@
     <div class="grid-2">
       <div class="card"><div class="card-head"><h2>Websocket events · 24h</h2></div><div class="table-wrap" id="wsev"></div></div>
       <div class="card"><div class="card-head"><h2>Last fetch events</h2></div><div class="table-wrap" id="fetches"></div></div>
+    </div>
+  </section>
+
+  <!-- COINS -->
+  <section class="page" id="page-coins" hidden aria-labelledby="cn-h">
+    <h1 class="sr-only" id="cn-h">Coins</h1>
+    <div class="card">
+      <div class="card-head"><h2>Check a new coin</h2><span class="hint">Check → Shadow (paper, 90 days) → Live. Every step needs your click.</span></div>
+      <form class="coin-form" id="coin-form">
+        <label for="coin-sym">Binance USD-M symbol</label>
+        <input id="coin-sym" name="symbol" placeholder="INJUSDT" autocomplete="off" spellcheck="false" maxlength="24" required>
+        <button type="submit" class="btn">Check</button>
+        <span class="hint" id="coin-msg" role="status"></span>
+      </form>
+      <p class="hint">The check tests the basic rules (USDT perpetual, crypto, trading, listed 90+ days, 30-day median volume ≥ $20M), downloads the coin's history and backtests today's list against today's list + this coin from 2022. That takes about 10–30 minutes. A coin is never added on a backtest alone: a good or weak result can start a shadow test on new data, and only after 90 days can it go live.</p>
+    </div>
+    <div class="card">
+      <div class="card-head"><h2>Candidates</h2><span class="hint" id="coins-hint"></span></div>
+      <div id="coins"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h2>Trading list</h2><span class="hint" id="list-hint"></span></div>
+      <div class="chips" id="base-list"></div>
     </div>
   </section>
 </main>

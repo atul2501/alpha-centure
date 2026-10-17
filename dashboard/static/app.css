@@ -174,3 +174,16 @@ select { background: var(--panel-2); border: 1px solid var(--line); border-radiu
 .skeleton { display: inline-block; height: 12px; border-radius: 4px; background: linear-gradient(90deg, var(--panel-2), var(--line), var(--panel-2)); background-size: 200% 100%; animation: sh 1.4s infinite; }
 .skeleton.w40 { width: 40%; }
 @keyframes sh { to { background-position: -200% 0; } }
+
+/* coins tab */
+.coin-form { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 4px 0 10px; }
+.coin-form input { font: 500 14px var(--mono); text-transform: uppercase; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--line, #8884); background: transparent; color: inherit; min-width: 0; width: 14ch; }
+.btn { border: 1px solid var(--accent); background: var(--accent); color: #fff; border-radius: 8px; padding: 7px 14px; cursor: pointer; font-weight: 600; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.coin { border-top: 1px solid var(--line, #8883); padding: 12px 0; display: grid; gap: 6px; }
+.coin-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.coin-top b { font: 600 15px var(--mono); }
+.coin ul { margin: 0; padding-left: 18px; }
+.coin .acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.coin .why { color: var(--ink-2); }

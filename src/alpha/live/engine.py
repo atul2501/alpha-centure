@@ -32,6 +32,7 @@ from alpha.exec.fillsim import Book, MakerOrder, taker_fill
 from alpha.exec.oms import (DAILY_LOSS_STOP, KILL_DRAWDOWN, LotFilter, RiskState, margin_ratio, plan_orders,
                             round_step)
 from alpha.strategy import p6
+from alpha.coins import trading_symbols_async, watch_symbols
 from alpha.strategy.monitor import MonitorState, evaluate, shadow_daily
 
 MAKER_TIMEOUT_S = 20 * 60
@@ -399,8 +400,17 @@ async def main() -> None:
     s = get_settings()
     db = await DB.connect(s.database_url)
     await db.init_schema()
+    base = s.symbols
+    s.symbols_csv = ",".join(await trading_symbols_async(db, base))  # + coins promoted from the dashboard
     try:
-        await PaperEngine(s, db).run()
+        engine = PaperEngine(s, db)
+        watch = asyncio.create_task(watch_symbols(db, base, s.symbols))
+        run = asyncio.create_task(engine.run())
+        done, _ = await asyncio.wait([watch, run], return_when=asyncio.FIRST_COMPLETED)
+        if run in done:
+            run.result()
+        async with engine.busy:  # never restart mid-rebalance
+            run.cancel()
     finally:
         await db.close()
 

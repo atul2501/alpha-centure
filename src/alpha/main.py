@@ -9,6 +9,7 @@ from loguru import logger
 
 from alpha.backfill import repair_gaps
 from alpha.binance.rest import BinanceREST
+from alpha.coins import trading_symbols_async, watch_symbols
 from alpha.collectors.futures import run_futures_poller, run_liquidations, run_oi_live_poller
 from alpha.collectors.klines import run_klines
 from alpha.collectors.orderflow import run_orderflow
@@ -40,11 +41,14 @@ async def main() -> None:
     settings = get_settings()
     db = await DB.connect(settings.database_url)
     await db.init_schema()
+    base = settings.symbols
+    settings.symbols_csv = ",".join(await trading_symbols_async(db, base))  # + coins promoted from the dashboard
     rest = BinanceREST(settings.spot_rest, settings.futures_rest)
     logger.info("collecting {} perp {} spot {}", settings.symbols, settings.perp_intervals,
                 settings.intervals or "off")
 
-    tasks = [asyncio.create_task(maintenance(db, rest, settings), name="maintenance")]
+    tasks = [asyncio.create_task(maintenance(db, rest, settings), name="maintenance"),
+             asyncio.create_task(watch_symbols(db, base, settings.symbols), name="coin_list")]
     if settings.spot_enabled:
         tasks.append(asyncio.create_task(run_klines(db, rest, settings, "spot"), name="klines_spot"))
     if settings.orderflow_enabled:
