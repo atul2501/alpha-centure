@@ -31,3 +31,27 @@ def test_verdict_and_compare():
 def test_symbols():
     assert merge_symbols(["BTCUSDT", "ETHUSDT"], ["INJUSDT", "BTCUSDT"]) == ["BTCUSDT", "ETHUSDT", "INJUSDT"]
     assert SYMBOL_RE.match("1000PEPEUSDT") and not SYMBOL_RE.match("BTC'; DROP") and not SYMBOL_RE.match("BTCUSDC")
+
+
+def test_purge_deletes_only_that_coin_and_refuses_in_use():
+    import os
+
+    import psycopg
+    import pytest
+
+    from alpha.coins import purge
+    dsn = os.environ.get("TEST_DATABASE_URL")
+    if not dsn:
+        pytest.skip("TEST_DATABASE_URL not set")
+    with psycopg.connect(dsn) as c:   # one transaction, rolled back at the end
+        c.execute("INSERT INTO coin_candidates (symbol, status) VALUES ('ZZTESTUSDT', 'rejected')")
+        c.execute("INSERT INTO funding_rate (symbol, funding_time, funding_rate) VALUES ('ZZTESTUSDT', now(), 0.0001)")
+        c.execute("INSERT INTO vision_files (path, dataset, symbol, period, rows) VALUES ('x/ZZTESTUSDT/1', 'klines', 'ZZTESTUSDT', '2026-01', 1)")
+        before = c.execute("SELECT count(*) FROM funding_rate WHERE symbol <> 'ZZTESTUSDT'").fetchone()[0]
+        with pytest.raises(ValueError):
+            purge(c, "BTCUSDT", {"BTCUSDT"})
+        out = purge(c, "ZZTESTUSDT", {"BTCUSDT"})
+        assert out["funding_rate"] == 1 and out["vision_files"] == 1
+        assert c.execute("SELECT count(*) FROM funding_rate WHERE symbol <> 'ZZTESTUSDT'").fetchone()[0] == before
+        assert c.execute("SELECT purged_at IS NOT NULL FROM coin_candidates WHERE symbol = 'ZZTESTUSDT'").fetchone()[0]
+        c.rollback()

@@ -361,6 +361,8 @@ function coinCard(c, d) {
   if (sh && sh.days != null) lines.push(`Shadow since ${utc(c.shadow_start, true).slice(0, 5)} (${sh.days} days, new data only): <b class="${cls(sh.ann_diff)}">${sPct(sh.ann_diff, 1)} a year</b> vs today's list, t = ${num(sh.t, 1)}${sh.ready ? " · ready to decide" : ""}`);
   else if (c.status === "shadow") lines.push(`Shadow test started ${utc(c.shadow_start, true).slice(0, 5)}: first result after the next daily update`);
   if (c.error) lines.push(`<span class="neg">Check failed: ${esc(c.error)}</span>`);
+  if (c.status === "rejected") lines.push(c.purged_at ? `Downloaded history deleted ${utc(c.purged_at, true).slice(0, 5)} to save space; this report is kept (Check again downloads it again)`
+    : `Downloaded history is deleted ${d.purge_days} days after rejection; this report is kept`);
   const days = c.shadow_start ? Math.floor((Date.now() - tsMs(c.shadow_start)) / 864e5) : 0, w = d.writable ? "" : " disabled";
   const acts = [];
   if (c.status === "checked" && (c.verdict === "good" || c.verdict === "weak")) acts.push(`<button class="btn" data-a="shadow" data-s="${esc(c.symbol)}"${w}>Confirm: start shadow test</button>`);

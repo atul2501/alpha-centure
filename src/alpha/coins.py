@@ -11,7 +11,8 @@ Stages (table coin_candidates, every action also in coin_events):
                                         from shadow_start: no hindsight.
     shadow -> live                      user confirms again, allowed after SHADOW_MIN_DAYS. The engine and collector
                                         notice the new list within the hour and restart themselves (systemd) with it.
-    any -> rejected                     user, or a failed check.
+    any -> rejected                     user, or a failed check. The report stays; the coin's downloaded history is
+                                        deleted PURGE_AFTER_DAYS later (never for a coin on the trading list).
 A coin is never added on a backtest alone. Live coins cannot be removed here yet: closing their positions first is
 not built (do it by hand: stop alpha-paper, set the row to 'rejected', start it again once the coin is flat).
 """
@@ -39,6 +40,10 @@ SHADOW_MIN_DAYS = 90
 REJECT_T = -2.0             # reliably worse
 HISTORY_SINCE = date(2021, 6, 1)
 VISION_SETS = "klines,premium,metrics,bookDepth"
+PURGE_AFTER_DAYS = 7        # rejected coins: keep the history this long (a re-check needs no new download)
+# (table, symbol column value) for every row a check downloads; perp-named tables use SYMBOL.P
+PURGE_TABLES = [("candles", "perp"), ("book_depth_5m", "perp"), ("premium_kline", "plain"),
+                ("futures_metrics", "plain"), ("funding_rate", "plain"), ("vision_files", "plain")]
 
 LIVE_SQL = "SELECT symbol FROM coin_candidates WHERE status = 'live' ORDER BY promoted_at"
 
@@ -91,7 +96,8 @@ def request_check(conn: psycopg.Connection, symbol: str, base: list[str]) -> str
         raise ValueError(f"{symbol} is already {row[0]}")
     conn.execute("""INSERT INTO coin_candidates (symbol, status, requested_at) VALUES (%s, 'queued', now())
                     ON CONFLICT (symbol) DO UPDATE SET status = 'queued', requested_at = now(), verdict = NULL,
-                    report = NULL, error = NULL, checked_at = NULL, shadow_start = NULL, shadow = NULL""", (symbol,))
+                    report = NULL, error = NULL, checked_at = NULL, shadow_start = NULL, shadow = NULL,
+                    purged_at = NULL""", (symbol,))
     event(conn, symbol, "check_requested")
     return symbol
 
@@ -121,14 +127,32 @@ def move(conn: psycopg.Connection, symbol: str, to: str) -> None:
     event(conn, symbol, to, {"from": status})
 
 
+def purge(conn: psycopg.Connection, symbol: str, keep: set[str]) -> dict[str, int]:
+    """Delete a rejected coin's downloaded history (report kept). Refuses anything still in use."""
+    if symbol in keep:
+        raise ValueError(f"{symbol} is in use; not deleting its data")
+    out = {}
+    for table, kind in PURGE_TABLES:
+        out[table] = conn.execute(f"DELETE FROM {table} WHERE symbol = %s",
+                                  (symbol + ".P" if kind == "perp" else symbol,)).rowcount
+    conn.execute("UPDATE coin_candidates SET purged_at = now() WHERE symbol = %s", (symbol,))
+    event(conn, symbol, "purged", out)
+    return out
+
+
+PURGE_DUE_SQL = f"""SELECT c.symbol FROM coin_candidates c WHERE c.status = 'rejected' AND c.purged_at IS NULL
+    AND (SELECT max(ts) FROM coin_events e WHERE e.symbol = c.symbol) < now() - interval '{PURGE_AFTER_DAYS} days'"""
+IN_USE_SQL = "SELECT symbol FROM coin_candidates WHERE status IN ('queued', 'checking', 'checked', 'shadow', 'live')"
+
+
 def listing(conn: psycopg.Connection) -> list[dict]:
     cols = ["symbol", "status", "verdict", "requested_at", "checked_at", "shadow_start", "promoted_at", "report",
-            "shadow", "error"]
+            "shadow", "error", "purged_at"]
     rows = conn.execute(f"SELECT {', '.join(cols)} FROM coin_candidates ORDER BY requested_at DESC").fetchall()
     out = []
     for r in rows:
         d = dict(zip(cols, r))
-        for k in ("requested_at", "checked_at", "shadow_start", "promoted_at"):
+        for k in ("requested_at", "checked_at", "shadow_start", "promoted_at", "purged_at"):
             d[k] = d[k].isoformat() if d[k] else None
         out.append(d)
     return out
@@ -335,6 +359,12 @@ def worker() -> None:
                         logger.exception("shadow {} failed", sym)
                         event(conn, sym, "shadow_failed", {"error": str(e)[:500]})
                 last_shadow = today
+                keep = set(trading_symbols(conn, base)) | {r[0] for r in conn.execute(IN_USE_SQL).fetchall()}
+                for (sym,) in conn.execute(PURGE_DUE_SQL).fetchall():
+                    try:
+                        logger.info("purged {}: {}", sym, purge(conn, sym, keep))
+                    except Exception:
+                        logger.exception("purge {} failed", sym)
         time.sleep(30)
 
 

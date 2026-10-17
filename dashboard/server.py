@@ -177,6 +177,7 @@ def api_candles(request: Request):
 def api_coins(request: Request):
     return JSONResponse(cached(("coins",), lambda c: {"coins": coins.listing(c), "base": _settings.symbols,
                                                        "shadow_min_days": coins.SHADOW_MIN_DAYS,
+                                                       "purge_days": coins.PURGE_AFTER_DAYS,
                                                        "writable": bool(_settings.dashboard_password)}))
 
 

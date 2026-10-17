@@ -112,6 +112,8 @@ vs today's list + the coin from 2022 (10–30 min). The verdict is ✅ good / �
 weak coin starts a shadow test on new data only (updated daily). After 90 days a second **Confirm** adds it to the
 live list: the engine and collector notice within ~10 minutes and restart themselves with it. A coin is never added on
 a backtest alone. Changes need `DASHBOARD_PASSWORD` set; every step is logged in `coin_events`.
+A rejected coin keeps its report; its downloaded history is deleted 7 days later to save disk (Check again downloads
+it again). Coins on the trading list or in a shadow test are never deleted.
 Removing an added live coin is not on the page yet (see `alpha.coins`).
 
 ## What gets collected

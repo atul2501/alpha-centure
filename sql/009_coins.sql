@@ -20,3 +20,5 @@ CREATE TABLE IF NOT EXISTS coin_events (
     detail  jsonb NOT NULL DEFAULT '{}'
 );
 CREATE INDEX IF NOT EXISTS coin_events_symbol_ts ON coin_events (symbol, ts);
+-- Rejected coins keep their report; their downloaded history is deleted after alpha.coins.PURGE_AFTER_DAYS.
+ALTER TABLE coin_candidates ADD COLUMN IF NOT EXISTS purged_at timestamptz;
