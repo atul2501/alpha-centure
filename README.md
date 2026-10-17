@@ -63,6 +63,8 @@ sudo systemctl enable --now alpha-coins    # Coins tab worker (checks + shadow t
 
 ### Paper vs backtest: what to expect (check from ~9 Nov 2026)
 
+**Written: 18 Oct 2026** · paper start: 17 Oct 2026 · first rebalance: 19 Oct 2026 · **check on: 9 Nov 2026** (21 days, ~7 rebalances) · full profit review: ~19 Jan 2027 (3 months).
+
 The paper account restarted at **$1,000 on 17 Oct 2026**; the first rebalance is **19 Oct 00:00 UTC (05:31 IST)**.
 Settings: V4_C, vol target 0.34, 23 coins, 1% band, rebalance every 72h, kill switch −30% (1-day pause).
 Three weeks is about 7 rebalances. That's enough to check that the **engine behaves like the backtest**, not
