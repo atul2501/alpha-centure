@@ -1,7 +1,7 @@
 # Alpha Centure
 
 A cost-aware crypto perpetual-futures research and paper-trading system. It collects live Binance **USD-M perpetual** data for
-**BTC, ETH, SOL, SUI, TRX, AAVE, BNB, XRP, HYPE, LINK, ADA, UNI, LTC, AVAX** (all `…USDT`, spot is off) into
+**23 coins: BTC ETH SOL SUI TRX AAVE BNB XRP HYPE LINK ADA UNI LTC AVAX ATOM DOGE DOT NEAR OP ARB WLD CAKE POL** (all `…USDT`, spot is off; more can be added from the dashboard's Coins tab) into
 PostgreSQL/TimescaleDB, with an audit dashboard on top.
 
 ## Strategy on this branch: V4_C (V4_carry with slower carry: lower drawdowns and costs)
@@ -10,15 +10,15 @@ V4_C combines three books and trades the mix at full risk:
 
 - **Ridge part:** a ridge regression turns 19 measurements per coin (1/2/4-week momentum, trend breakouts, funding,
   basis, open interest, long/short positioning, order flow, Bitcoin's trend) into a 72-hour forecast; retrained
-  monthly. Positions are inverse-volatility weighted and scaled to a 20% yearly volatility target.
+  monthly. Positions are inverse-volatility weighted and scaled to a 34% yearly volatility target (+70% size, since 17 Oct 2026; was 20%).
 - **Rules part:** no trained model. Cross-sectional momentum (rank the coins by 1/2/4-week trend, long the strongest,
   short the weakest, dollar-neutral) plus time-series momentum (each coin with its own 2/4-week trend and 20-day
-  breakout), 50/50, scaled to the same 20% target.
+  breakout), 50/50, scaled to the same 34% target.
 - **Carry part:** short the coins whose long holders pay the highest funding (24-hour average), long the coins with
-  the lowest funding, dollar-neutral, scaled to the same 20% target. It earns funding and does not move with momentum.
+  the lowest funding, dollar-neutral, scaled to the same 34% target. It earns funding and does not move with momentum.
   **Re-traded every 144h** (every second rebalance): funding moves slowly, so trading it every 72h mostly paid fees.
 - **Mix:** 0.5 × ridge + 0.25 × rules + 0.25 × carry. Where the books agree the position is large, where they disagree
-  it nets out. The three books diversify, so the mix is scaled back up to the 20% volatility target
+  it nets out. The three books diversify, so the mix is scaled back up to the 34% volatility target
   (max 3x gross, max 0.5x per coin, 1% no-trade band, 72h rebalance).
 
   | Coin (example) | Ridge | Rules | Carry | Mix before scaling |
@@ -60,6 +60,48 @@ sudo systemctl daemon-reload && sudo systemctl restart alpha-paper alpha-dashboa
 sudo systemctl enable --now alpha-coins    # Coins tab worker (checks + shadow tests)
 # revert: git checkout v4-carry, then the same setup + restart
 ```
+
+### Paper vs backtest: what to expect (check from ~9 Nov 2026)
+
+The paper account restarted at **$1,000 on 17 Oct 2026**; the first rebalance is **19 Oct 00:00 UTC (05:31 IST)**.
+Settings: V4_C, vol target 0.34, 23 coins, 1% band, rebalance every 72h, kill switch −30% (1-day pause).
+Three weeks is about 7 rebalances. That's enough to check that the **engine behaves like the backtest**, not
+enough to judge **profit**: even in the backtest, 42% of 3-week windows lost money.
+
+**1. Engine accuracy (the real test).** Run on the server:
+```bash
+sudo -u alpha bash -c 'cd /opt/alpha && set -a && . /etc/alpha/.env && ~/.local/bin/uv run --no-dev python -m alpha.live.report'
+```
+| Check | Pass | What a fail means |
+|---|---|---|
+| Uptime | equity marked ≥ 99% of minutes | the engine was down: check `journalctl -u alpha-paper` |
+| Schedule | every 72h bar has a REBALANCE (or a NO_TRADE with a reason) | missed rebalances |
+| Ledger | fills + funding rebuild the equity within $0.01 | a bookkeeping bug |
+| **Costs** | real cost per $ traded ≤ 1.25× the backtest model | the backtest is too optimistic: profit will be lower |
+| **Maker share** | 48–72% of traded $ filled as maker (model: 60%) | below 48%: more taker fees than assumed |
+| Book depth | no fill beyond the visible top-20 book | orders too big for the book |
+| **Tracking** | paper vs backtest-on-the-same-days daily P&L correlation ≥ 0.8 (needs ≥ 10 days) | the live engine doesn't follow the model |
+
+**2. Profit and risk range (backtest of this exact setup, $1,000, Jan 2022 → Oct 2026, every 21-day window).**
+Use it as a sanity range, not a target:
+
+| After 21 days | Return | Account |
+|---|---|---|
+| Bad (1 in 10) | −5.8% or worse | ≤ $942 |
+| Weak (1 in 4) | −2.3% or worse | ≤ $977 |
+| **Typical (median)** | **+1.0%** | **$1,010** |
+| Good (1 in 4) | +6.8% or better | ≥ $1,068 |
+| Very good (1 in 10) | +16.2% or better | ≥ $1,162 |
+
+- Typical day moves ±2.1% (about ±$21); about **1 day with a ≥3% loss per 3 weeks** is normal.
+- Largest drop from a high within the 3 weeks: typically **5.8%**, 1 window in 10 reaches **12.5%**.
+- Positive after 21 days in 58% of windows. Long run average +0.17% a day (about +70% a year), with a worst replayed
+  drop of 27–28%.
+- Not in the backtest: Binance minimum order sizes at $1,000 (some small rebalance trades are skipped), and
+  real fills. Those are exactly what the accuracy checks above measure.
+
+**Red flags:** cost ratio above 1.25×, maker share under 48%, tracking under 0.8, or a 3-week result below −12% or
+a drop above 20% (outside 9 in 10 backtest windows). Any one of these: stop and review before trusting the model.
 
 ### Adding coins (dashboard → Coins tab)
 Type a Binance USD-M symbol and press **Check**. The `alpha-coins` worker tests the basic rules (USDT perpetual,
@@ -173,7 +215,7 @@ supervisor is needed. The engine itself stops or holds trading in these cases:
 
 | Situation | What happens | What you do |
 |---|---|---|
-| Equity falls 30% from its peak (kill switch) | All positions closed, trading halted; stays halted across restarts | Review, then reset the `risk` row in `paper_state` by hand |
+| Equity falls 30% from its peak (kill switch) | All positions closed, paused 1 day, then trading resumes with the peak reset; a 2nd trip within 30 days stays halted | After a 2nd trip: review, then reset the `risk` row in `paper_state` by hand |
 | Loss of 3% in one UTC day | Reduce-only for the rest of the day (no new exposure) | Nothing: resets next day |
 | Order-book data stale (>10 s) for more than half the coins | That rebalance is skipped (logged as NO_TRADE) | Check `journalctl -u alpha-collector` / network |
 | Instance stopped, disk full, or Binance unreachable | Collector and engine stop updating | Check `df -h`, AWS console, region |
