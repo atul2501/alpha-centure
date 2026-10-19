@@ -46,7 +46,7 @@ CSS = """
 
 @st.cache_resource
 def connection() -> psycopg.Connection:
-    return psycopg.connect(settings.database_url, autocommit=True)
+    return psycopg.connect(settings.database_url, autocommit=True, **settings.ledger_conn)
 
 
 def conn() -> psycopg.Connection:

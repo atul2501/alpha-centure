@@ -48,7 +48,7 @@ _cache: dict[tuple, tuple[float, object, float]] = {}
 def _db() -> psycopg.Connection:
     global _conn
     if _conn is None or _conn.closed or _conn.broken:
-        _conn = psycopg.connect(_settings.database_url, autocommit=True)
+        _conn = psycopg.connect(_settings.database_url, autocommit=True, **_settings.ledger_conn)
     return _conn
 
 
@@ -85,7 +85,7 @@ _listener: threading.Thread | None = None
 def _listen() -> None:
     while True:
         try:
-            with psycopg.connect(_settings.database_url, autocommit=True) as c:
+            with psycopg.connect(_settings.database_url, autocommit=True, **_settings.ledger_conn) as c:
                 c.execute("LISTEN paper_live")
                 for n in c.notifies():
                     _live["data"], _live["v"] = n.payload, _live["v"] + 1

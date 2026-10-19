@@ -43,9 +43,14 @@ class Settings(BaseSettings):
     book_tick_seconds: int = 1   # top-of-book sample rate (spread/slippage calibration)
     oi_poll_seconds: int = 60    # live open interest poll (the 5m history endpoint keeps only ~30 days)
     models_dir: str = "models"
-    # Paper trading (alpha.live.engine). There is no live order path; 'paper' is the only accepted mode.
+    # alpha.live.engine: 'paper' simulates fills; 'live' sends real orders to Binance USD-M with the keys below
+    # (use a futures sub-account holding only the money to trade: the engine sizes on its whole wallet).
+    # Live keeps its own ledger in the 'live' schema, so the paper history in 'public' is untouched.
     trading_mode: str = "paper"
     paper_equity: float = 1_000.0
+    binance_api_key: str = ""
+    binance_api_secret: str = ""
+    live_rest: str = "https://fapi.binance.com"  # order / account endpoint (a testnet URL for a dry run)
     # Strategy monitor (pause at 20% shadow drawdown, auto-resume). Off: neutral on DEV (never triggered) and it cost
     # -$3,500 on $30k over Oct 2025 -> Oct 2026 (paused near lows, resumed after rebounds). See alpha.strategy.monitor.
     monitor_enabled: bool = False
@@ -61,6 +66,18 @@ class Settings(BaseSettings):
     futures_ws: str = "wss://fstream.binance.com/market"
     # Depth / bookTicker streams are only served on /public (they never arrive on /market).
     futures_ws_public: str = "wss://fstream.binance.com/public"
+
+    @property
+    def ledger_schema(self) -> str:
+        """Schema of the trading ledger (paper_* tables): 'live' for real money, 'public' for paper."""
+        if self.trading_mode not in ("paper", "live"):
+            raise ValueError(f"TRADING_MODE must be paper or live, not {self.trading_mode!r}")
+        return self.trading_mode if self.trading_mode == "live" else "public"
+
+    @property
+    def ledger_conn(self) -> dict:
+        """psycopg.connect(**) extras so the paper_* table names resolve to this mode's ledger."""
+        return {"options": "-c search_path=live,public"} if self.ledger_schema == "live" else {}
 
     @property
     def symbols(self) -> list[str]:

@@ -105,6 +105,23 @@ Use it as a sanity range, not a target:
 **Red flags:** cost ratio above 1.25×, maker share under 48%, tracking under 0.8, or a 3-week result below −12% or
 a drop above 20% (outside 9 in 10 backtest windows). Any one of these: stop and review before trusting the model.
 
+### Live trading (real money)
+`TRADING_MODE=live` in `/etc/alpha/.env` (plus `BINANCE_API_KEY` / `BINANCE_API_SECRET`) makes the same engine send
+real orders: a post-only limit at our side's best price for 20 min, then a market order for the rest. Wallet,
+positions, fees and funding come from Binance (positions synced every minute). The live ledger lives in the `live`
+schema, so the paper history stays intact; the dashboard and `alpha.live.report` show whichever mode is set (badge
+says LIVE). `TRADING_MODE=paper` switches back.
+
+Before switching: a Binance **futures sub-account** with only the money to trade (the engine sizes on the whole
+wallet and ignores, but warns about, positions in coins it doesn't trade), **One-way** position mode (the engine
+refuses Hedge mode), an API key with only *Enable Futures* (no withdrawals) and the server's IP whitelisted.
+On start it sets cross margin and 5x leverage on every traded coin.
+```bash
+sudo nano /etc/alpha/.env    # TRADING_MODE=live, BINANCE_API_KEY=..., BINANCE_API_SECRET=...
+sudo systemctl restart alpha-paper alpha-dashboard
+journalctl -u alpha-paper -f # expect "TRADING_MODE=live: REAL ORDERS ..." then "restored: cash <your wallet>"
+```
+
 ### Adding coins (dashboard → Coins tab)
 Type a Binance USD-M symbol and press **Check**. The `alpha-coins` worker tests the basic rules (USDT perpetual,
 crypto, trading, 90+ days listed, 30-day median volume ≥ $20M), downloads the coin's history and backtests today's list

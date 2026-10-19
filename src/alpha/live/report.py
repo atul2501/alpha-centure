@@ -125,7 +125,7 @@ def shadow(conn, symbols, start: pd.Timestamp, end: pd.Timestamp, costs: pd.Data
 
 def main() -> None:
     s = get_settings()
-    with psycopg.connect(s.database_url) as conn:
+    with psycopg.connect(s.database_url, **s.ledger_conn) as conn:
         eq, fills, dec, fund, st = paper_frames(conn)
         if eq.empty or st is None:
             print("no paper data yet: start alpha-paper (uv run python -m alpha.live.engine)")

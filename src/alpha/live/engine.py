@@ -1,6 +1,9 @@
-"""Mainnet paper-trading engine: uv run python -m alpha.live.engine
+"""Mainnet trading engine: uv run python -m alpha.live.engine
 
-Same strategy, risk and order logic that live trading would use; only order submission is simulated.
+TRADING_MODE=paper (default): fills are simulated against the real book. TRADING_MODE=live: the same strategy, risk
+and order logic sends real orders through alpha.binance.trade (post-only limit, then market), books the exchange's
+real trades / fees / funding, and takes wallet and positions from the exchange every minute. Live writes its ledger
+to the 'live' schema (live.paper_fills, ...); the paper ledger stays in public.
     data      mainnet websockets: depth20@100ms (/public) for the book, aggTrade + markPrice@1s (/market) for maker
               fills, marks and funding. Candles / funding / OI / premium come from the collector's tables.
     decide    hourly at HH:01:30 (after the collector has the closed bar and the 5m stats); trades only on the
@@ -10,7 +13,6 @@ Same strategy, risk and order logic that live trading would use; only order subm
               latency, walking the real book (alpha.exec.fillsim)
     ledger    paper_decisions / orders / fills / funding / equity (sql/006_paper.sql); the account is rebuilt from
               it on restart
-There are no API keys and no order endpoints anywhere in this process. TRADING_MODE must be 'paper'.
 """
 
 import asyncio
@@ -25,11 +27,12 @@ import psycopg
 from loguru import logger
 
 from alpha.binance.parse import ms_to_dt, now_ms
+from alpha.binance.trade import BinanceTrader
 from alpha.binance.ws import combined_url, run_stream
 from alpha.coins import trading_symbols_async, watch_symbols
 from alpha.config import Settings, get_settings
 from alpha.db import DB
-from alpha.exec.account import Account
+from alpha.exec.account import Account, Position
 from alpha.exec.fillsim import Book, MakerOrder, taker_fill
 from alpha.exec.oms import (DAILY_LOSS_STOP, KILL_DRAWDOWN, LotFilter, RiskState, margin_ratio, plan_orders,
                             round_step)
@@ -60,8 +63,8 @@ async def lot_filters(symbols: list[str]) -> dict[str, LotFilter]:
 
 class PaperEngine:
     def __init__(self, settings: Settings, db: DB):
-        if settings.trading_mode != "paper":
-            raise RuntimeError("alpha.live.engine only runs in TRADING_MODE=paper")
+        self.live = settings.ledger_schema == "live"
+        self.ex = BinanceTrader(settings.live_rest, settings.binance_api_key, settings.binance_api_secret) if self.live else None
         self.s, self.db = settings, db
         self.symbols = settings.symbols
         self.books = {s: Book(s) for s in self.symbols}
@@ -81,11 +84,15 @@ class PaperEngine:
     async def restore(self) -> None:
         st = await self.db.pool.fetchval("SELECT value FROM paper_state WHERE key = 'account'")
         if st is None:
-            await self._state("account", {"start_equity": self.s.paper_equity, "started_at": datetime.now(timezone.utc).isoformat()})
-            st = {"start_equity": self.s.paper_equity}
+            start = float((await self.ex.account())["totalMarginBalance"]) if self.live else self.s.paper_equity
+            await self._state("account", {"start_equity": start, "started_at": datetime.now(timezone.utc).isoformat()})
+            st = {"start_equity": start}
         self.account = Account(float(st["start_equity"]))
-        for r in await self.db.pool.fetch("SELECT symbol, side, qty, price, liquidity FROM paper_fills ORDER BY id"):
-            self.account.apply_fill(r["symbol"], r["side"], r["qty"], r["price"], r["liquidity"])
+        self.risk = RiskState(peak_equity=self.account.start_equity)
+        for r in await self.db.pool.fetch("SELECT symbol, side, qty, price, liquidity, fee FROM paper_fills ORDER BY id"):
+            model_fee = self.account.apply_fill(r["symbol"], r["side"], r["qty"], r["price"], r["liquidity"])
+            self.account.cash += model_fee - r["fee"]   # live fills carry the exchange's real fee
+            self.account.fees += r["fee"] - model_fee
         for r in await self.db.pool.fetch("SELECT amount FROM paper_funding ORDER BY id"):
             self.account.cash -= r["amount"]
             self.account.funding += r["amount"]
@@ -95,6 +102,10 @@ class PaperEngine:
         if rs:
             self.risk = RiskState(peak_equity=rs["peak_equity"], halted=rs["halted"], reason=rs.get("reason", ""),
                                   kills=rs.get("kills") or ([] if not rs["halted"] else [0.0, 0.0]))
+        if self.live:  # orders left from before a restart: cancel on the exchange, book what filled
+            for r in await self.db.pool.fetch("SELECT id, symbol, side, arrival_mid FROM paper_orders WHERE status = 'open'"):
+                await self._settle(r["id"], r["symbol"], r["side"], r["arrival_mid"])
+            await self._sync()
         await self.db.pool.execute("UPDATE paper_orders SET status = 'cancelled', closed_at = now() WHERE status = 'open'")
         logger.info("restored: cash {:.2f}, positions {}, halted {}", self.account.cash,
                     {k: round(v.qty, 6) for k, v in self.account.positions.items() if v.qty}, self.risk.halted)
@@ -105,7 +116,7 @@ class PaperEngine:
         hours = (bar - pd.Timestamp(0, tz="UTC")) // pd.Timedelta(hours=1)
         next_bar = bar + pd.Timedelta(hours=(p6.H - hours % p6.H) % p6.H or p6.H)
         prev = await self.db.pool.fetchval("SELECT value FROM paper_state WHERE key = 'engine'") or {}
-        await self._state("engine", {**prev, "model": p6.NAME, "rebalance_hours": p6.H,
+        await self._state("engine", {**prev, "mode": self.s.trading_mode, "model": p6.NAME, "rebalance_hours": p6.H,
                                      "model_train_end": str(self.bundle.train_end.date()) if self.bundle else None,
                                      "latency_ms": round(self.latency_ms, 1), "open_maker_orders": len(self.makers),
                                      "next_rebalance_decision": str(next_bar + pd.Timedelta(hours=1, seconds=DECIDE_AFTER_CLOSE_S)),
@@ -144,8 +155,12 @@ class PaperEngine:
     # ---------------- ledger ----------------
 
     async def _record_fill(self, oid: int, sym: str, side: int, price: float, qty: float, liq: str,
-                           mid: float, latency: float | None, beyond: bool) -> None:
+                           mid: float, latency: float | None, beyond: bool, real_fee: float | None = None) -> None:
         fee = self.account.apply_fill(sym, side, qty, price, liq)
+        if real_fee is not None:
+            self.account.cash += fee - real_fee
+            self.account.fees += real_fee - fee
+            fee = real_fee
         slip = side * (price / mid - 1) * 1e4
         await self.db.pool.execute(
             "INSERT INTO paper_fills (order_id, symbol, side, price, qty, liquidity, fee, arrival_mid, slippage_bps, "
@@ -173,7 +188,53 @@ class PaperEngine:
 
     # ---------------- execution ----------------
 
+    async def _sync(self) -> None:
+        """Live: the exchange is the truth for wallet and positions; the fills ledger only explains them."""
+        a = await self.ex.account()
+        held = {p["symbol"]: p for p in a["positions"] if float(p["positionAmt"])}
+        if set(held) - set(self.symbols):
+            logger.warning("positions outside the trading list (not managed, not in equity): {}", set(held) - set(self.symbols))
+        self.account.positions = {s: Position(float(p["positionAmt"]), float(p["entryPrice"]))
+                                  for s, p in held.items() if s in self.symbols}
+        self.account.cash = float(a["totalWalletBalance"])
+
+    async def _send(self, oid: int, sym: str, side: int, qty: float, price: float | None = None) -> None:
+        try:
+            await self.ex.order(sym, side, qty, oid, price)
+        except Exception as e:  # _settle asks the exchange what really happened
+            logger.error("order {} {} {} {} failed: {}", oid, sym, side, qty, e)
+
+    async def _settle(self, oid: int, sym: str, side: int, mid: float) -> float | None:
+        """Live: close the exchange order (cancel if still resting) and book its real trades. Returns the qty filled,
+        None if the exchange could not be asked (the order stays 'open' and is settled on the next restart)."""
+        try:
+            o = await self.ex.finish(sym, oid)
+            if o is None:
+                await self._close_order(oid, "rejected", 0.0)
+                return 0.0
+            done = float(o["executedQty"])
+            for _ in range(5):  # trades can lag the order status by a moment
+                trades = await self.ex.trades(sym, o["orderId"]) if done else []
+                if sum(float(t["qty"]) for t in trades) >= done - 1e-12:
+                    break
+                await asyncio.sleep(1)
+            for t in trades:
+                fee = float(t["commission"]) if t["commissionAsset"] == "USDT" else None  # BNB fees: model fee
+                await self._record_fill(oid, sym, side, float(t["price"]), float(t["qty"]),
+                                        "maker" if t["maker"] else "taker", mid, None, False, fee)
+            await self._close_order(oid, o["status"].lower(), done)
+            return done
+        except Exception:
+            logger.exception("settle order {} {} failed", oid, sym)
+            return None
+
     async def taker(self, decision_id: int, sym: str, side: int, qty: float, mid: float) -> None:
+        if self.live:
+            oid = await self._new_order(decision_id, sym, side, "taker", None, qty, mid, None)
+            await self._send(oid, sym, side, qty)
+            await asyncio.sleep(1)
+            await self._settle(oid, sym, side, mid)
+            return
         await asyncio.sleep(self.latency_ms / 1000)   # decision -> exchange: book state after the delay
         book = self.books[sym]
         if not book.ok:
@@ -185,7 +246,7 @@ class PaperEngine:
         await self._close_order(oid, "filled", f.qty)
 
     async def execute(self, decision_id: int, orders, urgent: bool = False) -> None:
-        mine = []
+        mine, pending = [], {}
         for o in orders:
             book = self.books[o.symbol]
             mid = book.mid if book.ok else self.marks[o.symbol]
@@ -196,16 +257,26 @@ class PaperEngine:
             queue = book.queue_at(o.side, price)
             oid = await self._new_order(decision_id, o.symbol, o.side, "maker", price, o.qty, mid, queue)
             m = MakerOrder(oid, o.symbol, o.side, price, o.qty, queue, now_ms(), now_ms() + MAKER_TIMEOUT_S * 1000)
-            self.makers[oid] = (m, mid)
+            if self.live:
+                await self._send(oid, o.symbol, o.side, o.qty, price)
+                pending[oid] = (m, mid)
+            else:
+                self.makers[oid] = (m, mid)
             mine.append(oid)
         if not mine:
             return
         await asyncio.sleep(MAKER_TIMEOUT_S)
         for oid in mine:
-            m, mid = self.makers.pop(oid, (None, None))
-            if m is None:
-                continue
-            await self._close_order(oid, "expired" if m.filled == 0 else "partial_expired", m.filled)
+            if self.live:
+                m, mid = pending[oid]
+                m.filled = await self._settle(oid, m.symbol, m.side, mid)
+                if m.filled is None:  # unknown state: don't risk a double trade, the next rebalance corrects
+                    continue
+            else:
+                m, mid = self.makers.pop(oid, (None, None))
+                if m is None:
+                    continue
+                await self._close_order(oid, "expired" if m.filled == 0 else "partial_expired", m.filled)
             f = self.filters.get(m.symbol, LotFilter(0.0, 0.0, 5.0))
             rest = round_step(m.remaining, f.step)
             if rest > 0 and rest * self.marks.get(m.symbol, 0) >= f.min_notional:
@@ -248,6 +319,8 @@ class PaperEngine:
             await self._decision(bar, "NO_TRADE", f"data not ready: last closed bar {last}", None, current)
             return
         targets = {s: round(float(v), 5) for s, v in w.items() if abs(v) > 1e-6}
+        if self.live:
+            await self._sync()
         eq = self.account.equity(self.marks)
         orders = plan_orders(targets, self._positions(), self.marks, eq, self.filters, p6.BAND,
                              reduce_only=self.risk.daily_stop)
@@ -279,7 +352,20 @@ class PaperEngine:
         if not self.marks:
             return
         t = now_ms()
-        for sym, (T, rate) in list(self.funding_next.items()):
+        if self.live:
+            await self._sync()
+            # ponytail: polls the last 24h only; a longer outage leaves gaps in the funding ledger (equity stays exact)
+            for r in await self.ex.funding(t - 86_400_000):
+                sym = r["symbol"]
+                if sym not in self.symbols:
+                    continue
+                qty, amount = self.account.pos(sym).qty, -float(r["income"])
+                if await self.db.pool.fetchval(
+                        "INSERT INTO paper_funding (ts, symbol, qty, mark, rate, amount) VALUES ($1,$2,$3,$4,$5,$6) "
+                        "ON CONFLICT (symbol, ts) DO NOTHING RETURNING id", ms_to_dt(int(r["time"])), sym, qty,
+                        self.marks.get(sym, 0.0), self.funding_next.get(sym, (0, 0.0))[1], amount):
+                    self.account.funding += amount
+        for sym, (T, rate) in ([] if self.live else list(self.funding_next.items())):
             if t >= T and sym in self.marks:
                 qty = self.account.pos(sym).qty
                 if qty:
@@ -354,6 +440,9 @@ class PaperEngine:
     # ---------------- run ----------------
 
     async def run(self) -> None:
+        if self.live:
+            logger.warning("TRADING_MODE=live: REAL ORDERS on {} for {}", self.s.live_rest, self.symbols)
+            await self.ex.setup(self.symbols)
         await self.restore()
         self.filters = await lot_filters(self.symbols)
         await self.ensure_model()
@@ -421,7 +510,10 @@ async def main() -> None:
     logger.add(sys.stdout, level="INFO", format="{time:YYYY-MM-DD HH:mm:ss} | {level: <7} | {message}")
     s = get_settings()
     db = await DB.connect(s.database_url)
-    await db.init_schema()
+    await db.init_schema(s.ledger_schema)
+    if s.ledger_schema != "public":
+        await db.close()
+        db = await DB.connect(s.database_url, s.ledger_schema)
     base = s.symbols
     s.symbols_csv = ",".join(await trading_symbols_async(db, base))  # + coins promoted from the dashboard
     try:

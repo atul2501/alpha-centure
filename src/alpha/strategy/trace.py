@@ -103,7 +103,7 @@ def snapshot() -> int:
     if b is None:
         raise SystemExit(f"no model in {s.models_dir}")
     now = pd.Timestamp.now(tz="UTC")
-    with psycopg.connect(s.database_url) as conn:
+    with psycopg.connect(s.database_url, **s.ledger_conn) as conn:
         last, w, _, tr = p6.live_targets_explained(conn, s.symbols, b, now)
         tr.notes = "snapshot: what the strategy would hold if it rebalanced on this bar (nothing traded)"
         eq = conn.execute("SELECT equity FROM paper_equity ORDER BY ts DESC LIMIT 1").fetchone()

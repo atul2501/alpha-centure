@@ -55,17 +55,24 @@ class DB:
         self.pool = pool
 
     @classmethod
-    async def connect(cls, dsn: str) -> "DB":
-        pool = await asyncpg.create_pool(dsn, min_size=1, max_size=8, init=_init_conn)
+    async def connect(cls, dsn: str, schema: str = "public") -> "DB":
+        """schema: where unqualified paper_* names resolve (the trading ledger); market data stays in public."""
+        extra = {"server_settings": {"search_path": f"{schema},public"}} if schema != "public" else {}
+        pool = await asyncpg.create_pool(dsn, min_size=1, max_size=8, init=_init_conn, **extra)
         return cls(pool)
 
     async def close(self) -> None:
         await self.pool.close()
 
-    async def init_schema(self) -> None:
+    async def init_schema(self, ledger: str = "public") -> None:
         async with self.pool.acquire() as conn:
             for path in sorted(SQL_DIR.glob("*.sql")):
                 await conn.execute(path.read_text())
+            if ledger != "public":  # a second copy of the ledger tables (live money), e.g. live.paper_fills
+                await conn.execute(f"CREATE SCHEMA IF NOT EXISTS {ledger}; SET search_path TO {ledger}")
+                for name in ("006_paper.sql", "008_strategy_trace.sql"):
+                    await conn.execute((SQL_DIR / name).read_text())
+                await conn.execute("RESET search_path")
         logger.info("schema ready")
 
     async def upsert(self, table: str, rows: list[tuple]) -> int:

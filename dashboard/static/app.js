@@ -168,6 +168,7 @@ function renderWorkflow(d) {
   $("banner").className = "banner " + (b.status === "ok" ? "ok" : b.status);
   const e = d.engine || {};
   $("model").textContent = e.model || "–";
+  $("mode").textContent = e.mode === "live" ? "LIVE" : "PAPER";
   $("model-sub").textContent = e.model_train_end ? `ridge model trained to ${e.model_train_end}` : "model not trained yet";
   $("lat").textContent = e.latency_ms != null ? Math.round(e.latency_ms) + " ms" : "–";
   const ld = d.last_decision;
