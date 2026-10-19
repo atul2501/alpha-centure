@@ -396,10 +396,12 @@ $("coin-form").addEventListener("submit", e => { e.preventDefault(); const v = $
 $("coins").addEventListener("click", e => { const b = e.target.closest("button[data-a]"); if (b && !b.disabled) coinAction(b.dataset.a, b.dataset.s); });
 
 /* ---------- polling, routing, clocks ---------- */
-async function get(url) { const r = await fetch(url, { cache: "no-store" }); if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`); return r.json(); }
+async function get(url) { const r = await fetch(url, { cache: "no-store" }); if (!r.ok) throw new Error(`${url}: HTTP ${r.status} ${(await r.text()).slice(0, 300)}`); return r.json(); }
 const LOAD = {
   workflow: async () => { S.wf = await get("/api/workflow"); renderWorkflow(S.wf); },
-  ledger: async () => { S.lg = await get("/api/ledger"); if (S.live && Date.now() - S.liveAt < 5000) applyLive(S.live); else renderLedger(S.lg); },
+  ledger: async () => {
+    try { S.lg = await get("/api/ledger"); }
+    catch (e) { if (!S.lg) setHTML($("kpis"), kpi("Ledger", "Error", esc(e.message), "neg")); throw e; } if (S.live && Date.now() - S.liveAt < 5000) applyLive(S.live); else renderLedger(S.lg); },
   market: async () => { S.mk = await get("/api/market"); renderMarket(S.mk); loadCandles(false); },
   coins: async () => { renderCoins(await get("/api/coins")); },
 };

@@ -153,7 +153,11 @@ def api_workflow(request: Request):
 
 
 def api_ledger(request: Request):
-    return JSONResponse(cached(("ledger",), data.ledger))
+    try:
+        return JSONResponse(cached(("ledger",), data.ledger))
+    except Exception as e:  # show the cause on the page instead of a bare 500
+        logger.exception("ledger failed")
+        return JSONResponse({"error": f"{type(e).__name__}: {e}"}, 500)
 
 
 def api_market(request: Request):
