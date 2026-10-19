@@ -99,7 +99,9 @@ def ledger(conn: psycopg.Connection) -> dict:
                                   FROM paper_equity) x
                             ORDER BY b, ts DESC""", (step,))
     peak = max((p["equity"] for p in points), default=equity)
-    fills = _rows(conn, "SELECT symbol, side, qty, price, liquidity FROM paper_fills ORDER BY id")
+    # full precision: _rows goes through JSON (10 decimals), which turns a tiny maker remainder into a 0-qty fill
+    fills = [dict(zip(("symbol", "side", "qty", "price", "liquidity"), r))
+             for r in conn.execute("SELECT symbol, side, qty, price, liquidity FROM paper_fills ORDER BY id")]
     fund_by = dict(conn.execute("SELECT symbol, sum(amount) FROM paper_funding GROUP BY symbol").fetchall())
     pos_rows = [{"symbol": s, "qty": p.get("qty", 0.0), "entry": p.get("entry", 0.0), "mark": p.get("mark"),
                  "notional": (p.get("qty") or 0.0) * (p.get("mark") or 0.0),

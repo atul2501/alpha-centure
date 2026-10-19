@@ -91,3 +91,15 @@ def test_coin_actions_need_password_and_json(monkeypatch):
     monkeypatch.setattr(server._settings, "dashboard_password", "pw")
     form = c.post("/api/coins/action", data={"action": "check", "symbol": "INJUSDT"})  # cross-site form shape
     assert form.status_code == 415
+
+
+def test_ledger_survives_a_tiny_maker_remainder():
+    # a 3e-11 fill used to round to 0 through JSON and divide by zero when replayed on a flat coin
+    try:
+        conn = psycopg.connect(get_settings().database_url, connect_timeout=3)
+    except Exception:
+        pytest.skip("dev database not reachable")
+    with conn, conn.transaction(force_rollback=True):
+        conn.execute("""INSERT INTO paper_fills (order_id, symbol, side, price, qty, liquidity, fee, arrival_mid, slippage_bps)
+                        SELECT max(id), 'TINYUSDT', 1, 1.0, 3e-11, 'maker', 0, 1.0, 0 FROM paper_orders""")
+        data.ledger(conn)  # raised ZeroDivisionError before
