@@ -205,10 +205,25 @@ Day to day:
 ```bash
 systemctl status alpha-collector alpha-paper     # running?
 journalctl -u alpha-paper -f                     # live log
-sudo systemctl restart alpha-paper               # after a code change
 ssh -L 8501:localhost:8501 ubuntu@<ip>           # dashboard at http://localhost:8501
 # public instead: DASHBOARD_HOST=0.0.0.0 in /etc/alpha/.env (optional DASHBOARD_PASSWORD=...), your IP only in the security group
 ```
+**Updating the code.** The services run from a copy in **`/opt/alpha`** (user `alpha`), not from `~/alpha-centure`:
+`git pull` alone changes nothing that is running.
+```bash
+cd ~/alpha-centure && git pull
+# dashboard only (engine untouched):
+sudo rsync -a dashboard/ /opt/alpha/dashboard/
+# or everything (same excludes as setup_ec2.sh; models, data and .env stay):
+sudo rsync -a --delete --exclude .venv --exclude .git --exclude .env --exclude models --exclude data ./ /opt/alpha/
+sudo chown -R alpha:alpha /opt/alpha
+sudo -u alpha bash -c "cd /opt/alpha && ~/.local/bin/uv sync --no-dev"   # only if pyproject/uv.lock changed
+sudo systemctl restart alpha-dashboard           # dashboard change
+sudo systemctl restart alpha-paper               # engine change (src/)
+```
+Then hard-refresh the browser (Cmd+Shift+R): it keeps the old `app.js` cached. If the Ledger page is blank or shows
+an error, the reason is in the red box at the top and in `journalctl -u alpha-dashboard -n 80`.
+
 Backups: set `S3_BACKUP_URI` in `/etc/alpha/.env` and give the instance an IAM role with `s3:PutObject`
 (`alpha-backup.timer`, daily 02:30 UTC). An existing `/etc/alpha/.env` is never overwritten.
 
