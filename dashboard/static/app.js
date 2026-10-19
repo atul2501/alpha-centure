@@ -112,14 +112,15 @@ function waterfallChart(box, w) {
   let run = 0; const bars = steps.map(([n, v, k]) => { const from = k === "total" ? 0 : run, to = k === "total" ? v : run + v; run = to; return { n, v, k, from, to }; });
   const vals = bars.flatMap(b => [b.from, b.to]); let lo = Math.min(...vals.filter(v => v !== 0), w.start), hi = Math.max(...vals);
   const span = hi - lo || hi * 0.02 || 1; lo = Math.max(0, lo - span * 0.6); hi += span * 0.25;
+  const d = hi - lo < 20 ? 2 : 0;  /* cents when the moves are small next to the account */
   const y = v => m.t + (1 - (v - lo) / (hi - lo)) * ih, bw = iw / bars.length * 0.56, s = svg(W, H, "P&L waterfall");
   niceTicks(lo, hi, 4).forEach(v => { el(s, "line", { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), stroke: "var(--line)" });
-    el(s, "text", { x: m.l - 8, y: y(v) + 4, "text-anchor": "end" }).textContent = "$" + num(v, 0); });
+    el(s, "text", { x: m.l - 8, y: y(v) + 4, "text-anchor": "end" }).textContent = "$" + num(v, d); });
   bars.forEach((b, i) => {
     const cx = m.l + (i + 0.5) * iw / bars.length, top = y(Math.max(b.from, b.to)), bot = y(Math.max(lo, Math.min(b.from, b.to)));
     const fill = b.k === "total" ? "var(--blue)" : b.v >= 0 ? "var(--up)" : "var(--down)";
     const r = el(s, "rect", { x: cx - bw / 2, y: top, width: bw, height: Math.max(2, bot - top), rx: 3, fill, opacity: b.k === "total" ? .85 : 1 });
-    el(s, "text", { x: cx, y: top - 5, "text-anchor": "middle" }).textContent = b.k === "total" ? usd(b.v, 0) : sUsd(b.v, b.v && Math.abs(b.v) < 10 ? 2 : 0);
+    el(s, "text", { x: cx, y: top - 5, "text-anchor": "middle" }).textContent = b.k === "total" ? usd(b.v, d) : sUsd(b.v, b.v && Math.abs(b.v) < 10 ? 2 : 0);
     el(s, "text", { x: cx, y: H - 8, "text-anchor": "middle" }).textContent = b.n;
     r.addEventListener("pointermove", e => showTip(e, `<div class="h">${b.n}</div><div class="r"><span>${b.k === "total" ? "value" : "change"}</span><b>${b.k === "total" ? usd(b.v) : sUsd(b.v)}</b></div>`));
     r.addEventListener("pointerleave", hideTip);
@@ -228,7 +229,8 @@ function renderLedger(d) {
     : `marked every minute · as of ${utc(d.as_of)} UTC`;
   const key = JSON.stringify([d.curve.length, d.curve.at(-1)]);
   if ($("equity-chart")._k !== key) { $("equity-chart")._k = key;
-    lineChart($("equity-chart"), d.curve.map(p => ({ t: p.t, v: p.equity })), { base: k.start, fmt: v => "$" + num(v, 0), label: "Equity curve" }); }
+    const eqs = d.curve.map(p => p.equity).concat(k.start), eqSpan = Math.max(...eqs) - Math.min(...eqs);
+    lineChart($("equity-chart"), d.curve.map(p => ({ t: p.t, v: p.equity })), { base: k.start, fmt: v => "$" + num(v, eqSpan < 20 ? 2 : 0), label: "Equity curve" }); }
   const wkey = JSON.stringify(w);
   if ($("waterfall")._k !== wkey) { $("waterfall")._k = wkey; waterfallChart($("waterfall"), w); }
   const f = d.fills_summary, fu = d.funding_summary;
@@ -247,7 +249,7 @@ function renderLedger(d) {
   const maxN = Math.max(0.01, ...d.by_coin.map(r => Math.abs(r.net)));
   setHTML($("bycoin"), table([
     { k: "symbol", h: "Coin", l: 1, f: v => `<b>${esc(v.replace("USDT", ""))}</b>` },
-    { k: "realized", h: "Realized", f: sUsd, c: v => "m " + cls(v) }, { k: "unrealized", h: "Unrealized", f: sUsd, c: v => "m " + cls(v) },
+    { k: "realized", h: "Realized", f: v => sUsd(v), c: v => "m " + cls(v) }, { k: "unrealized", h: "Unrealized", f: v => sUsd(v), c: v => "m " + cls(v) },
     { k: "fees", h: "Fees", f: v => v ? "−" + usd(v) : "–", c: "m neg" }, { k: "funding", h: "Funding", f: v => v ? sUsd(-v) : "–", c: v => "m " + cls(-v) },
     { k: "net", h: "Net", f: v => `<b>${sUsd(v)}</b>`, c: v => "m " + cls(v) },
     { k: "net", h: "", f: v => `<span class="bar"><i style="${v >= 0 ? "left:50%" : "right:50%"};width:${Math.abs(v) / maxN * 50}%;background:var(--${v >= 0 ? "up" : "down"})"></i></span>` },
